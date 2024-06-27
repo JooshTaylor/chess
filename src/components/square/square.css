@@ -2,12 +2,23 @@
   width: 100px;
   height: 100px;
   position: relative;
+  cursor: pointer;
 }
 
-.label {
+.selected-square {
+  background-color: rgb(105, 182, 105) !important;
+}
+
+.character-label {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  bottom: 5px;
+  right: 5px;
+}
+
+.numeric-label {
+  position: absolute;
+  top: 5px;
+  left: 5px;
 }
 
 .piece {
@@ -16,8 +27,6 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-
-  cursor: grab;
 }
 
 .white {

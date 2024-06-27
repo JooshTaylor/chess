@@ -1,0 +1,1 @@
+export type XAxisPositions = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h';
