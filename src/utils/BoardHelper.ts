@@ -5,6 +5,8 @@ import { Grid } from '../interfaces/Grid';
 import { Position } from '../interfaces/Position';
 import { XAxisPositions } from '../interfaces/XAxisPositions';
 import { YAxisPositions } from '../interfaces/YAxisPositions';
+import { Piece } from '../interfaces/pieces/Piece';
+import { CanTakeLookups } from './MovementHelper';
 
 export function loadInitialPieces(board: Grid = InitialBoard): Grid {
   return board.map(row => row.map(square => {
@@ -39,4 +41,15 @@ export function convertCharToNumber(char: string): number {
 
 export function convertNumberToChar(num: number): string {
   return String.fromCharCode(num + 96);
+}
+
+export function getPieceAtPosition(board: Grid, x: number, y: number): Piece {
+  return board[8 - y][8 - x].piece;
+}
+
+export function canTake(attacker: Piece, defender: Piece): boolean {
+  if (attacker.colour === defender.colour)
+    return false;
+
+  return CanTakeLookups[attacker.type].has(defender.type);
 }

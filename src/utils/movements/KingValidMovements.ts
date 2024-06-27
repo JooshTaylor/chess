@@ -1,8 +1,9 @@
 import { Grid } from "../../interfaces/Grid";
 import { Position } from "../../interfaces/Position";
+import { IKing } from "../../interfaces/pieces/IKing";
 import { splitPosition, convertCharToNumber } from "../BoardHelper";
 
-export function kingValidMovements(position: Position, board: Grid): Set<Position> {
+export function kingValidMovements(piece: IKing, position: Position, board: Grid): Set<Position> {
   const validPositions = new Set<Position>([]);
 
   const [ x, y ] = splitPosition(position);

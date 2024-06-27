@@ -18,7 +18,9 @@ export function Board(props: BoardProps): JSX.Element {
   function onSelectSquare(cell: Cell): void {
     if (selectedSquare) {
       const getValidPositions = ValidPositionLookups[selectedSquare.piece.type];
-      const validPositions = getValidPositions(getCellPosition(selectedSquare), props.board);
+      const validPositions = getValidPositions(selectedSquare.piece, getCellPosition(selectedSquare), props.board);
+
+      console.log('valid positions', validPositions);
 
       if (!validPositions.has(getCellPosition(cell))) {
         setSelectedSquare(null);
