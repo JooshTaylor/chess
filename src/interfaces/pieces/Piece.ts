@@ -1,7 +1,6 @@
-import { Grid } from "../Grid";
-import { Position } from "../Position";
+import { PieceType } from "./PieceType";
 
 export type Piece = {
   name: string;
-  getValidPositions: (currentPosition: Position, board: Grid) => Set<Position>;
+  type: PieceType;
 };

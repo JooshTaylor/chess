@@ -4,6 +4,7 @@ import { Square } from '../square/Square';
 import './board.css';
 import { Cell } from '../../interfaces/Cell';
 import { getCellPosition } from '../../utils/BoardHelper';
+import { ValidPositionLookups } from '../../utils/MovementHelper';
 
 interface BoardProps {
   board: Grid;
@@ -16,7 +17,8 @@ export function Board(props: BoardProps): JSX.Element {
 
   function onSelectSquare(cell: Cell): void {
     if (selectedSquare) {
-      const validPositions = selectedSquare.piece.getValidPositions?.(getCellPosition(selectedSquare), props.board);
+      const getValidPositions = ValidPositionLookups[selectedSquare.piece.type];
+      const validPositions = getValidPositions(getCellPosition(selectedSquare), props.board);
 
       if (!validPositions.has(getCellPosition(cell))) {
         setSelectedSquare(null);

@@ -1,5 +1,6 @@
 import { IKnight } from '../../interfaces/pieces/IKnight';
 
 export const Knight: IKnight = {
-  name: 'Knight'
+  name: 'Knight',
+  type: 'knight'
 };
