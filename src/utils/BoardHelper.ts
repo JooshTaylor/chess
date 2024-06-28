@@ -44,7 +44,7 @@ export function convertNumberToChar(num: number): string {
 }
 
 export function getPieceAtPosition(board: Grid, x: number, y: number): Piece {
-  return board[8 - y][8 - x].piece;
+  return board[8 - y]?.[8 - x]?.piece;
 }
 
 export function canTake(attacker: Piece, defender: Piece): boolean {
