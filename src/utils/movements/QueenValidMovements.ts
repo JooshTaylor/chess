@@ -1,17 +1,12 @@
 import { Grid } from "../../interfaces/Grid";
 import { Position } from "../../interfaces/Position";
 import { IQueen } from "../../interfaces/pieces/IQueen";
-import { splitPosition, convertCharToNumber } from "../BoardHelper";
+import { bishopValidMovements } from "./BishopValidMovements";
+import { rookValidMovements } from "./RookValidMovements";
 
 export function queenValidMovements(piece: IQueen, position: Position, board: Grid): Set<Position> {
-  const validPositions = new Set<Position>([]);
+  const validRookMovements = rookValidMovements(piece, position, board);
+  const validBishopMovements = bishopValidMovements(piece, position, board);
 
-  const [ x, y ] = splitPosition(position);
-
-  const xNumeric = convertCharToNumber(x);
-  const yNumeric = Number(y);
-
-  console.log(xNumeric, yNumeric);
-
-  return validPositions;
+  return new Set<Position>([ ...validBishopMovements, ...validRookMovements ]);
 }
