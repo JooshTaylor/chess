@@ -38,3 +38,11 @@
   background-color: rgb(180,136,97);
   color: white;
 }
+
+.piece-black {
+  color: black;
+}
+
+.piece-white {
+  color: white;
+}

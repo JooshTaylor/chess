@@ -1,4 +1,3 @@
-import React from 'react';
 import { Cell } from '../../interfaces/Cell';
 import './square.css';
 
@@ -44,7 +43,7 @@ export function Square(props: SquareProps): JSX.Element {
       )}
 
       {!!props.cell.piece && (
-        <div className='piece'>
+        <div className={`piece ${props.cell.piece?.colour === 'black' ? 'piece-black' : 'piece-white'}`}>
           {props.cell.piece?.name}
         </div>
       )}
