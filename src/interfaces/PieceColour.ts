@@ -1,0 +1,1 @@
+export type PieceColour = 'black' | 'white';

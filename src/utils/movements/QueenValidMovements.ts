@@ -1,12 +1,11 @@
-import { Grid } from "../../interfaces/Grid";
-import { Position } from "../../interfaces/Position";
-import { IQueen } from "../../interfaces/pieces/IQueen";
+import { Piece } from "../../interfaces/Piece";
+import { GameState } from "../../reducers/GameReducer";
 import { bishopValidMovements } from "./BishopValidMovements";
 import { rookValidMovements } from "./RookValidMovements";
 
-export function queenValidMovements(piece: IQueen, position: Position, board: Grid): Set<Position> {
-  const validRookMovements = rookValidMovements(piece, position, board);
-  const validBishopMovements = bishopValidMovements(piece, position, board);
+export function queenValidMovements(piece: Piece, state: GameState): Set<string> {
+  const validRookMovements = rookValidMovements(piece, state);
+  const validBishopMovements = bishopValidMovements(piece, state);
 
-  return new Set<Position>([ ...validBishopMovements, ...validRookMovements ]);
+  return new Set<string>([ ...validBishopMovements, ...validRookMovements ]);
 }

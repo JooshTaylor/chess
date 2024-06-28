@@ -1,74 +1,67 @@
-import { Grid } from "../../interfaces/Grid";
-import { Position } from "../../interfaces/Position";
-import { IRook } from "../../interfaces/pieces/IRook";
-import { splitPosition, convertCharToNumber, getPieceAtPosition, canTake, convertNumberToChar } from "../BoardHelper";
+import { Piece } from "../../interfaces/Piece";
+import { GameState } from "../../reducers/GameReducer";
+import { getPieceAtPosition, canTake } from "../BoardHelper";
 
-export function rookValidMovements(piece: IRook, position: Position, board: Grid): Set<Position> {
-  const validPositions = new Set<Position>([]);
+export function rookValidMovements(piece: Piece, state: GameState): Set<string> {
+  const validPositions = new Set<string>([]);
+  const add = (x: number, y: number) => validPositions.add(`${x}:${y}`);
 
-  const add = (x: number, y: number) => validPositions.add(`${convertNumberToChar(x)}:${y}`);
-
-  const [ x, y ] = splitPosition(position);
-
-  const xNumeric = convertCharToNumber(x);
-  const yNumeric = Number(y);
-
-  console.log(xNumeric, yNumeric);
+  const { x: currentX, y: currentY } = piece;
 
   // Up
-  let currentY = yNumeric + 1;
+  let targetY = currentY + 1;
 
-  while (currentY < 9) {
-    const pieceAtPosition = getPieceAtPosition(board, xNumeric, currentY);
+  while (targetY < 9) {
+    const pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
     if (pieceAtPosition) {
       if (!canTake(piece, pieceAtPosition))
         break;
     }
 
-    add(xNumeric, currentY);
-    currentY++;
+    add(currentX, targetY);
+    targetY++;
   }
 
   // Right
-  let currentX = xNumeric + 1;
+  let targetX = currentX + 1;
 
-  while (currentX < 9) {
-    const pieceAtPosition = getPieceAtPosition(board, currentX, yNumeric);
+  while (targetX < 9) {
+    const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: currentY });
     if (pieceAtPosition) {
       if (!canTake(piece, pieceAtPosition))
         break;
     }
 
-    add(currentX, yNumeric);
-    currentX++;
+    add(targetX, currentY);
+    targetX++;
   }
 
   // Bottom
-  currentY = yNumeric - 1;
+  targetY = currentY - 1;
 
-  while (currentY > 0) {
-    const pieceAtPosition = getPieceAtPosition(board, xNumeric, currentY);
+  while (targetY > 0) {
+    const pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
     if (pieceAtPosition) {
       if (!canTake(piece, pieceAtPosition))
         break;
     }
 
-    add(xNumeric, currentY);
-    currentY--;
+    add(currentX, targetY);
+    targetY--;
   }
 
   // Left
-  currentX = xNumeric - 1;
+  targetX = currentX - 1;
 
-  while (currentX > 0) {
-    const pieceAtPosition = getPieceAtPosition(board, currentX, yNumeric);
+  while (targetX > 0) {
+    const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: currentY });
     if (pieceAtPosition) {
       if (!canTake(piece, pieceAtPosition))
         break;
     }
 
-    add(currentX, yNumeric);
-    currentX--;
+    add(targetX, currentY);
+    targetX--;
   }
 
   return validPositions;

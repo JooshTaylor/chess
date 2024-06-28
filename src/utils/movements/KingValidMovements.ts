@@ -1,17 +1,8 @@
-import { Grid } from "../../interfaces/Grid";
-import { Position } from "../../interfaces/Position";
-import { IKing } from "../../interfaces/pieces/IKing";
-import { splitPosition, convertCharToNumber } from "../BoardHelper";
+import { Piece } from "../../interfaces/Piece";
+import { GameState } from "../../reducers/GameReducer";
 
-export function kingValidMovements(piece: IKing, position: Position, board: Grid): Set<Position> {
-  const validPositions = new Set<Position>([]);
-
-  const [ x, y ] = splitPosition(position);
-
-  const xNumeric = convertCharToNumber(x);
-  const yNumeric = Number(y);
-
-  console.log(xNumeric, yNumeric);
+export function kingValidMovements(piece: Piece, state: GameState): Set<string> {
+  const validPositions = new Set<string>([]);
 
   return validPositions;
 }

@@ -1,7 +1,6 @@
-import { Grid } from "../interfaces/Grid";
-import { Position } from "../interfaces/Position";
-import { Piece } from "../interfaces/pieces/Piece";
-import { PieceType } from "../interfaces/pieces/PieceType";
+import { Piece } from "../interfaces/Piece";
+import { PieceType } from "../interfaces/PieceType";
+import { GameState } from "../reducers/GameReducer";
 import { bishopValidMovements } from "./movements/BishopValidMovements";
 import { kingValidMovements } from "./movements/KingValidMovements";
 import { knightValidMovements } from "./movements/KnightValidMovements";
@@ -9,7 +8,7 @@ import { pawnValidMovements } from "./movements/PawnValidMovements";
 import { queenValidMovements } from "./movements/QueenValidMovements";
 import { rookValidMovements } from "./movements/RookValidMovements";
 
-type GetPieceTypeFunc = (piece: Piece, position: Position, board: Grid) => Set<Position>;
+type GetPieceTypeFunc = (piece: Piece, state: GameState) => Set<string>;
 
 export const ValidPositionLookups: Record<PieceType, GetPieceTypeFunc> = {
   bishop: bishopValidMovements,
