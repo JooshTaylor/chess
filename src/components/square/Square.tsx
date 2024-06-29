@@ -48,7 +48,7 @@ export function Square(props: SquareProps): JSX.Element {
 
       {!!props.piece && (
         <div className={`piece ${props.piece?.colour === 'black' ? 'piece-black' : 'piece-white'}`}>
-          {props.piece?.id}
+          {props.piece?.id}{props.piece?.promotionType ? ` as ${props.piece.promotionType}` : ''}
         </div>
       )}
     </div>

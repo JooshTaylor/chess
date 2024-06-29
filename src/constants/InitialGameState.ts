@@ -3,7 +3,6 @@ import { GameState } from "../reducers/GameReducer";
 export const INITIAL_GAME_STATE: GameState = {
   turnColour: 'white',
   selectedPiece: '',
-  status: 'normal',
 
   positions: {
     // Y pos then X

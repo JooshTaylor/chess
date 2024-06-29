@@ -21,7 +21,7 @@ export function ChessBoard(): JSX.Element {
       return;
 
     const selectedPiece = state.pieces[state.selectedPiece];
-    const getValidPositions = ValidPositionLookups[selectedPiece.type];
+    const getValidPositions = ValidPositionLookups[selectedPiece.promotionType || selectedPiece.type];
     const validPositions = getValidPositions(selectedPiece, state);
 
     if (!validPositions.has(getPositionId(position))) {
@@ -83,7 +83,15 @@ export function ChessBoard(): JSX.Element {
   }
 
   function onPromote(currentPieceId: PieceId, promotionType: PieceType): void {
-    console.log(`Promoting ${currentPieceId} to ${promotionType}`);
+    dispatch({
+      type: 'promote-piece',
+      payload: {
+        pieceId: currentPieceId,
+        type: promotionType
+      }
+    });
+
+    setPromotionPiece(null);
   }
 
   return (
@@ -110,8 +118,7 @@ export function ChessBoard(): JSX.Element {
       </div>
       {!!promotionPiece && (
         <PromotionModal
-          pieceId={promotionPiece}
-          onPromote={onPromote}
+          onPromote={promotionType => onPromote(promotionPiece, promotionType)}
         />
       )}
     </>
