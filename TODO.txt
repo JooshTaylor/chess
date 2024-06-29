@@ -1,6 +1,3 @@
-- Pawn movements
-- King movements
-- Get pieces actually moving positions
 - Castling
 - Pawn promotion
 - Check

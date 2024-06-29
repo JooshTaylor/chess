@@ -43,4 +43,5 @@ export interface Piece extends Position {
   type: PieceType;
   colour: PieceColour;
   status: PieceStatus;
+  promotionType?: PieceType;
 }

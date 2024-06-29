@@ -5,6 +5,10 @@
   cursor: pointer;
 }
 
+.disabled {
+  cursor: default;
+}
+
 .selected-square {
   background-color: rgb(105, 182, 105) !important;
 }

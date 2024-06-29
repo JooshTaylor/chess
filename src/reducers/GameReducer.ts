@@ -3,9 +3,21 @@ import { PieceColour } from "../interfaces/PieceColour";
 import { Position } from "../interfaces/Position";
 import { getPieceAtPosition } from "../utils/BoardHelper";
 
-export type GameActionType = 'select-piece' | 'deselect-piece' | 'take-piece' | 'move-piece';
+export type GameActionType =
+  'select-piece' |
+  'deselect-piece' |
+  'take-piece' |
+  'move-piece' |
+  'begin-promotion' |
+  'promote-piece';
+
+export type GameStatus =
+  'normal' |
+  'promoting' |
+  'finished';
 
 export interface GameState {
+  status: GameStatus;
   turnColour: PieceColour;
   selectedPiece: PieceId | '';
   pieces: Record<PieceId, Piece>;
@@ -108,6 +120,13 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         selectedPiece: '',
         turnColour: getNextTurnColour(newState)
       };
+    }
+
+    case 'begin-promotion': {
+      return {
+        ...state,
+        status: 'promoting'
+      }
     }
 
     default:

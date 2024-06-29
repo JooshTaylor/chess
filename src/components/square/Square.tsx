@@ -17,6 +17,7 @@ interface SquareProps {
   piece: Piece;
   onSelect: () => void;
   isSelected: boolean;
+  disabled: boolean;
 }
 
 export function Square(props: SquareProps): JSX.Element {
@@ -25,6 +26,9 @@ export function Square(props: SquareProps): JSX.Element {
 
     if (props.isSelected)
       className += ' selected-square';
+
+    if (props.disabled)
+      className += ' disabled';
 
     return className;
   }
