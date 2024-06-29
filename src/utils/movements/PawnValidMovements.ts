@@ -2,9 +2,10 @@ import { INITIAL_GAME_STATE } from "../../constants/InitialGameState";
 import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
 import { canTake, getPieceAtPosition, isValidSquare } from "../BoardHelper";
+import { getValidPositionSet } from "../MovementHelper";
 
 export function pawnValidMovements(piece: Piece, state: GameState): Set<string> {
-  const validPositions = new Set<string>([]);
+  const { validPositions, addValidPosition } = getValidPositionSet();
 
   const { x: initialX, y: initialY } = INITIAL_GAME_STATE.pieces[piece.id];
   const { x: currentX, y: currentY } = piece;
@@ -17,7 +18,7 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
 
     // Forward once
     if (isValidSquare(currentX, targetY) && !pieceAtPosition) {
-      validPositions.add(`${currentX}:${targetY}`);
+      addValidPosition(currentX, targetY);
 
       // Forward twice
       if (isAtStartingPosition) {
@@ -25,7 +26,7 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
         pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
 
         if (isValidSquare(currentX, targetY) && !pieceAtPosition)
-          validPositions.add(`${currentX}:${targetY}`);
+          addValidPosition(currentX, targetY);
       }
     }
 
@@ -48,7 +49,7 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
 
   // Forward once
   if (isValidSquare(currentX, targetY) && !pieceAtPosition) {
-    validPositions.add(`${currentX}:${targetY}`);
+    addValidPosition(currentX, targetY);
 
     // Forward twice
     if (isAtStartingPosition) {
@@ -56,7 +57,7 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
       pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
 
       if (isValidSquare(currentX, targetY) && !pieceAtPosition)
-        validPositions.add(`${currentX}:${targetY}`);
+        addValidPosition(currentX, targetY);
     }
   }
 

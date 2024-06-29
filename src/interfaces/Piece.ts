@@ -36,8 +36,11 @@ export type PieceId =
   'white-pawn-7' |
   'white-pawn-8';
 
+export type PieceStatus = 'alive' | 'dead' | 'promoted';
+
 export interface Piece extends Position {
   id: PieceId;
   type: PieceType;
   colour: PieceColour;
+  status: PieceStatus;
 }

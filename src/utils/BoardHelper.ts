@@ -1,17 +1,17 @@
-import { ICell } from '../interfaces/Cell';
 import { Piece } from '../interfaces/Piece';
+import { Position } from '../interfaces/Position';
 import { GameState } from '../reducers/GameReducer';
 import { CanTakeLookups } from './MovementHelper';
 
-export function getCellPosition(cell: ICell): `${number}:${number}` {
-  if (!cell)
+export function getPositionId(position: Position): `${number}:${number}` {
+  if (!position)
     return null;
 
-  return `${cell.x}:${cell.y}`;
+  return `${position.x}:${position.y}`;
 }
 
-export function getPieceAtPosition(state: GameState, cell: ICell): Piece | null {
-  const pieceId = state.positions[cell.y]?.[cell.x];
+export function getPieceAtPosition(state: GameState, position: Position): Piece | null {
+  const pieceId = state.positions[position.y]?.[position.x];
 
   if (pieceId === '')
     return null;

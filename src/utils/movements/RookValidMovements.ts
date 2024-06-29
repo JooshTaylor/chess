@@ -1,10 +1,10 @@
 import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
 import { getPieceAtPosition, canTake } from "../BoardHelper";
+import { getValidPositionSet } from "../MovementHelper";
 
 export function rookValidMovements(piece: Piece, state: GameState): Set<string> {
-  const validPositions = new Set<string>([]);
-  const add = (x: number, y: number) => validPositions.add(`${x}:${y}`);
+  const { validPositions, addValidPosition } = getValidPositionSet();
 
   const { x: currentX, y: currentY } = piece;
 
@@ -18,7 +18,7 @@ export function rookValidMovements(piece: Piece, state: GameState): Set<string> 
         break;
     }
 
-    add(currentX, targetY);
+    addValidPosition(currentX, targetY);
     targetY++;
   }
 
@@ -32,7 +32,7 @@ export function rookValidMovements(piece: Piece, state: GameState): Set<string> 
         break;
     }
 
-    add(targetX, currentY);
+    addValidPosition(targetX, currentY);
     targetX++;
   }
 
@@ -46,7 +46,7 @@ export function rookValidMovements(piece: Piece, state: GameState): Set<string> 
         break;
     }
 
-    add(currentX, targetY);
+    addValidPosition(currentX, targetY);
     targetY--;
   }
 
@@ -60,7 +60,7 @@ export function rookValidMovements(piece: Piece, state: GameState): Set<string> 
         break;
     }
 
-    add(targetX, currentY);
+    addValidPosition(targetX, currentY);
     targetX--;
   }
 

@@ -1,6 +1,7 @@
 import { Piece } from "../interfaces/Piece";
 import { PieceType } from "../interfaces/PieceType";
 import { GameState } from "../reducers/GameReducer";
+import { getPositionId } from "./BoardHelper";
 import { bishopValidMovements } from "./movements/BishopValidMovements";
 import { kingValidMovements } from "./movements/KingValidMovements";
 import { knightValidMovements } from "./movements/KnightValidMovements";
@@ -28,4 +29,13 @@ export const CanTakeLookups: Record<PieceType, Set<PieceType>> = {
   queen: AllPiecesSet,
   rook: AllPiecesSet,
   knight: AllPiecesSet
+}
+
+export function getValidPositionSet() {
+  const validPositions = new Set<string>();
+
+  return {
+    validPositions,
+    addValidPosition: (x: number, y: number) => validPositions.add(getPositionId({ x, y }))
+  };
 }

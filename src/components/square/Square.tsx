@@ -1,19 +1,19 @@
-import { ICell } from '../../interfaces/Cell';
 import { Piece } from '../../interfaces/Piece';
+import { Position } from '../../interfaces/Position';
 import { convertNumberToChar } from '../../utils/BoardHelper';
 import './square.css';
 
-const getColour = (cell: ICell) => {
+const getColour = (position: Position) => {
   // If the first in the row is white
-  if (cell.y % 2 === 0)
-    return cell.x % 2 === 0 ? 'black' : 'white';
+  if (position.y % 2 === 0)
+    return position.x % 2 === 0 ? 'black' : 'white';
 
   // If the first in the row is black
-  return cell.x % 2 === 0 ? 'white' : 'black';
+  return position.x % 2 === 0 ? 'white' : 'black';
 };
 
 interface SquareProps {
-  cell: ICell;
+  position: Position;
   piece: Piece;
   onSelect: () => void;
   isSelected: boolean;
@@ -21,7 +21,7 @@ interface SquareProps {
 
 export function Square(props: SquareProps): JSX.Element {
   function getClassName(): string {
-    let className = `square ${getColour(props.cell)}`;
+    let className = `square ${getColour(props.position)}`;
 
     if (props.isSelected)
       className += ' selected-square';
@@ -31,14 +31,14 @@ export function Square(props: SquareProps): JSX.Element {
 
   return (
     <div className={getClassName()} onClick={props.onSelect}>
-      {props.cell.x === 1 && (
+      {props.position.x === 1 && (
         <div className='label numeric-label'>
-          {convertNumberToChar(props.cell.y)}
+          {convertNumberToChar(props.position.y)}
         </div>
       )}
-      {props.cell.y === 1 && (
+      {props.position.y === 1 && (
         <div className='label character-label'>
-          {props.cell.x}
+          {props.position.x}
         </div>
       )}
 

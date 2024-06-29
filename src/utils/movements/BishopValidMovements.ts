@@ -1,10 +1,10 @@
 import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
 import { getPieceAtPosition, canTake } from "../BoardHelper";
+import { getValidPositionSet } from "../MovementHelper";
 
 export function bishopValidMovements(piece: Piece, state: GameState): Set<string> {
-  const validPositions = new Set<string>([]);
-  const add = (x: number, y: number) => validPositions.add(`${x}:${y}`);
+  const { validPositions, addValidPosition } = getValidPositionSet();
 
   const { x: currentX, y: currentY } = piece;
 
@@ -19,7 +19,7 @@ export function bishopValidMovements(piece: Piece, state: GameState): Set<string
         break;
     }
 
-    add(targetX, targetY);
+    addValidPosition(targetX, targetY);
 
     targetX--;
     targetY++;
@@ -36,7 +36,7 @@ export function bishopValidMovements(piece: Piece, state: GameState): Set<string
         break;
     }
 
-    add(targetX, targetY);
+    addValidPosition(targetX, targetY);
 
     targetX++;
     targetY++;
@@ -53,7 +53,7 @@ export function bishopValidMovements(piece: Piece, state: GameState): Set<string
         break;
     }
 
-    add(targetX, targetY);
+    addValidPosition(targetX, targetY);
 
     targetX++;
     targetY--;
@@ -70,7 +70,7 @@ export function bishopValidMovements(piece: Piece, state: GameState): Set<string
         break;
     }
 
-    add(targetX, targetY);
+    addValidPosition(targetX, targetY);
 
     targetX--;
     targetY--;
