@@ -20,17 +20,6 @@ export const ValidPositionLookups: Record<PieceType, GetPieceTypeFunc> = {
   knight: knightValidMovements
 };
 
-const AllPiecesSet = new Set<PieceType>([ 'knight', 'queen', 'king', 'bishop', 'pawn', 'rook' ]);
-
-export const CanTakeLookups: Record<PieceType, Set<PieceType>> = {
-  bishop: AllPiecesSet,
-  king: new Set([]),
-  pawn: new Set([]),
-  queen: AllPiecesSet,
-  rook: AllPiecesSet,
-  knight: AllPiecesSet
-}
-
 export function getValidPositionSet() {
   const validPositions = new Set<string>();
 

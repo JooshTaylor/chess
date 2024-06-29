@@ -37,7 +37,7 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
     addDiagonal(validPositions, piece, state, targetX, targetY);
 
     // Top right
-    targetX -= 2;
+    targetX += 2;
     addDiagonal(validPositions, piece, state, targetX, targetY);
 
     return validPositions;
@@ -68,7 +68,7 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
   addDiagonal(validPositions, piece, state, targetX, targetY);
 
   // Top right
-  targetX -= 2;
+  targetX += 2;
   addDiagonal(validPositions, piece, state, targetX, targetY);
 
   return validPositions;

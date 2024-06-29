@@ -1,7 +1,6 @@
 import { Piece } from '../interfaces/Piece';
 import { Position } from '../interfaces/Position';
 import { GameState } from '../reducers/GameReducer';
-import { CanTakeLookups } from './MovementHelper';
 
 export function getPositionId(position: Position): `${number}:${number}` {
   if (!position)
@@ -22,15 +21,12 @@ export function getPieceAtPosition(state: GameState, position: Position): Piece 
   return state.pieces[pieceId];
 }
 
-export function convertNumberToChar(num: number): string {
-  return String.fromCharCode(num + 96);
+export function canTake(currentPiece: Piece, targetPiece: Piece): boolean {
+  return currentPiece.colour !== targetPiece.colour;
 }
 
-export function canTake(currentPiece: Piece, targetPiece: Piece): boolean {
-  if (currentPiece.colour === targetPiece.colour)
-    return false;
-
-  return CanTakeLookups[currentPiece.type].has(targetPiece.type);
+export function convertNumberToChar(num: number): string {
+  return String.fromCharCode(num + 96);
 }
 
 export function isValidSquare(x: number, y: number): boolean {
