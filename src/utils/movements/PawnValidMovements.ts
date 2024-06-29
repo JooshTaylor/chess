@@ -1,7 +1,7 @@
 import { INITIAL_GAME_STATE } from "../../constants/InitialGameState";
 import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
-import { canTake, getPieceAtPosition } from "../BoardHelper";
+import { canTake, getPieceAtPosition, isValidSquare } from "../BoardHelper";
 
 export function pawnValidMovements(piece: Piece, state: GameState): Set<string> {
   const validPositions = new Set<string>([]);
@@ -16,7 +16,7 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
     let pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
 
     // Forward once
-    if (!pieceAtPosition) {
+    if (isValidSquare(currentX, targetY) && !pieceAtPosition) {
       validPositions.add(`${currentX}:${targetY}`);
 
       // Forward twice
@@ -24,7 +24,7 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
         targetY++;
         pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
 
-        if (!pieceAtPosition)
+        if (isValidSquare(currentX, targetY) && !pieceAtPosition)
           validPositions.add(`${currentX}:${targetY}`);
       }
     }
@@ -47,7 +47,7 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
   let pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
 
   // Forward once
-  if (!pieceAtPosition) {
+  if (isValidSquare(currentX, targetY) && !pieceAtPosition) {
     validPositions.add(`${currentX}:${targetY}`);
 
     // Forward twice
@@ -55,7 +55,7 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
       targetY--;
       pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
 
-      if (!pieceAtPosition)
+      if (isValidSquare(currentX, targetY) && !pieceAtPosition)
         validPositions.add(`${currentX}:${targetY}`);
     }
   }
@@ -76,6 +76,6 @@ export function pawnValidMovements(piece: Piece, state: GameState): Set<string> 
 function addDiagonal(set: Set<string>, piece: Piece, state: GameState, targetX: number, targetY: number): void {
   const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
 
-  if (pieceAtPosition && canTake(piece, pieceAtPosition))
+  if (isValidSquare(targetX, targetY) && pieceAtPosition && canTake(piece, pieceAtPosition))
     set.add(`${targetX}:${targetY}`);
 }

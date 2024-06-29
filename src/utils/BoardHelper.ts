@@ -32,3 +32,7 @@ export function canTake(currentPiece: Piece, targetPiece: Piece): boolean {
 
   return CanTakeLookups[currentPiece.type].has(targetPiece.type);
 }
+
+export function isValidSquare(x: number, y: number): boolean {
+  return x > 0 && y > 0 && x < 9 && y < 9;
+}

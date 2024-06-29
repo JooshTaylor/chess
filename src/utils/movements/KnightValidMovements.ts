@@ -1,12 +1,10 @@
 import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
-import { getPieceAtPosition, canTake } from "../BoardHelper";
+import { getPieceAtPosition, canTake, isValidSquare } from "../BoardHelper";
 
 export function knightValidMovements(piece: Piece, state: GameState): Set<string> {
   const validPositions = new Set<string>([]);
   const add = (x: number, y: number) => validPositions.add(`${x}:${y}`);
-
-  const isValidSquare = (x: number, y: number) => x > 0 && y > 0 && x < 9 && y < 9;
 
   const { x: currentX, y: currentY } = piece;
 
