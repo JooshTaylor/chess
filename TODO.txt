@@ -1,14 +1,2 @@
-- Check
 - Check mate
-- Preventing pieces from entering "check"
-
-If I'm about to move a piece into "Check", prevent it:
-- Select a move
-- Put the board in that state in memory
-- For every piece of the other colour, check if one of their valid moves targets the square that the king is on (vulnerabilities)
-
-If I'm currently in check and try to make a move that won't get me out of check, prevent it
-- Game must know that my colour is in check (in reducer state)
-- Each move validator should check if the board state will still leave my piece vulnerable
-
 If I'm in checkmate, game over

@@ -33,8 +33,15 @@ export function Square(props: SquareProps): JSX.Element {
     return className;
   }
 
+  function onSelect(): void {
+    if (props.disabled)
+      return;
+
+    props.onSelect();
+  }
+
   return (
-    <div className={getClassName()} onClick={props.onSelect}>
+    <div className={getClassName()} onClick={onSelect}>
       {props.position.x === 1 && (
         <div className='label numeric-label'>
           {convertNumberToChar(props.position.y)}

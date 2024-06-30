@@ -147,7 +147,7 @@ export function ChessBoard(): JSX.Element {
                     isSelected={state.selectedPiece !== '' && getPositionId(position) === getPositionId(state.pieces[state.selectedPiece])}
                     position={position}
                     piece={getPieceAtPosition(state, position)}
-                    disabled={!!promotionPiece}
+                    disabled={!!promotionPiece || state.status !== 'running'}
                   />
                 );
               })}

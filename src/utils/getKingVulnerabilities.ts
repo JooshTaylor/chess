@@ -1,12 +1,13 @@
 import { PieceColour } from "../interfaces/PieceColour";
 import { GameState } from "../reducers/GameReducer";
 import { getPositionId } from "./BoardHelper";
+import { getKing } from "./getKing";
 import { getValidPositions } from "./getValidPositions";
 
 export function getKingVulnerabilities(state: GameState, colour: PieceColour): Set<string> {
   const vulnerabilities = new Set<string>([]);
 
-  const king = state.pieces[colour === 'black' ? 'black-king' : 'white-king'];
+  const king = getKing(state, colour);
   const kingPositionId = getPositionId(king);
 
   for (const piece of Object.values(state.pieces)) {

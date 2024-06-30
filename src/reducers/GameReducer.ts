@@ -3,13 +3,18 @@ import { PieceColour } from "../interfaces/PieceColour";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
 import { getPieceAtPosition } from "../utils/BoardHelper";
+import { getKing } from "../utils/getKing";
 import { getMovePieceState } from "../utils/getMovePieceState";
+import { getValidKingPositions } from "../utils/movements/getValidKingPositions";
+
+type GameStatus = 'running' | 'ended';
 
 export interface GameState {
   turnColour: PieceColour;
   selectedPiece: PieceId | '';
   pieces: Record<PieceId, Piece>;
   positions: Record<number, Record<number, PieceId | ''>>;
+  status: GameStatus;
 }
 
 interface MoveActionPayload {
@@ -56,20 +61,23 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
 
     case 'move-piece': {
       const { currentPosition, targetPosition } = action.payload;
-      const newState = getMovePieceState(state, getPieceAtPosition(state, currentPosition), currentPosition, targetPosition);
+      let newState: GameState = getMovePieceState(state, getPieceAtPosition(state, currentPosition), currentPosition, targetPosition);
 
-      return {
+      newState = {
         ...newState,
         selectedPiece: '',
         turnColour: getNextTurnColour(newState)
-      }
+      };
+
+      newState.status = updateGameStatus(newState);
+      return newState;
     }
 
     case 'take-piece': {
       const { currentPosition, targetPosition } = action.payload;
       const targetPiece = getPieceAtPosition(state, targetPosition);
 
-      const newState: GameState = {
+      let newState: GameState = {
         ...state,
         pieces: {
           ...state.pieces,
@@ -80,12 +88,15 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         }
       };
 
-      return {
+      newState = {
         ...newState,
         ...getMovePieceState(newState, getPieceAtPosition(state, currentPosition), currentPosition, targetPosition),
         selectedPiece: '',
-        turnColour: getNextTurnColour(newState)
+        turnColour: getNextTurnColour(newState),
       };
+
+      newState.status = updateGameStatus(newState);
+      return newState;
     }
 
     case 'castle': {
@@ -99,7 +110,7 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
       const king = getPieceAtPosition(state, currentPosition);
       const rook = getPieceAtPosition(state, rookCurrentPosition);
 
-      return {
+      const newState: GameState = {
         ...state,
         positions: {
           ...state.positions,
@@ -126,13 +137,16 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         },
         selectedPiece: '',
         turnColour: getNextTurnColour(state)
-      }
+      };
+
+      newState.status = updateGameStatus(newState);
+      return newState;
     }
 
     case 'promote-piece': {
       const { pieceId, type } = action.payload;
 
-      return {
+      const newState: GameState = {
         ...state,
         pieces: {
           ...state.pieces,
@@ -142,6 +156,9 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
           }
         }
       };
+
+      newState.status = updateGameStatus(newState);
+      return newState;
     }
 
     default:
@@ -163,4 +180,18 @@ function getCastlingRookPositionDetails(kingCurrentPosition: Position, kingTarge
     currentPosition: { x: kingCurrentPosition.x + 4, y: kingCurrentPosition.y },
     targetPosition: { x: kingTargetPosition.x - 1, y: kingCurrentPosition.y }
   };
+}
+
+function updateGameStatus(state: GameState): GameStatus {
+  if (state.status !== 'running')
+    return state.status;
+
+  const nextPlayerKing = getKing(state, state.turnColour);
+
+  const validPositions = getValidKingPositions(nextPlayerKing, state);
+
+  if (!validPositions.size)
+    return 'ended';
+
+  return 'running';
 }
