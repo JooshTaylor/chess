@@ -2,6 +2,7 @@ import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
 import { getPieceAtPosition, canTake } from "../BoardHelper";
 import { getValidPositionSet } from "../getValidPositions";
+import { willMoveLeadToCheck } from "../willMoveLeadToCheck";
 
 export function getValidBishopPositions(piece: Piece, state: GameState): Set<string> {
   const { validPositions, addValidPosition } = getValidPositionSet();
@@ -15,13 +16,14 @@ export function getValidBishopPositions(piece: Piece, state: GameState): Set<str
   while (targetX > 0 && targetY < 9) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
     if (pieceAtPosition) {
-      if (canTake(piece, pieceAtPosition))
+      if (canTake(piece, pieceAtPosition) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
         addValidPosition(targetX, targetY);
 
       break;
     }
 
-    addValidPosition(targetX, targetY);
+    if (!willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
+      addValidPosition(targetX, targetY);
 
     targetX--;
     targetY++;
@@ -34,13 +36,14 @@ export function getValidBishopPositions(piece: Piece, state: GameState): Set<str
   while (targetX < 9 && targetY < 9) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
     if (pieceAtPosition) {
-      if (canTake(piece, pieceAtPosition))
+      if (canTake(piece, pieceAtPosition) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
         addValidPosition(targetX, targetY);
 
       break;
     }
 
-    addValidPosition(targetX, targetY);
+    if (!willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
+      addValidPosition(targetX, targetY);
 
     targetX++;
     targetY++;
@@ -53,13 +56,14 @@ export function getValidBishopPositions(piece: Piece, state: GameState): Set<str
   while (targetX < 9 && targetY > 0) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
     if (pieceAtPosition) {
-      if (canTake(piece, pieceAtPosition))
+      if (canTake(piece, pieceAtPosition) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
         addValidPosition(targetX, targetY);
 
       break;
     }
 
-    addValidPosition(targetX, targetY);
+    if (!willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
+      addValidPosition(targetX, targetY);
 
     targetX++;
     targetY--;
@@ -72,13 +76,14 @@ export function getValidBishopPositions(piece: Piece, state: GameState): Set<str
   while (targetX > 0 && targetY > 0) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
     if (pieceAtPosition) {
-      if (canTake(piece, pieceAtPosition))
+      if (canTake(piece, pieceAtPosition) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
         addValidPosition(targetX, targetY);
 
       break;
     }
 
-    addValidPosition(targetX, targetY);
+    if (!willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
+      addValidPosition(targetX, targetY);
 
     targetX--;
     targetY--;

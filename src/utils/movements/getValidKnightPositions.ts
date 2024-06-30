@@ -2,6 +2,7 @@ import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
 import { getPieceAtPosition, canTake, isValidSquare } from "../BoardHelper";
 import { getValidPositionSet } from "../getValidPositions";
+import { willMoveLeadToCheck } from "../willMoveLeadToCheck";
 
 export function getValidKnightPositions(piece: Piece, state: GameState): Set<string> {
   const { validPositions, addValidPosition } = getValidPositionSet();
@@ -14,7 +15,7 @@ export function getValidKnightPositions(piece: Piece, state: GameState): Set<str
   let targetY = currentY + 2;
 
   let pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
+  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
     addValidPosition(targetX, targetY);
 
   // Top right
@@ -23,7 +24,7 @@ export function getValidKnightPositions(piece: Piece, state: GameState): Set<str
   targetY = currentY + 2;
 
   pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
+  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
     addValidPosition(targetX, targetY);
 
   // Right top
@@ -32,7 +33,7 @@ export function getValidKnightPositions(piece: Piece, state: GameState): Set<str
   targetY = currentY + 1;
 
   pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
+  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
     addValidPosition(targetX, targetY);
 
   // Right bottom
@@ -41,7 +42,7 @@ export function getValidKnightPositions(piece: Piece, state: GameState): Set<str
   targetY = currentY - 1;
 
   pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
+  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
     addValidPosition(targetX, targetY);
 
   // Bottom right
@@ -50,7 +51,7 @@ export function getValidKnightPositions(piece: Piece, state: GameState): Set<str
   targetY = currentY - 2;
 
   pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
+  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
     addValidPosition(targetX, targetY);
 
   // Bottom left
@@ -59,7 +60,7 @@ export function getValidKnightPositions(piece: Piece, state: GameState): Set<str
   targetY = currentY - 2;
 
   pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
+  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
     addValidPosition(targetX, targetY);
 
   // Left bottom
@@ -68,7 +69,7 @@ export function getValidKnightPositions(piece: Piece, state: GameState): Set<str
   targetY = currentY - 1;
 
   pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
+  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
     addValidPosition(targetX, targetY);
 
   // Left top
@@ -77,7 +78,7 @@ export function getValidKnightPositions(piece: Piece, state: GameState): Set<str
   targetY = currentY + 1;
 
   pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
+  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)) && !willMoveLeadToCheck(state, { x: targetX, y: targetY }, state.turnColour))
     addValidPosition(targetX, targetY);
 
   return validPositions;

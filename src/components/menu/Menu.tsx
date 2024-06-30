@@ -1,9 +1,8 @@
-import React from "react";
 import { GameState } from "../../reducers/GameReducer";
-import { getKingVulnerabilities } from "../../utils/getKingVulnerabilities";
+import { PieceColour } from "../../interfaces/PieceColour";
+import { isInCheck } from "../../utils/willMoveLeadToCheck";
 
 import './menu.css';
-import { PieceColour } from "../../interfaces/PieceColour";
 
 function getColourString(colour: PieceColour): string {
   if (colour === 'black')
@@ -17,10 +16,6 @@ interface MenuProps {
 }
 
 export function Menu(props: MenuProps): JSX.Element {
-  const isInCheck = React.useMemo(() => {
-    return getKingVulnerabilities(props.state, props.state.turnColour).size > 0;
-  }, [props.state]);
-
   return (
     <div className='menu'>
       <div className='menu-contents'>
@@ -32,7 +27,9 @@ export function Menu(props: MenuProps): JSX.Element {
           </div>
         )}
 
-        {(isInCheck && props.state.status === 'running') && <div>{getColourString(props.state.turnColour)} is in check!</div>}
+        {(isInCheck(props.state, props.state.turnColour) && props.state.status === 'running') && (
+          <div>{getColourString(props.state.turnColour)} is in check!</div>
+        )}
       </div>
     </div>
   );

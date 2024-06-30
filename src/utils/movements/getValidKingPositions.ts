@@ -2,6 +2,7 @@ import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
 import { canTake, getPieceAtPosition, isValidSquare } from "../BoardHelper";
 import { getValidPositionSet } from "../getValidPositions";
+import { willMoveLeadToCheck } from "../willMoveLeadToCheck";
 
 export function getValidKingPositions(piece: Piece, state: GameState): Set<string> {
   const { validPositions, addValidPosition } = getValidPositionSet();
@@ -9,7 +10,7 @@ export function getValidKingPositions(piece: Piece, state: GameState): Set<strin
   function addIfValid(x: number, y: number): void {
     const pieceAtPosition = getPieceAtPosition(state, { x, y });
   
-    if (isValidSquare(x, y) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
+    if (isValidSquare(x, y) && (!pieceAtPosition || canTake(piece, pieceAtPosition)) && !willMoveLeadToCheck(state, { x, y }, state.turnColour))
       addValidPosition(x, y);
   }
 

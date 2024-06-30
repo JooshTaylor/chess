@@ -2,6 +2,7 @@ import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
 import { getPieceAtPosition, canTake } from "../BoardHelper";
 import { getValidPositionSet } from "../getValidPositions";
+import { willMoveLeadToCheck } from "../willMoveLeadToCheck";
 
 export function getValidRookPositions(piece: Piece, state: GameState): Set<string> {
   const { validPositions, addValidPosition } = getValidPositionSet();
@@ -14,13 +15,15 @@ export function getValidRookPositions(piece: Piece, state: GameState): Set<strin
   while (targetY < 9) {
     const pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
     if (pieceAtPosition) {
-      if (canTake(piece, pieceAtPosition))
+      if (canTake(piece, pieceAtPosition) && !willMoveLeadToCheck(state, { x: currentX, y: targetY }, state.turnColour))
         addValidPosition(currentX, targetY);
 
       break;
     }
 
-    addValidPosition(currentX, targetY);
+    if (!willMoveLeadToCheck(state, { x: currentX, y: targetY }, state.turnColour))
+      addValidPosition(currentX, targetY);
+
     targetY++;
   }
 
@@ -30,13 +33,15 @@ export function getValidRookPositions(piece: Piece, state: GameState): Set<strin
   while (targetX < 9) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: currentY });
     if (pieceAtPosition) {
-      if (canTake(piece, pieceAtPosition))
+      if (canTake(piece, pieceAtPosition) && !willMoveLeadToCheck(state, { x: targetX, y: currentY }, state.turnColour))
         addValidPosition(targetX, currentY);
 
       break;
     }
 
-    addValidPosition(targetX, currentY);
+    if (!willMoveLeadToCheck(state, { x: targetX, y: currentY }, state.turnColour))
+      addValidPosition(targetX, currentY);
+
     targetX++;
   }
 
@@ -46,13 +51,15 @@ export function getValidRookPositions(piece: Piece, state: GameState): Set<strin
   while (targetY > 0) {
     const pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
     if (pieceAtPosition) {
-      if (canTake(piece, pieceAtPosition))
+      if (canTake(piece, pieceAtPosition) && !willMoveLeadToCheck(state, { x: currentX, y: targetY }, state.turnColour))
         addValidPosition(currentX, targetY);
 
       break;
     }
 
-    addValidPosition(currentX, targetY);
+    if (!willMoveLeadToCheck(state, { x: currentX, y: targetY }, state.turnColour))
+      addValidPosition(currentX, targetY);
+
     targetY--;
   }
 
@@ -62,13 +69,14 @@ export function getValidRookPositions(piece: Piece, state: GameState): Set<strin
   while (targetX > 0) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: currentY });
     if (pieceAtPosition) {
-      if (canTake(piece, pieceAtPosition))
+      if (canTake(piece, pieceAtPosition) && !willMoveLeadToCheck(state, { x: targetX, y: currentY }, state.turnColour))
         addValidPosition(targetX, currentY);
 
       break;
     }
 
-    addValidPosition(targetX, currentY);
+    if (!willMoveLeadToCheck(state, { x: targetX, y: currentY }, state.turnColour))
+      addValidPosition(targetX, currentY);
     targetX--;
   }
 

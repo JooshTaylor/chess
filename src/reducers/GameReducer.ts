@@ -4,6 +4,7 @@ import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
 import { getPieceAtPosition } from "../utils/BoardHelper";
 import { getKing } from "../utils/getKing";
+import { getKingVulnerabilities } from "../utils/getKingVulnerabilities";
 import { getMovePieceState } from "../utils/getMovePieceState";
 import { getValidKingPositions } from "../utils/movements/getValidKingPositions";
 
@@ -188,9 +189,12 @@ function updateGameStatus(state: GameState): GameStatus {
 
   const nextPlayerKing = getKing(state, state.turnColour);
 
-  const validPositions = getValidKingPositions(nextPlayerKing, state);
+  const kingVulnerabilities = getKingVulnerabilities(state, state.turnColour);
+  const kingValidPositions = getValidKingPositions(nextPlayerKing, state);
 
-  if (!validPositions.size)
+  console.log('update status', kingVulnerabilities, kingValidPositions);
+
+  if (kingVulnerabilities.size && !kingValidPositions.size)
     return 'ended';
 
   return 'running';

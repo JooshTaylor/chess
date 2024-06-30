@@ -4,6 +4,7 @@
   top: calc(calc(100vh - (var(--square-size) * 8)) / 2);
   bottom: calc(calc(100vh - (var(--square-size) * 8)) / 2);
   width: calc(calc(100vw - (var(--square-size) * 8) - var(--spacer-3)) / 2);
+  max-width: 300px;
 
   border-radius: var(--spacer-1);
   border: 2px solid var(--dark-square-colour);

@@ -1,8 +1,10 @@
 import { INITIAL_GAME_STATE } from "../../constants/InitialGameState";
 import { Piece } from "../../interfaces/Piece";
+import { Position } from "../../interfaces/Position";
 import { GameState } from "../../reducers/GameReducer";
-import { canTake, getPieceAtPosition, isValidSquare } from "../BoardHelper";
+import { canTake, getPieceAtPosition, getPositionId, isValidSquare } from "../BoardHelper";
 import { getValidPositionSet } from "../getValidPositions";
+import { willMoveLeadToCheck } from "../willMoveLeadToCheck";
 
 export function getValidPawnPositions(piece: Piece, state: GameState): Set<string> {
   const { validPositions, addValidPosition } = getValidPositionSet();
@@ -18,14 +20,15 @@ export function getValidPawnPositions(piece: Piece, state: GameState): Set<strin
 
     // Forward once
     if (isValidSquare(currentX, targetY) && !pieceAtPosition) {
-      addValidPosition(currentX, targetY);
+      if (!willMoveLeadToCheck(state, { x: currentX, y: targetY }, state.turnColour))
+        addValidPosition(currentX, targetY);
 
       // Forward twice
       if (isAtStartingPosition) {
         targetY++;
         pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
 
-        if (isValidSquare(currentX, targetY) && !pieceAtPosition)
+        if (isValidSquare(currentX, targetY) && !pieceAtPosition && !willMoveLeadToCheck(state, { x: currentX, y: targetY }, state.turnColour))
           addValidPosition(currentX, targetY);
       }
     }
@@ -34,11 +37,11 @@ export function getValidPawnPositions(piece: Piece, state: GameState): Set<strin
 
     // Top left
     let targetX = currentX - 1;
-    addDiagonal(validPositions, piece, state, targetX, targetY);
+    addDiagonal(validPositions, piece, state, { x: targetX, y: targetY });
 
     // Top right
     targetX += 2;
-    addDiagonal(validPositions, piece, state, targetX, targetY);
+    addDiagonal(validPositions, piece, state, { x: targetX, y: targetY });
 
     return validPositions;
   }
@@ -49,14 +52,15 @@ export function getValidPawnPositions(piece: Piece, state: GameState): Set<strin
 
   // Forward once
   if (isValidSquare(currentX, targetY) && !pieceAtPosition) {
-    addValidPosition(currentX, targetY);
+    if (!willMoveLeadToCheck(state, { x: currentX, y: targetY }, state.turnColour))
+      addValidPosition(currentX, targetY);
 
     // Forward twice
     if (isAtStartingPosition) {
       targetY--;
       pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
 
-      if (isValidSquare(currentX, targetY) && !pieceAtPosition)
+      if (isValidSquare(currentX, targetY) && !pieceAtPosition&& !willMoveLeadToCheck(state, { x: currentX, y: targetY }, state.turnColour))
         addValidPosition(currentX, targetY);
     }
   }
@@ -65,18 +69,18 @@ export function getValidPawnPositions(piece: Piece, state: GameState): Set<strin
 
   // Top left
   let targetX = currentX - 1;
-  addDiagonal(validPositions, piece, state, targetX, targetY);
+  addDiagonal(validPositions, piece, state, { x: targetX, y: targetY });
 
   // Top right
   targetX += 2;
-  addDiagonal(validPositions, piece, state, targetX, targetY);
+  addDiagonal(validPositions, piece, state, { x: targetX, y: targetY });
 
   return validPositions;
 }
 
-function addDiagonal(set: Set<string>, piece: Piece, state: GameState, targetX: number, targetY: number): void {
-  const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
+function addDiagonal(set: Set<string>, piece: Piece, state: GameState, targetPosition: Position): void {
+  const pieceAtPosition = getPieceAtPosition(state, targetPosition);
 
-  if (isValidSquare(targetX, targetY) && pieceAtPosition && canTake(piece, pieceAtPosition))
-    set.add(`${targetX}:${targetY}`);
+  if (isValidSquare(targetPosition.x, targetPosition.y) && pieceAtPosition && canTake(piece, pieceAtPosition) && !willMoveLeadToCheck(state, targetPosition, state.turnColour))
+    set.add(getPositionId(targetPosition));
 }
