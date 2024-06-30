@@ -39,6 +39,29 @@ export function kingValidMovements(piece: Piece, state: GameState): Set<string> 
   // Top left
   addIfValid(currentX - 1, currentY + 1);
 
+  if (piece.totalMoves > 0)
+    return validPositions; 
+
+  // King side castle
+  if (!getPieceAtPosition(state, { x: currentX - 1, y: currentY }) && !getPieceAtPosition(state, { x: currentX - 2, y: currentY })) {
+    const pieceInRookPosition = getPieceAtPosition(state, { x: currentX - 3, y: currentY });
+
+    if (pieceInRookPosition && pieceInRookPosition.type === 'rook' && pieceInRookPosition.totalMoves === 0)
+      addValidPosition(currentX - 2, currentY);
+  }
+
+  // Queen side castle
+  if (
+    !getPieceAtPosition(state, { x: currentX + 1, y: currentY }) &&
+    !getPieceAtPosition(state, { x: currentX + 2, y: currentY }) &&
+    !getPieceAtPosition(state, { x: currentX + 3, y: currentY })
+  ) {
+    const pieceInRookPosition = getPieceAtPosition(state, { x: currentX + 4, y: currentY });
+
+    if (pieceInRookPosition && pieceInRookPosition.type === 'rook' && pieceInRookPosition.totalMoves === 0)
+      addValidPosition(currentX + 2, currentY);
+  }
+
   return validPositions;
 }
 

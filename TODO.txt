@@ -1,5 +1,4 @@
 - Castling
-- Pawn promotion
 - Check
 - Check mate
 - Preventing pieces from entering "check"

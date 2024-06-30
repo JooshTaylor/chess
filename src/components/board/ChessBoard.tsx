@@ -11,6 +11,7 @@ import { canPromotePiece } from '../../utils/canPromotePiece';
 import { PieceId } from '../../interfaces/Piece';
 import { PromotionModal } from '../promotion-modal/PromotionModal';
 import { PieceType } from '../../interfaces/PieceType';
+import { isCastling } from '../../utils/isCastling';
 
 export function ChessBoard(): JSX.Element {
   const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);
@@ -35,13 +36,26 @@ export function ChessBoard(): JSX.Element {
       return;
     }
 
+    const currentPosition: Position = { x: selectedPiece.x, y: selectedPiece.y };
+
+    if (isCastling(selectedPiece, position)) {
+      dispatch({
+        type: 'castle',
+        payload: {
+          currentPosition,
+          targetPosition: position
+        }
+      });
+      return;
+    }
+
     const pieceAtPosition = getPieceAtPosition(state, position);
 
     if (pieceAtPosition) {
       dispatch({
         type: 'take-piece',
         payload: {
-          currentPosition: { x: selectedPiece.x, y: selectedPiece.y },
+          currentPosition,
           targetPosition: position
         }
       });
@@ -49,7 +63,7 @@ export function ChessBoard(): JSX.Element {
       dispatch({
         type: 'move-piece',
         payload: {
-          currentPosition: { x: selectedPiece.x, y: selectedPiece.y },
+          currentPosition,
           targetPosition: position
         }
       });

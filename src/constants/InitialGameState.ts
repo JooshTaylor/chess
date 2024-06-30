@@ -96,7 +96,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 1,
-      y: 8
+      y: 8,
+      totalMoves: 0
     },
     'black-knight-1': {
       id: 'black-knight-1',
@@ -104,7 +105,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 2,
-      y: 8
+      y: 8,
+      totalMoves: 0
     },
     'black-bishop-1': {
       id: 'black-bishop-1',
@@ -112,7 +114,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 3,
-      y: 8
+      y: 8,
+      totalMoves: 0
     },
     'black-king': {
       id: 'black-king',
@@ -120,7 +123,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 4,
-      y: 8
+      y: 8,
+      totalMoves: 0
     },
     'black-queen': {
       id: 'black-queen',
@@ -128,7 +132,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 5,
-      y: 8
+      y: 8,
+      totalMoves: 0
     },
     'black-bishop-2': {
       id: 'black-bishop-2',
@@ -136,7 +141,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 6,
-      y: 8
+      y: 8,
+      totalMoves: 0
     },
     'black-knight-2': {
       id: 'black-knight-2',
@@ -144,7 +150,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 7,
-      y: 8
+      y: 8,
+      totalMoves: 0
     },
     'black-rook-2': {
       id: 'black-rook-2',
@@ -152,7 +159,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 8,
-      y: 8
+      y: 8,
+      totalMoves: 0
     },
 
     // BLACK: Second row
@@ -163,7 +171,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 1,
-      y: 7
+      y: 7,
+      totalMoves: 0
     },
 
     'black-pawn-2': {
@@ -172,7 +181,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 2,
-      y: 7
+      y: 7,
+      totalMoves: 0
     },
 
     'black-pawn-3': {
@@ -181,7 +191,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 3,
-      y: 7
+      y: 7,
+      totalMoves: 0
     },
 
     'black-pawn-4': {
@@ -190,7 +201,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 4,
-      y: 7
+      y: 7,
+      totalMoves: 0
     },
 
     'black-pawn-5': {
@@ -199,7 +211,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 5,
-      y: 7
+      y: 7,
+      totalMoves: 0
     },
 
     'black-pawn-6': {
@@ -208,7 +221,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 6,
-      y: 7
+      y: 7,
+      totalMoves: 0
     },
 
     'black-pawn-7': {
@@ -217,7 +231,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 7,
-      y: 7
+      y: 7,
+      totalMoves: 0
     },
 
     'black-pawn-8': {
@@ -226,7 +241,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'black',
       status: 'alive',
       x: 8,
-      y: 7
+      y: 7,
+      totalMoves: 0
     },
 
     // WHITE: Seventh row
@@ -237,7 +253,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 1,
-      y: 2
+      y: 2,
+      totalMoves: 0
     },
 
     'white-pawn-2': {
@@ -246,7 +263,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 2,
-      y: 2
+      y: 2,
+      totalMoves: 0
     },
 
     'white-pawn-3': {
@@ -255,7 +273,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 3,
-      y: 2
+      y: 2,
+      totalMoves: 0
     },
 
     'white-pawn-4': {
@@ -264,7 +283,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 4,
-      y: 2
+      y: 2,
+      totalMoves: 0
     },
 
     'white-pawn-5': {
@@ -273,7 +293,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 5,
-      y: 2
+      y: 2,
+      totalMoves: 0
     },
 
     'white-pawn-6': {
@@ -282,7 +303,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 6,
-      y: 2
+      y: 2,
+      totalMoves: 0
     },
 
     'white-pawn-7': {
@@ -291,7 +313,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 7,
-      y: 2
+      y: 2,
+      totalMoves: 0
     },
 
     'white-pawn-8': {
@@ -300,7 +323,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 8,
-      y: 2
+      y: 2,
+      totalMoves: 0
     },
 
     // WHITE: Eighth row
@@ -310,7 +334,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 1,
-      y: 1
+      y: 1,
+      totalMoves: 0
     },
     'white-knight-1': {
       id: 'white-knight-1',
@@ -318,7 +343,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 2,
-      y: 1
+      y: 1,
+      totalMoves: 0
     },
     'white-bishop-1': {
       id: 'white-bishop-1',
@@ -326,7 +352,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 3,
-      y: 1
+      y: 1,
+      totalMoves: 0
     },
     'white-king': {
       id: 'white-king',
@@ -334,7 +361,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 4,
-      y: 1
+      y: 1,
+      totalMoves: 0
     },
     'white-queen': {
       id: 'white-queen',
@@ -342,7 +370,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 5,
-      y: 1
+      y: 1,
+      totalMoves: 0
     },
     'white-bishop-2': {
       id: 'white-bishop-2',
@@ -350,7 +379,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 6,
-      y: 1
+      y: 1,
+      totalMoves: 0
     },
     'white-knight-2': {
       id: 'white-knight-2',
@@ -358,7 +388,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 7,
-      y: 1
+      y: 1,
+      totalMoves: 0
     },
     'white-rook-2': {
       id: 'white-rook-2',
@@ -366,7 +397,8 @@ export const INITIAL_GAME_STATE: GameState = {
       colour: 'white',
       status: 'alive',
       x: 8,
-      y: 1
+      y: 1,
+      totalMoves: 0
     }
   }
 };

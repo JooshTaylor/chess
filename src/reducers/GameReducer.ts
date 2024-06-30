@@ -17,7 +17,7 @@ interface MoveActionPayload {
 }
 
 interface MoveAction {
-  type: 'select-piece' | 'deselect-piece' | 'take-piece' | 'move-piece';
+  type: 'select-piece' | 'deselect-piece' | 'take-piece' | 'move-piece' | 'castle';
   payload: MoveActionPayload;
 }
 
@@ -59,7 +59,8 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         ...currentState.pieces,
         [currentPiece.id]: {
           ...currentPiece,
-          ...targetPosition
+          ...targetPosition,
+          totalMoves: currentPiece.totalMoves + 1
         }
       }
     };
@@ -124,6 +125,47 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    case 'castle': {
+      const { currentPosition, targetPosition } = action.payload;
+
+      const {
+        currentPosition: rookCurrentPosition,
+        targetPosition: rookTargetPosition
+      } = getCastlingRookPositionDetails(currentPosition, targetPosition);
+
+      const king = getPieceAtPosition(state, currentPosition);
+      const rook = getPieceAtPosition(state, rookCurrentPosition);
+
+      return {
+        ...state,
+        positions: {
+          ...state.positions,
+          [currentPosition.y]: {
+            ...state.positions[currentPosition.y],
+            [targetPosition.x]: king.id,
+            [rookTargetPosition.x]: rook.id,
+            [rookCurrentPosition.x]: '',
+            [currentPosition.x]: ''
+          }
+        },
+        pieces: {
+          ...state.pieces,
+          [king.id]: {
+            ...king,
+            ...targetPosition,
+            totalMoves: 1
+          },
+          [rook.id]: {
+            ...rook,
+            ...rookTargetPosition,
+            totalMoves: 1
+          }
+        },
+        selectedPiece: '',
+        turnColour: getNextTurnColour(state)
+      }
+    }
+
     case 'promote-piece': {
       const { pieceId, type } = action.payload;
 
@@ -142,4 +184,20 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
     default:
       return state;
   }
+}
+
+function getCastlingRookPositionDetails(kingCurrentPosition: Position, kingTargetPosition: Position): MoveActionPayload {
+  // King side castling
+  if (kingCurrentPosition.x > kingTargetPosition.x) {
+    return {
+      currentPosition: { x: kingCurrentPosition.x - 3, y: kingCurrentPosition.y },
+      targetPosition: { x: kingTargetPosition.x + 1, y: kingCurrentPosition.y }
+    };
+  }
+
+  // Queen side castling
+  return {
+    currentPosition: { x: kingCurrentPosition.x + 4, y: kingCurrentPosition.y },
+    targetPosition: { x: kingTargetPosition.x - 1, y: kingCurrentPosition.y }
+  };
 }
