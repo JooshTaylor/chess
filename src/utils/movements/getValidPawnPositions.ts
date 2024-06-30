@@ -2,9 +2,9 @@ import { INITIAL_GAME_STATE } from "../../constants/InitialGameState";
 import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
 import { canTake, getPieceAtPosition, isValidSquare } from "../BoardHelper";
-import { getValidPositionSet } from "../MovementHelper";
+import { getValidPositionSet } from "../getValidPositions";
 
-export function pawnValidMovements(piece: Piece, state: GameState): Set<string> {
+export function getValidPawnPositions(piece: Piece, state: GameState): Set<string> {
   const { validPositions, addValidPosition } = getValidPositionSet();
 
   const { x: initialX, y: initialY } = INITIAL_GAME_STATE.pieces[piece.id];

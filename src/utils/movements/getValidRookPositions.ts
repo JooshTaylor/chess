@@ -1,9 +1,9 @@
 import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
 import { getPieceAtPosition, canTake } from "../BoardHelper";
-import { getValidPositionSet } from "../MovementHelper";
+import { getValidPositionSet } from "../getValidPositions";
 
-export function rookValidMovements(piece: Piece, state: GameState): Set<string> {
+export function getValidRookPositions(piece: Piece, state: GameState): Set<string> {
   const { validPositions, addValidPosition } = getValidPositionSet();
 
   const { x: currentX, y: currentY } = piece;
@@ -14,8 +14,10 @@ export function rookValidMovements(piece: Piece, state: GameState): Set<string> 
   while (targetY < 9) {
     const pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
     if (pieceAtPosition) {
-      if (!canTake(piece, pieceAtPosition))
-        break;
+      if (canTake(piece, pieceAtPosition))
+        addValidPosition(currentX, targetY);
+
+      break;
     }
 
     addValidPosition(currentX, targetY);
@@ -28,8 +30,10 @@ export function rookValidMovements(piece: Piece, state: GameState): Set<string> 
   while (targetX < 9) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: currentY });
     if (pieceAtPosition) {
-      if (!canTake(piece, pieceAtPosition))
-        break;
+      if (canTake(piece, pieceAtPosition))
+        addValidPosition(targetX, currentY);
+
+      break;
     }
 
     addValidPosition(targetX, currentY);
@@ -42,8 +46,10 @@ export function rookValidMovements(piece: Piece, state: GameState): Set<string> 
   while (targetY > 0) {
     const pieceAtPosition = getPieceAtPosition(state, { x: currentX, y: targetY });
     if (pieceAtPosition) {
-      if (!canTake(piece, pieceAtPosition))
-        break;
+      if (canTake(piece, pieceAtPosition))
+        addValidPosition(currentX, targetY);
+
+      break;
     }
 
     addValidPosition(currentX, targetY);
@@ -56,8 +62,10 @@ export function rookValidMovements(piece: Piece, state: GameState): Set<string> 
   while (targetX > 0) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: currentY });
     if (pieceAtPosition) {
-      if (!canTake(piece, pieceAtPosition))
-        break;
+      if (canTake(piece, pieceAtPosition))
+        addValidPosition(targetX, currentY);
+
+      break;
     }
 
     addValidPosition(targetX, currentY);

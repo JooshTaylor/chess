@@ -18,7 +18,12 @@ export function getPieceAtPosition(state: GameState, position: Position): Piece 
   if (!pieceId)
     return null;
 
-  return state.pieces[pieceId];
+  const piece = state.pieces[pieceId];
+
+  if (piece.status === 'dead')
+    return null;
+
+  return piece;
 }
 
 export function canTake(currentPiece: Piece, targetPiece: Piece): boolean {

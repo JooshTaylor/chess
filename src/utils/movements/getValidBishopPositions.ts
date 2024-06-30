@@ -1,9 +1,9 @@
 import { Piece } from "../../interfaces/Piece";
 import { GameState } from "../../reducers/GameReducer";
 import { getPieceAtPosition, canTake } from "../BoardHelper";
-import { getValidPositionSet } from "../MovementHelper";
+import { getValidPositionSet } from "../getValidPositions";
 
-export function bishopValidMovements(piece: Piece, state: GameState): Set<string> {
+export function getValidBishopPositions(piece: Piece, state: GameState): Set<string> {
   const { validPositions, addValidPosition } = getValidPositionSet();
 
   const { x: currentX, y: currentY } = piece;
@@ -15,8 +15,10 @@ export function bishopValidMovements(piece: Piece, state: GameState): Set<string
   while (targetX > 0 && targetY < 9) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
     if (pieceAtPosition) {
-      if (!canTake(piece, pieceAtPosition))
-        break;
+      if (canTake(piece, pieceAtPosition))
+        addValidPosition(targetX, targetY);
+
+      break;
     }
 
     addValidPosition(targetX, targetY);
@@ -32,8 +34,10 @@ export function bishopValidMovements(piece: Piece, state: GameState): Set<string
   while (targetX < 9 && targetY < 9) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
     if (pieceAtPosition) {
-      if (!canTake(piece, pieceAtPosition))
-        break;
+      if (canTake(piece, pieceAtPosition))
+        addValidPosition(targetX, targetY);
+
+      break;
     }
 
     addValidPosition(targetX, targetY);
@@ -49,8 +53,10 @@ export function bishopValidMovements(piece: Piece, state: GameState): Set<string
   while (targetX < 9 && targetY > 0) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
     if (pieceAtPosition) {
-      if (!canTake(piece, pieceAtPosition))
-        break;
+      if (canTake(piece, pieceAtPosition))
+        addValidPosition(targetX, targetY);
+
+      break;
     }
 
     addValidPosition(targetX, targetY);
@@ -66,8 +72,10 @@ export function bishopValidMovements(piece: Piece, state: GameState): Set<string
   while (targetX > 0 && targetY > 0) {
     const pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
     if (pieceAtPosition) {
-      if (!canTake(piece, pieceAtPosition))
-        break;
+      if (canTake(piece, pieceAtPosition))
+        addValidPosition(targetX, targetY);
+
+      break;
     }
 
     addValidPosition(targetX, targetY);

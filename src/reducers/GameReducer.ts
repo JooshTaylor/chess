@@ -3,6 +3,7 @@ import { PieceColour } from "../interfaces/PieceColour";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
 import { getPieceAtPosition } from "../utils/BoardHelper";
+import { getMovePieceState } from "../utils/getMovePieceState";
 
 export interface GameState {
   turnColour: PieceColour;
@@ -31,58 +32,9 @@ interface PromoteAction {
   payload: PromoteActionPayload;
 }
 
-type GameAction = MoveAction | PromoteAction;
+export type GameAction = MoveAction | PromoteAction;
 
 export function GameReducer(state: GameState, action: GameAction): GameState {
-  function takePiece(currentState: GameState, targetPiece: Piece): GameState {
-    return {
-      ...currentState,
-      pieces: {
-        ...currentState.pieces,
-        [targetPiece.id]: {
-          ...targetPiece,
-          status: 'dead'
-        }
-      }
-    };
-  }
-
-  function movePiece(
-    currentState: GameState,
-    currentPiece: Piece,
-    currentPosition: Position,
-    targetPosition: Position
-  ): GameState {
-    const newState: GameState = {
-      ...currentState,
-      pieces: {
-        ...currentState.pieces,
-        [currentPiece.id]: {
-          ...currentPiece,
-          ...targetPosition,
-          totalMoves: currentPiece.totalMoves + 1
-        }
-      }
-    };
-
-    const newPositions: GameState['positions'] = {
-      ...currentState.positions,
-      [currentPosition.y]: {
-        ...currentState.positions[currentPosition.y],
-        [currentPosition.x]: ''
-      }
-    }
-
-    newPositions[targetPosition.y] = {
-      ...newPositions[targetPosition.y],
-      [targetPosition.x]: currentPiece.id
-    };
-
-    newState.positions = newPositions;
-
-    return newState;
-  }
-
   function getNextTurnColour(state: GameState): PieceColour {
     return state.turnColour === 'black' ? 'white' : 'black';
   }
@@ -104,7 +56,7 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
 
     case 'move-piece': {
       const { currentPosition, targetPosition } = action.payload;
-      const newState = movePiece(state, getPieceAtPosition(state, currentPosition), currentPosition, targetPosition);
+      const newState = getMovePieceState(state, getPieceAtPosition(state, currentPosition), currentPosition, targetPosition);
 
       return {
         ...newState,
@@ -115,11 +67,22 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
 
     case 'take-piece': {
       const { currentPosition, targetPosition } = action.payload;
-      const newState = takePiece(state, getPieceAtPosition(state, targetPosition));
+      const targetPiece = getPieceAtPosition(state, targetPosition);
+
+      const newState: GameState = {
+        ...state,
+        pieces: {
+          ...state.pieces,
+          [targetPiece.id]: {
+            ...targetPiece,
+            status: 'dead'
+          }
+        }
+      };
 
       return {
         ...newState,
-        ...movePiece(newState, getPieceAtPosition(state, currentPosition), currentPosition, targetPosition),
+        ...getMovePieceState(newState, getPieceAtPosition(state, currentPosition), currentPosition, targetPosition),
         selectedPiece: '',
         turnColour: getNextTurnColour(newState)
       };

@@ -2,9 +2,8 @@ import React from 'react';
 import { Square } from '../square/Square';
 import './board.css';
 import { getPositionId, getPieceAtPosition } from '../../utils/BoardHelper';
-import { ValidPositionLookups } from '../../utils/MovementHelper';
 import { INITIAL_GAME_STATE } from '../../constants/InitialGameState';
-import { GameReducer } from '../../reducers/GameReducer';
+import { GameAction, GameReducer } from '../../reducers/GameReducer';
 import { BOARD } from '../../constants/Board';
 import { Position } from '../../interfaces/Position';
 import { canPromotePiece } from '../../utils/canPromotePiece';
@@ -12,6 +11,8 @@ import { PieceId } from '../../interfaces/Piece';
 import { PromotionModal } from '../promotion-modal/PromotionModal';
 import { PieceType } from '../../interfaces/PieceType';
 import { isCastling } from '../../utils/isCastling';
+import { getValidPositions } from '../../utils/getValidPositions';
+import { getKingVulnerabilities } from '../../utils/getKingVulnerabilities';
 
 export function ChessBoard(): JSX.Element {
   const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);
@@ -22,8 +23,7 @@ export function ChessBoard(): JSX.Element {
       return;
 
     const selectedPiece = state.pieces[state.selectedPiece];
-    const getValidPositions = ValidPositionLookups[selectedPiece.promotionType || selectedPiece.type];
-    const validPositions = getValidPositions(selectedPiece, state);
+    const validPositions = getValidPositions(state, selectedPiece)
 
     if (!validPositions.has(getPositionId(position))) {
       dispatch({
@@ -39,34 +39,58 @@ export function ChessBoard(): JSX.Element {
     const currentPosition: Position = { x: selectedPiece.x, y: selectedPiece.y };
 
     if (isCastling(selectedPiece, position)) {
-      dispatch({
+      const action: GameAction = {
         type: 'castle',
         payload: {
           currentPosition,
           targetPosition: position
         }
-      });
+      };
+
+      const futureState = GameReducer(state, action);
+      const kingVulnerabilities = getKingVulnerabilities(futureState, state.turnColour);
+
+      if (kingVulnerabilities.size)
+        return;
+
+      dispatch(action);
       return;
     }
 
     const pieceAtPosition = getPieceAtPosition(state, position);
 
     if (pieceAtPosition) {
-      dispatch({
+      const action: GameAction = {
         type: 'take-piece',
         payload: {
           currentPosition,
           targetPosition: position
         }
-      });
+      };
+
+      const futureState = GameReducer(state, action);
+      const kingVulnerabilities = getKingVulnerabilities(futureState, state.turnColour);
+
+      if (kingVulnerabilities.size)
+        return;
+
+      dispatch(action);
     } else {
-      dispatch({
+      const action: GameAction = {
         type: 'move-piece',
         payload: {
           currentPosition,
           targetPosition: position
         }
-      });
+      };
+
+      const futureState = GameReducer(state, action);
+      const kingVulnerabilities = getKingVulnerabilities(futureState, state.turnColour);
+
+      if (kingVulnerabilities.size)
+        return;
+
+      dispatch(action);
     }
 
     if (canPromotePiece(selectedPiece, position))
