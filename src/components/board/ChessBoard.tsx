@@ -13,6 +13,7 @@ import { PieceType } from '../../interfaces/PieceType';
 import { isCastling } from '../../utils/isCastling';
 import { getValidPositions } from '../../utils/getValidPositions';
 import { getKingVulnerabilities } from '../../utils/getKingVulnerabilities';
+import { Menu } from '../menu/Menu';
 
 export function ChessBoard(): JSX.Element {
   const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);
@@ -154,6 +155,10 @@ export function ChessBoard(): JSX.Element {
           ))}
         </div>
       </div>
+      <Menu
+        state={state}
+      />
+
       {!!promotionPiece && (
         <PromotionModal
           onPromote={promotionType => onPromote(promotionPiece, promotionType)}

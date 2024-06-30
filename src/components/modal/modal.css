@@ -3,18 +3,18 @@
   top: 20vh;
   left: 50%;
   transform: translateX(-50%);
-  width: 300px;
+  width: var(--modal-width);
   background-color: white;
-  border-radius: 15px;
+  border-radius: var(--spacer-1);
 }
 
 .modal-header {
   border-bottom: 1px solid lightgray;
   margin: 0;
-  padding: 10px 15px;
+  padding: var(--spacer-1) var(--spacer-2);
   font-size: 1.2em;
 }
 
 .modal-body {
-  padding: 15px;
+  padding: var(--spacer-1);
 }
