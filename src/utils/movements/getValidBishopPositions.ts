@@ -2,8 +2,9 @@ import { Piece } from "../../interfaces/Piece";
 import { PiecePositionMap } from "../../utils/getPiecePositionMap";
 import { GameState } from "../../reducers/GameReducer";
 import { getValidPositionSet } from "../getValidPositions";
+import { PieceValidPositionsMap } from "../getPieceValidPositionsMap";
 
-export function getValidBishopPositions(piece: Piece, state: GameState, piecePositionMap: PiecePositionMap): Set<string> {
+export function getValidBishopPositions(piece: Piece, state: GameState, piecePositionMap: PiecePositionMap, pieceValidPositionMap: PieceValidPositionsMap): Set<string> {
   const { validPositions, tryAddPosition } = getValidPositionSet();
 
   const { x: currentX, y: currentY } = piecePositionMap[piece.id];
@@ -13,7 +14,7 @@ export function getValidBishopPositions(piece: Piece, state: GameState, piecePos
   let targetY = currentY + 1;
 
   while (targetX > 0 && targetY < 9) {
-    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY });
+    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY }, piecePositionMap, pieceValidPositionMap);
 
     if (!canContinueInDirection)
       break;
@@ -27,7 +28,7 @@ export function getValidBishopPositions(piece: Piece, state: GameState, piecePos
   targetY = currentY + 1
 
   while (targetX < 9 && targetY < 9) {
-    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY });
+    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY }, piecePositionMap, pieceValidPositionMap);
 
     if (!canContinueInDirection)
       break;
@@ -41,7 +42,7 @@ export function getValidBishopPositions(piece: Piece, state: GameState, piecePos
   targetY = currentY - 1;
 
   while (targetX < 9 && targetY > 0) {
-    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY });
+    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY }, piecePositionMap, pieceValidPositionMap);
 
     if (!canContinueInDirection)
       break;
@@ -55,7 +56,7 @@ export function getValidBishopPositions(piece: Piece, state: GameState, piecePos
   targetY = currentY - 1;
 
   while (targetX > 0 && targetY > 0) {
-    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY });
+    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY }, piecePositionMap, pieceValidPositionMap);
 
     if (!canContinueInDirection)
       break;

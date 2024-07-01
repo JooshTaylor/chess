@@ -3,8 +3,9 @@ import { PiecePositionMap } from "../../utils/getPiecePositionMap";
 import { GameState } from "../../reducers/GameReducer";
 import { getInitialPiecePosition } from "../getInitialPiecePosition";
 import { getValidPositionSet } from "../getValidPositions";
+import { PieceValidPositionsMap } from "../getPieceValidPositionsMap";
 
-export function getValidPawnPositions(piece: Piece, state: GameState, piecePositionMap: PiecePositionMap): Set<string> {
+export function getValidPawnPositions(piece: Piece, state: GameState, piecePositionMap: PiecePositionMap, pieceValidPositionMap: PieceValidPositionsMap): Set<string> {
   const { validPositions, tryAddPosition } = getValidPositionSet();
 
   const { x: initialX, y: initialY } = getInitialPiecePosition(piece.id);
@@ -14,17 +15,17 @@ export function getValidPawnPositions(piece: Piece, state: GameState, piecePosit
 
   if (piece.colour === 'white') {
     // Forward once
-    tryAddPosition(state, piece, { x: currentX, y: currentY + 1 }, true);
+    tryAddPosition(state, piece, { x: currentX, y: currentY + 1 }, piecePositionMap, pieceValidPositionMap, true);
 
     // Forward twice
     if (isAtStartingPosition)
-      tryAddPosition(state, piece, { x: currentX, y: currentY + 2 }, true);
+      tryAddPosition(state, piece, { x: currentX, y: currentY + 2 }, piecePositionMap, pieceValidPositionMap, true);
 
     // Top left
-    tryAddPosition(state, piece, { x: currentX - 1, y: currentY + 1 });
+    tryAddPosition(state, piece, { x: currentX - 1, y: currentY + 1 }, piecePositionMap, pieceValidPositionMap);
 
     // Top right
-    tryAddPosition(state, piece, { x: currentX + 1, y: currentY + 1 });
+    tryAddPosition(state, piece, { x: currentX + 1, y: currentY + 1 }, piecePositionMap, pieceValidPositionMap);
 
     return validPositions;
   }
@@ -32,17 +33,17 @@ export function getValidPawnPositions(piece: Piece, state: GameState, piecePosit
   // Black pawns
 
   // Forward once
-  tryAddPosition(state, piece, { x: currentX, y: currentY - 1 }, true);
+  tryAddPosition(state, piece, { x: currentX, y: currentY - 1 }, piecePositionMap, pieceValidPositionMap, true);
 
   // Forward twice
   if (isAtStartingPosition)
-    tryAddPosition(state, piece, { x: currentX, y: currentY - 2 }, true);
+    tryAddPosition(state, piece, { x: currentX, y: currentY - 2 }, piecePositionMap, pieceValidPositionMap, true);
 
   // Top left
-  tryAddPosition(state, piece, { x: currentX - 1, y: currentY - 1 });
+  tryAddPosition(state, piece, { x: currentX - 1, y: currentY - 1 }, piecePositionMap, pieceValidPositionMap);
 
   // Top right
-  tryAddPosition(state, piece, { x: currentX + 1, y: currentY - 1 });
+  tryAddPosition(state, piece, { x: currentX + 1, y: currentY - 1 }, piecePositionMap, pieceValidPositionMap);
 
   return validPositions;
 }

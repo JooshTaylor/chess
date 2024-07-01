@@ -1,8 +1,3 @@
-- Get check mate actually working:
-  - At the moment, the king apparently has valid moves, but all of those moves would put it in check, so the game doesn't recognise that it's over.
-  - To identify checkmate, we need to check every possible move on the board to see if anything can get the king out of check.
-  - We also need to check if any possible moves exist that won't lead to check
-
 - Try to DRY up the logic for adding valid moves
 - Bug where castling action was triggered
 

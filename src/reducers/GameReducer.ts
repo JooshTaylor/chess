@@ -2,12 +2,8 @@ import { Piece, PieceId } from "../interfaces/Piece";
 import { PieceColour } from "../interfaces/PieceColour";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
-import { getKing } from "../utils/getKing";
-import { getKingVulnerabilities } from "../utils/getKingVulnerabilities";
 import { getMovePieceState } from "../utils/getMovePieceState";
 import { getPieceAtPosition } from "../utils/getPieceAtPosition";
-import { getPiecePositionMap } from "../utils/getPiecePositionMap";
-import { getValidKingPositions } from "../utils/movements/getValidKingPositions";
 
 type GameStatus = 'running' | 'ended';
 
@@ -195,18 +191,18 @@ function getCastlingRookPositionDetails(kingCurrentPosition: Position, kingTarge
 
 function updateGameStatus(state: GameState): GameStatus {
   return state.status;
-  if (state.status !== 'running')
-    return state.status;
+  // if (state.status !== 'running')
+  //   return state.status;
 
-  const nextPlayerKing = getKing(state, state.turnColour);
+  // const nextPlayerKing = getKing(state, state.turnColour);
 
-  const piecePositionMap = getPiecePositionMap(state.positions);
+  // const piecePositionMap = getPiecePositionMap(state.positions);
 
-  const kingVulnerabilities = getKingVulnerabilities(state, state.turnColour, piecePositionMap);
-  const kingValidPositions = getValidKingPositions(nextPlayerKing, state, piecePositionMap);
+  // const kingVulnerabilities = getKingVulnerabilities(state, state.turnColour, piecePositionMap);
+  // const kingValidPositions = getValidKingPositions(nextPlayerKing, state, piecePositionMap);
 
-  if (kingVulnerabilities.size && !kingValidPositions.size)
-    return 'ended';
+  // if (kingVulnerabilities.size && !kingValidPositions.size)
+  //   return 'ended';
 
-  return 'running';
+  // return 'running';
 }
