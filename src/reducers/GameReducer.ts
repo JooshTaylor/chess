@@ -2,10 +2,10 @@ import { Piece, PieceId } from "../interfaces/Piece";
 import { PieceColour } from "../interfaces/PieceColour";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
-import { getPieceAtPosition } from "../utils/BoardHelper";
 import { getKing } from "../utils/getKing";
 import { getKingVulnerabilities } from "../utils/getKingVulnerabilities";
 import { getMovePieceState } from "../utils/getMovePieceState";
+import { getPieceAtPosition } from "../utils/getPieceAtPosition";
 import { getPiecePositionMap } from "../utils/getPiecePositionMap";
 import { getValidKingPositions } from "../utils/movements/getValidKingPositions";
 

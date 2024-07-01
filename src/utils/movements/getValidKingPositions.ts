@@ -1,44 +1,37 @@
 import { Piece } from "../../interfaces/Piece";
 import { PiecePositionMap } from "../../utils/getPiecePositionMap";
 import { GameState } from "../../reducers/GameReducer";
-import { canTake, getPieceAtPosition, isValidSquare } from "../BoardHelper";
 import { getValidPositionSet } from "../getValidPositions";
+import { getPieceAtPosition } from "../getPieceAtPosition";
 
 export function getValidKingPositions(piece: Piece, state: GameState, piecePositionMap: PiecePositionMap): Set<string> {
-  const { validPositions, addValidPosition } = getValidPositionSet();
-
-  function addIfValid(x: number, y: number): void {
-    const pieceAtPosition = getPieceAtPosition(state, { x, y });
-  
-    if (isValidSquare(x, y) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
-      addValidPosition(x, y);
-  }
+  const { validPositions, tryAddPosition } = getValidPositionSet();
 
   const { x: currentX, y: currentY } = piecePositionMap[piece.id];
 
   // Up
-  addIfValid(currentX, currentY + 1);
+  tryAddPosition(state, piece, { x: currentX, y: currentY + 1 });
 
   // Top right
-  addIfValid(currentX + 1, currentY + 1);
+  tryAddPosition(state, piece, { x: currentX + 1, y: currentY + 1 });
 
   // Right
-  addIfValid(currentX + 1, currentY);
+  tryAddPosition(state, piece, { x: currentX + 1, y: currentY });
 
   // Bottom right
-  addIfValid(currentX + 1, currentY - 1);
+  tryAddPosition(state, piece, { x: currentX + 1, y: currentY - 1 });
 
   // Down
-  addIfValid(currentX, currentY - 1);
+  tryAddPosition(state, piece, { x: currentX, y: currentY - 1 });
 
   // Down left
-  addIfValid(currentX - 1, currentY - 1);
+  tryAddPosition(state, piece, { x: currentX - 1, y: currentY - 1 });
 
   // Left
-  addIfValid(currentX - 1, currentY);
+  tryAddPosition(state, piece, { x: currentX - 1, y: currentY });
 
   // Top left
-  addIfValid(currentX - 1, currentY + 1);
+  tryAddPosition(state, piece, { x: currentX - 1, y: currentY + 1 });
 
   if (piece.totalMoves > 0)
     return validPositions; 
@@ -48,7 +41,7 @@ export function getValidKingPositions(piece: Piece, state: GameState, piecePosit
     const pieceInRookPosition = getPieceAtPosition(state, { x: currentX + 3, y: currentY });
 
     if (pieceInRookPosition && pieceInRookPosition.type === 'rook' && pieceInRookPosition.totalMoves === 0)
-      addValidPosition(currentX + 2, currentY);
+      tryAddPosition(state, piece, { x: currentX + 2, y: currentY });
   }
 
   // Queen side castle
@@ -60,7 +53,7 @@ export function getValidKingPositions(piece: Piece, state: GameState, piecePosit
     const pieceInRookPosition = getPieceAtPosition(state, { x: currentX - 4, y: currentY });
 
     if (pieceInRookPosition && pieceInRookPosition.type === 'rook' && pieceInRookPosition.totalMoves === 0)
-      addValidPosition(currentX - 2, currentY);
+      tryAddPosition(state, piece, { x: currentX - 2, y: currentY });
   }
 
   return validPositions;

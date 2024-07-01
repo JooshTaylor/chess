@@ -1,7 +1,6 @@
 import React from 'react';
 import { Square } from '../square/Square';
 import './board.css';
-import { getPositionId, getPieceAtPosition } from '../../utils/BoardHelper';
 import { INITIAL_GAME_STATE } from '../../constants/InitialGameState';
 import { GameReducer } from '../../reducers/GameReducer';
 import { BOARD } from '../../constants/Board';
@@ -14,6 +13,8 @@ import { Menu } from '../menu/Menu';
 import { getPiecePositionMap } from '../../utils/getPiecePositionMap';
 import { getPieceValidPositionsMap } from '../../utils/getPieceValidPositionsMap';
 import { isCastling } from '../../utils/isCastling';
+import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
+import { getPositionId } from '../../utils/getPositionId';
 
 export function ChessBoard(): JSX.Element {
   const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);

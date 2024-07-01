@@ -1,85 +1,36 @@
 import { Piece } from "../../interfaces/Piece";
 import { PiecePositionMap } from "../../utils/getPiecePositionMap";
 import { GameState } from "../../reducers/GameReducer";
-import { getPieceAtPosition, canTake, isValidSquare } from "../BoardHelper";
 import { getValidPositionSet } from "../getValidPositions";
 
 export function getValidKnightPositions(piece: Piece, state: GameState, piecePositionMap: PiecePositionMap): Set<string> {
-  const { validPositions, addValidPosition } = getValidPositionSet();
+  const { validPositions, tryAddPosition } = getValidPositionSet();
 
   const { x: currentX, y: currentY } = piecePositionMap[piece.id];
 
   // Top left
-
-  let targetX = currentX - 1;
-  let targetY = currentY + 2;
-
-  let pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
-    addValidPosition(targetX, targetY);
+  tryAddPosition(state, piece, { x: currentX - 1, y: currentY + 2 });
 
   // Top right
-
-  targetX = currentX + 1;
-  targetY = currentY + 2;
-
-  pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
-    addValidPosition(targetX, targetY);
+  tryAddPosition(state, piece, { x: currentX + 1, y: currentY + 2 });
 
   // Right top
-
-  targetX = currentX + 2;
-  targetY = currentY + 1;
-
-  pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
-    addValidPosition(targetX, targetY);
+  tryAddPosition(state, piece, { x: currentX + 2, y: currentY + 1 });
 
   // Right bottom
-
-  targetX = currentX + 2;
-  targetY = currentY - 1;
-
-  pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
-    addValidPosition(targetX, targetY);
+  tryAddPosition(state, piece, { x: currentX + 2, y: currentY - 1 });
 
   // Bottom right
-
-  targetX = currentX + 1;
-  targetY = currentY - 2;
-
-  pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
-    addValidPosition(targetX, targetY);
+  tryAddPosition(state, piece, { x: currentX + 1, y: currentY - 2 });
 
   // Bottom left
-
-  targetX = currentX - 1;
-  targetY = currentY - 2;
-
-  pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
-    addValidPosition(targetX, targetY);
+  tryAddPosition(state, piece, { x: currentX - 1, y: currentY - 2 });
 
   // Left bottom
-
-  targetX = currentX - 2;
-  targetY = currentY - 1;
-
-  pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
-    addValidPosition(targetX, targetY);
+  tryAddPosition(state, piece, { x: currentX - 2, y: currentY - 1 });
 
   // Left top
-
-  targetX = currentX - 2;
-  targetY = currentY + 1;
-
-  pieceAtPosition = getPieceAtPosition(state, { x: targetX, y: targetY });
-  if (isValidSquare(targetX, targetY) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
-    addValidPosition(targetX, targetY);
+  tryAddPosition(state, piece, { x: currentX - 2, y: currentY + 1 });
 
   return validPositions;
 }

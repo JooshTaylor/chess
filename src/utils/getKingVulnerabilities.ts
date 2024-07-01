@@ -1,9 +1,9 @@
 import { PieceColour } from "../interfaces/PieceColour";
 import { PiecePositionMap } from "../utils/getPiecePositionMap";
 import { GameState } from "../reducers/GameReducer";
-import { getPositionId } from "./BoardHelper";
 import { getKing } from "./getKing";
 import { getValidPositions } from "./getValidPositions";
+import { getPositionId } from "./getPositionId";
 
 export function getKingVulnerabilities(state: GameState, colour: PieceColour, piecePositionMap: PiecePositionMap): Set<string> {
   const vulnerabilities = new Set<string>([]);

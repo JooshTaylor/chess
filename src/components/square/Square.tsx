@@ -1,16 +1,20 @@
 import { Piece } from '../../interfaces/Piece';
+import { PieceColour } from '../../interfaces/PieceColour';
 import { Position } from '../../interfaces/Position';
-import { convertNumberToChar } from '../../utils/BoardHelper';
 import './square.css';
 
-const getColour = (position: Position) => {
+function getColour(position: Position): PieceColour {
   // If the first in the row is white
   if (position.y % 2 === 0)
     return position.x % 2 === 0 ? 'black' : 'white';
 
   // If the first in the row is black
   return position.x % 2 === 0 ? 'white' : 'black';
-};
+}
+
+function convertNumberToChar(num: number): string {
+  return String.fromCharCode(num + 96);
+}
 
 interface SquareProps {
   position: Position;
