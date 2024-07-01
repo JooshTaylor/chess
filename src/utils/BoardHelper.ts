@@ -10,7 +10,7 @@ export function getPositionId(position: Position): `${number}:${number}` {
 }
 
 export function getPieceAtPosition(state: GameState, position: Position): Piece | null {
-  const pieceId = state.positions[position.y]?.[position.x];
+  const pieceId = state.positions[position.x]?.[position.y];
 
   if (pieceId === '')
     return null;

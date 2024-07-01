@@ -1,20 +1,20 @@
 import { Piece } from "../../interfaces/Piece";
+import { PiecePositionMap } from "../../utils/getPiecePositionMap";
 import { GameState } from "../../reducers/GameReducer";
 import { canTake, getPieceAtPosition, isValidSquare } from "../BoardHelper";
 import { getValidPositionSet } from "../getValidPositions";
-import { willMoveLeadToCheck } from "../willMoveLeadToCheck";
 
-export function getValidKingPositions(piece: Piece, state: GameState): Set<string> {
+export function getValidKingPositions(piece: Piece, state: GameState, piecePositionMap: PiecePositionMap): Set<string> {
   const { validPositions, addValidPosition } = getValidPositionSet();
 
   function addIfValid(x: number, y: number): void {
     const pieceAtPosition = getPieceAtPosition(state, { x, y });
   
-    if (isValidSquare(x, y) && (!pieceAtPosition || canTake(piece, pieceAtPosition)) && !willMoveLeadToCheck(state, { x, y }, state.turnColour))
+    if (isValidSquare(x, y) && (!pieceAtPosition || canTake(piece, pieceAtPosition)))
       addValidPosition(x, y);
   }
 
-  const { x: currentX, y: currentY } = piece;
+  const { x: currentX, y: currentY } = piecePositionMap[piece.id];
 
   // Up
   addIfValid(currentX, currentY + 1);
@@ -44,23 +44,23 @@ export function getValidKingPositions(piece: Piece, state: GameState): Set<strin
     return validPositions; 
 
   // King side castle
-  if (!getPieceAtPosition(state, { x: currentX - 1, y: currentY }) && !getPieceAtPosition(state, { x: currentX - 2, y: currentY })) {
-    const pieceInRookPosition = getPieceAtPosition(state, { x: currentX - 3, y: currentY });
+  if (!getPieceAtPosition(state, { x: currentX + 1, y: currentY }) && !getPieceAtPosition(state, { x: currentX + 2, y: currentY })) {
+    const pieceInRookPosition = getPieceAtPosition(state, { x: currentX + 3, y: currentY });
 
     if (pieceInRookPosition && pieceInRookPosition.type === 'rook' && pieceInRookPosition.totalMoves === 0)
-      addValidPosition(currentX - 2, currentY);
+      addValidPosition(currentX + 2, currentY);
   }
 
   // Queen side castle
   if (
-    !getPieceAtPosition(state, { x: currentX + 1, y: currentY }) &&
-    !getPieceAtPosition(state, { x: currentX + 2, y: currentY }) &&
-    !getPieceAtPosition(state, { x: currentX + 3, y: currentY })
+    !getPieceAtPosition(state, { x: currentX - 1, y: currentY }) &&
+    !getPieceAtPosition(state, { x: currentX - 2, y: currentY }) &&
+    !getPieceAtPosition(state, { x: currentX - 3, y: currentY })
   ) {
-    const pieceInRookPosition = getPieceAtPosition(state, { x: currentX + 4, y: currentY });
+    const pieceInRookPosition = getPieceAtPosition(state, { x: currentX - 4, y: currentY });
 
     if (pieceInRookPosition && pieceInRookPosition.type === 'rook' && pieceInRookPosition.totalMoves === 0)
-      addValidPosition(currentX + 2, currentY);
+      addValidPosition(currentX - 2, currentY);
   }
 
   return validPositions;

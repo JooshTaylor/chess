@@ -6,6 +6,7 @@ import { getPieceAtPosition } from "../utils/BoardHelper";
 import { getKing } from "../utils/getKing";
 import { getKingVulnerabilities } from "../utils/getKingVulnerabilities";
 import { getMovePieceState } from "../utils/getMovePieceState";
+import { getPiecePositionMap } from "../utils/getPiecePositionMap";
 import { getValidKingPositions } from "../utils/movements/getValidKingPositions";
 
 type GameStatus = 'running' | 'ended';
@@ -115,12 +116,21 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         positions: {
           ...state.positions,
-          [currentPosition.y]: {
-            ...state.positions[currentPosition.y],
-            [targetPosition.x]: king.id,
-            [rookTargetPosition.x]: rook.id,
-            [rookCurrentPosition.x]: '',
-            [currentPosition.x]: ''
+          [currentPosition.x]: {
+            ...state.positions[currentPosition.x],
+            [currentPosition.y]: ''
+          },
+          [targetPosition.x]: {
+            ...state.positions[targetPosition.x],
+            [targetPosition.y]: king.id
+          },
+          [rookCurrentPosition.x]: {
+            ...state.positions[rookCurrentPosition.x],
+            [rookCurrentPosition.y]: ''
+          },
+          [rookTargetPosition.x]: {
+            ...state.positions[rookTargetPosition.x],
+            [rookTargetPosition.y]: rook.id
           }
         },
         pieces: {
@@ -169,30 +179,31 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
 
 function getCastlingRookPositionDetails(kingCurrentPosition: Position, kingTargetPosition: Position): MoveActionPayload {
   // King side castling
-  if (kingCurrentPosition.x > kingTargetPosition.x) {
+  if (kingCurrentPosition.x < kingTargetPosition.x) {
     return {
-      currentPosition: { x: kingCurrentPosition.x - 3, y: kingCurrentPosition.y },
-      targetPosition: { x: kingTargetPosition.x + 1, y: kingCurrentPosition.y }
+      currentPosition: { x: kingCurrentPosition.x + 3, y: kingCurrentPosition.y },
+      targetPosition: { x: kingTargetPosition.x - 1, y: kingCurrentPosition.y }
     };
   }
 
   // Queen side castling
   return {
-    currentPosition: { x: kingCurrentPosition.x + 4, y: kingCurrentPosition.y },
-    targetPosition: { x: kingTargetPosition.x - 1, y: kingCurrentPosition.y }
+    currentPosition: { x: kingCurrentPosition.x - 4, y: kingCurrentPosition.y },
+    targetPosition: { x: kingTargetPosition.x + 1, y: kingCurrentPosition.y }
   };
 }
 
 function updateGameStatus(state: GameState): GameStatus {
+  return state.status;
   if (state.status !== 'running')
     return state.status;
 
   const nextPlayerKing = getKing(state, state.turnColour);
 
-  const kingVulnerabilities = getKingVulnerabilities(state, state.turnColour);
-  const kingValidPositions = getValidKingPositions(nextPlayerKing, state);
+  const piecePositionMap = getPiecePositionMap(state.positions);
 
-  console.log('update status', kingVulnerabilities, kingValidPositions);
+  const kingVulnerabilities = getKingVulnerabilities(state, state.turnColour, piecePositionMap);
+  const kingValidPositions = getValidKingPositions(nextPlayerKing, state, piecePositionMap);
 
   if (kingVulnerabilities.size && !kingValidPositions.size)
     return 'ended';

@@ -22,15 +22,15 @@ export function getMovePieceState(
 
   const newPositions: GameState['positions'] = {
     ...currentState.positions,
-    [currentPosition.y]: {
-      ...currentState.positions[currentPosition.y],
-      [currentPosition.x]: ''
+    [currentPosition.x]: {
+      ...currentState.positions[currentPosition.x],
+      [currentPosition.y]: ''
     }
   }
 
-  newPositions[targetPosition.y] = {
-    ...newPositions[targetPosition.y],
-    [targetPosition.x]: currentPiece.id
+  newPositions[targetPosition.x] = {
+    ...newPositions[targetPosition.x],
+    [targetPosition.y]: currentPiece.id
   };
 
   newState.positions = newPositions;

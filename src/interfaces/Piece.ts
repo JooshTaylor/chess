@@ -1,4 +1,3 @@
-import { Position } from "./Position";
 import { PieceColour } from "./PieceColour";
 import { PieceType } from "./PieceType";
 
@@ -38,7 +37,7 @@ export type PieceId =
 
 export type PieceStatus = 'alive' | 'dead' | 'promoted';
 
-export interface Piece extends Position {
+export interface Piece {
   id: PieceId;
   type: PieceType;
   colour: PieceColour;

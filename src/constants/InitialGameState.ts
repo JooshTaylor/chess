@@ -6,87 +6,87 @@ export const INITIAL_GAME_STATE: GameState = {
   status: 'running',
 
   positions: {
-    // Y pos then X
+    // X pos then Y
     1: {
       1: 'white-rook-1',
-      2: 'white-knight-1',
-      3: 'white-bishop-1',
-      4: 'white-king',
-      5: 'white-queen',
-      6: 'white-bishop-2',
-      7: 'white-knight-2',
-      8: 'white-rook-2'
+      2: 'white-pawn-1',
+      3: '',
+      4: '',
+      5: '',
+      6: '',
+      7: 'black-pawn-1',
+      8: 'black-rook-1'
     },
     2: {
-      1: 'white-pawn-1',
+      1: 'white-knight-1',
       2: 'white-pawn-2',
-      3: 'white-pawn-3',
-      4: 'white-pawn-4',
-      5: 'white-pawn-5',
-      6: 'white-pawn-6',
-      7: 'white-pawn-7',
-      8: 'white-pawn-8'
+      3: '',
+      4: '',
+      5: '',
+      6: '',
+      7: 'black-pawn-2',
+      8: 'black-knight-1'
     },
     3: {
-      1: '',
-      2: '',
+      1: 'white-bishop-1',
+      2: 'white-pawn-3',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: '',
-      8: '',
+      7: 'black-pawn-3',
+      8: 'black-bishop-1',
     },
     4: {
-      1: '',
-      2: '',
+      1: 'white-queen',
+      2: 'white-pawn-4',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: '',
-      8: '',
+      7: 'black-pawn-4',
+      8: 'black-queen',
     },
     5: {
-      1: '',
-      2: '',
+      1: 'white-king',
+      2: 'white-pawn-5',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: '',
-      8: '',
+      7: 'black-pawn-5',
+      8: 'black-king',
     },
     6: {
-      1: '',
-      2: '',
+      1: 'white-bishop-2',
+      2: 'white-pawn-6',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: '',
-      8: '',
+      7: 'black-pawn-6',
+      8: 'black-bishop-2',
     },
     7: {
-      1: 'black-pawn-1',
-      2: 'black-pawn-2',
-      3: 'black-pawn-3',
-      4: 'black-pawn-4',
-      5: 'black-pawn-5',
-      6: 'black-pawn-6',
+      1: 'white-knight-2',
+      2: 'white-pawn-7',
+      3: '',
+      4: '',
+      5: '',
+      6: '',
       7: 'black-pawn-7',
-      8: 'black-pawn-8'
+      8: 'black-knight-2'
     },
     8: {
-      1: 'black-rook-1',
-      2: 'black-knight-1',
-      3: 'black-bishop-1',
-      4: 'black-king',
-      5: 'black-queen',
-      6: 'black-bishop-2',
-      7: 'black-knight-2',
+      1: 'white-rook-2',
+      2: 'white-pawn-8',
+      3: '',
+      4: '',
+      5: '',
+      6: '',
+      7: 'black-pawn-8',
       8: 'black-rook-2'
-    },
+    }
   },
 
   pieces: {
@@ -96,8 +96,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'rook',
       colour: 'black',
       status: 'alive',
-      x: 1,
-      y: 8,
       totalMoves: 0
     },
     'black-knight-1': {
@@ -105,8 +103,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'knight',
       colour: 'black',
       status: 'alive',
-      x: 2,
-      y: 8,
       totalMoves: 0
     },
     'black-bishop-1': {
@@ -114,8 +110,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'bishop',
       colour: 'black',
       status: 'alive',
-      x: 3,
-      y: 8,
       totalMoves: 0
     },
     'black-king': {
@@ -123,8 +117,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'king',
       colour: 'black',
       status: 'alive',
-      x: 4,
-      y: 8,
       totalMoves: 0
     },
     'black-queen': {
@@ -132,8 +124,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'queen',
       colour: 'black',
       status: 'alive',
-      x: 5,
-      y: 8,
       totalMoves: 0
     },
     'black-bishop-2': {
@@ -141,8 +131,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'bishop',
       colour: 'black',
       status: 'alive',
-      x: 6,
-      y: 8,
       totalMoves: 0
     },
     'black-knight-2': {
@@ -150,8 +138,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'knight',
       colour: 'black',
       status: 'alive',
-      x: 7,
-      y: 8,
       totalMoves: 0
     },
     'black-rook-2': {
@@ -159,8 +145,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'rook',
       colour: 'black',
       status: 'alive',
-      x: 8,
-      y: 8,
       totalMoves: 0
     },
 
@@ -171,8 +155,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'black',
       status: 'alive',
-      x: 1,
-      y: 7,
       totalMoves: 0
     },
 
@@ -181,8 +163,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'black',
       status: 'alive',
-      x: 2,
-      y: 7,
       totalMoves: 0
     },
 
@@ -191,8 +171,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'black',
       status: 'alive',
-      x: 3,
-      y: 7,
       totalMoves: 0
     },
 
@@ -201,8 +179,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'black',
       status: 'alive',
-      x: 4,
-      y: 7,
       totalMoves: 0
     },
 
@@ -211,8 +187,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'black',
       status: 'alive',
-      x: 5,
-      y: 7,
       totalMoves: 0
     },
 
@@ -221,8 +195,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'black',
       status: 'alive',
-      x: 6,
-      y: 7,
       totalMoves: 0
     },
 
@@ -231,8 +203,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'black',
       status: 'alive',
-      x: 7,
-      y: 7,
       totalMoves: 0
     },
 
@@ -241,8 +211,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'black',
       status: 'alive',
-      x: 8,
-      y: 7,
       totalMoves: 0
     },
 
@@ -253,8 +221,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'white',
       status: 'alive',
-      x: 1,
-      y: 2,
       totalMoves: 0
     },
 
@@ -263,8 +229,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'white',
       status: 'alive',
-      x: 2,
-      y: 2,
       totalMoves: 0
     },
 
@@ -273,8 +237,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'white',
       status: 'alive',
-      x: 3,
-      y: 2,
       totalMoves: 0
     },
 
@@ -283,8 +245,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'white',
       status: 'alive',
-      x: 4,
-      y: 2,
       totalMoves: 0
     },
 
@@ -293,8 +253,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'white',
       status: 'alive',
-      x: 5,
-      y: 2,
       totalMoves: 0
     },
 
@@ -303,8 +261,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'white',
       status: 'alive',
-      x: 6,
-      y: 2,
       totalMoves: 0
     },
 
@@ -313,8 +269,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'white',
       status: 'alive',
-      x: 7,
-      y: 2,
       totalMoves: 0
     },
 
@@ -323,8 +277,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'pawn',
       colour: 'white',
       status: 'alive',
-      x: 8,
-      y: 2,
       totalMoves: 0
     },
 
@@ -334,8 +286,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'rook',
       colour: 'white',
       status: 'alive',
-      x: 1,
-      y: 1,
       totalMoves: 0
     },
     'white-knight-1': {
@@ -343,8 +293,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'knight',
       colour: 'white',
       status: 'alive',
-      x: 2,
-      y: 1,
       totalMoves: 0
     },
     'white-bishop-1': {
@@ -352,8 +300,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'bishop',
       colour: 'white',
       status: 'alive',
-      x: 3,
-      y: 1,
       totalMoves: 0
     },
     'white-king': {
@@ -361,8 +307,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'king',
       colour: 'white',
       status: 'alive',
-      x: 4,
-      y: 1,
       totalMoves: 0
     },
     'white-queen': {
@@ -370,8 +314,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'queen',
       colour: 'white',
       status: 'alive',
-      x: 5,
-      y: 1,
       totalMoves: 0
     },
     'white-bishop-2': {
@@ -379,8 +321,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'bishop',
       colour: 'white',
       status: 'alive',
-      x: 6,
-      y: 1,
       totalMoves: 0
     },
     'white-knight-2': {
@@ -388,8 +328,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'knight',
       colour: 'white',
       status: 'alive',
-      x: 7,
-      y: 1,
       totalMoves: 0
     },
     'white-rook-2': {
@@ -397,8 +335,6 @@ export const INITIAL_GAME_STATE: GameState = {
       type: 'rook',
       colour: 'white',
       status: 'alive',
-      x: 8,
-      y: 1,
       totalMoves: 0
     }
   }

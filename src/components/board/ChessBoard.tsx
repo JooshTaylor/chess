@@ -11,19 +11,65 @@ import { PieceId } from '../../interfaces/Piece';
 import { PromotionModal } from '../promotion-modal/PromotionModal';
 import { PieceType } from '../../interfaces/PieceType';
 import { Menu } from '../menu/Menu';
-import { getMoveAction } from '../../utils/getMoveAction';
+import { getPiecePositionMap } from '../../utils/getPiecePositionMap';
+import { getPieceValidPositionsMap } from '../../utils/getPieceValidPositionsMap';
+import { isCastling } from '../../utils/isCastling';
 
 export function ChessBoard(): JSX.Element {
   const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);
   const [ promotionPiece, setPromotionPiece ] = React.useState<PieceId>(null);
+
+  const piecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), [state.positions]);
+  const pieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, piecePositionMap), [state, piecePositionMap]);
 
   function onMovePiece(targetPosition: Position): void {
     if (state.selectedPiece === '')
       return;
 
     const selectedPiece = state.pieces[state.selectedPiece];
-
-    dispatch(getMoveAction(state, targetPosition, { validatePositions: true }));
+  
+    const validPositions = pieceValidPositionsMap[state.selectedPiece];
+    if (!validPositions.has(getPositionId(targetPosition))) {
+      dispatch({
+        type: 'deselect-piece',
+        payload: {
+          currentPosition: null,
+          targetPosition: null
+        }
+      });
+    }
+  
+    const currentPosition = piecePositionMap[selectedPiece.id];
+  
+    if (isCastling(selectedPiece, currentPosition, targetPosition)) {
+      dispatch({
+        type: 'castle',
+        payload: {
+          currentPosition,
+          targetPosition
+        }
+      });
+    }
+  
+    const pieceAtPosition = getPieceAtPosition(state, targetPosition);
+  
+    if (pieceAtPosition) {
+      dispatch({
+        type: 'take-piece',
+        payload: {
+          currentPosition,
+          targetPosition
+        }
+      });
+    } else {
+      dispatch({
+        type: 'move-piece',
+        payload: {
+          currentPosition,
+          targetPosition
+        }
+      });
+    }
 
     if (canPromotePiece(selectedPiece, targetPosition))
       setPromotionPiece(selectedPiece.id);
@@ -75,7 +121,7 @@ export function ChessBoard(): JSX.Element {
                   <Square
                     key={getPositionId(position)}
                     onSelect={() => onSelectSquare(position)}
-                    isSelected={state.selectedPiece !== '' && getPositionId(position) === getPositionId(state.pieces[state.selectedPiece])}
+                    isSelected={state.selectedPiece !== '' && getPositionId(position) === getPositionId(piecePositionMap[state.selectedPiece])}
                     position={position}
                     piece={getPieceAtPosition(state, position)}
                     disabled={!!promotionPiece || state.status !== 'running'}
@@ -88,6 +134,7 @@ export function ChessBoard(): JSX.Element {
       </div>
       <Menu
         state={state}
+        piecePositionMap={piecePositionMap}
       />
 
       {!!promotionPiece && (
