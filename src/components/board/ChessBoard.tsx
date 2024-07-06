@@ -2,7 +2,7 @@ import React from 'react';
 import { Square } from '../square/Square';
 import './board.css';
 import { INITIAL_GAME_STATE } from '../../constants/InitialGameState';
-import { GameAction, GameReducer } from '../../reducers/GameReducer';
+import { GameReducer } from '../../reducers/GameReducer';
 import { BOARD } from '../../constants/Board';
 import { Position } from '../../interfaces/Position';
 import { canPromotePiece } from '../../utils/canPromotePiece';
@@ -11,13 +11,13 @@ import { PieceType } from '../../interfaces/PieceType';
 import { Menu } from '../menu/Menu';
 import { getPiecePositionMap } from '../../utils/getPiecePositionMap';
 import { getPieceValidPositionsMap } from '../../utils/getPieceValidPositionsMap';
-import { isCastling } from '../../utils/isCastling';
 import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
 import { getPositionId } from '../../utils/getPositionId';
-import { isInCheckMate } from '../../utils/isInCheckMate';
+import { isInCheck } from '../../utils/isInCheck';
 import { Modal } from '../modal/Modal';
-import { isEnPassant } from '../../utils/isEnPassant';
 import { PieceId } from '../../interfaces/PieceId';
+import { isInCheckMate } from '../../utils/isInCheckMate';
+import { getMoveAction } from '../../utils/getMoveAction';
 
 export function ChessBoard(): JSX.Element {
   const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);
@@ -39,54 +39,6 @@ export function ChessBoard(): JSX.Element {
       });
     }
   }, [ state, pieceValidPositionsMap ]);
-
-  function getMoveAction(targetPosition: Position): GameAction {
-    if (state.selectedPiece === '')
-      return null;
-
-    const currentPosition = piecePositionMap[state.selectedPiece];
-    const selectedPiece = state.pieces[state.selectedPiece];
-    
-    if (isCastling(selectedPiece, currentPosition, targetPosition)) {
-      return {
-        type: 'castle',
-        payload: {
-          currentPosition,
-          targetPosition
-        }
-      };
-    }
-
-    if (isEnPassant(state, selectedPiece, currentPosition, targetPosition)) {
-      return {
-        type: 'en-passant',
-        payload: {
-          currentPosition,
-          targetPosition
-        }
-      }
-    }
-  
-    const pieceAtPosition = getPieceAtPosition(state, targetPosition);
-  
-    if (pieceAtPosition) {
-      return {
-        type: 'take-piece',
-        payload: {
-          currentPosition,
-          targetPosition
-        }
-      };
-    } else {
-      return {
-        type: 'move-piece',
-        payload: {
-          currentPosition,
-          targetPosition
-        }
-      };
-    }
-  }
 
   function onSelectPiece(position: Position): void {
     const piece = getPieceAtPosition(state, position);
@@ -124,14 +76,14 @@ export function ChessBoard(): JSX.Element {
       return;
     }
 
-    const moveAction = getMoveAction(targetPosition);
+    const moveAction = getMoveAction(state, targetPosition, piecePositionMap);
 
     const futureState = GameReducer(state, moveAction);
     const futurePositionsMap = getPiecePositionMap(futureState.positions);
     const futureValidPositionsMap = getPieceValidPositionsMap(futureState, futurePositionsMap);
 
-    // Prevent moves that will put the mover into check mate
-    if (isInCheckMate(futureState, state.turnColour, futurePositionsMap, futureValidPositionsMap)) {
+    // Prevent moves that will put the mover into check
+    if (isInCheck(futureState, state.turnColour, futurePositionsMap, futureValidPositionsMap)) {
       dispatch({
         type: 'deselect-piece',
         payload: {
