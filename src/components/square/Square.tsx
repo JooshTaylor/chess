@@ -1,3 +1,4 @@
+import { PieceComponentMap } from '../../constants/PieceComponentMap';
 import { Piece } from '../../interfaces/Piece';
 import { PieceColour } from '../../interfaces/PieceColour';
 import { Position } from '../../interfaces/Position';
@@ -44,6 +45,8 @@ export function Square(props: SquareProps): JSX.Element {
     props.onSelect();
   }
 
+  const PieceComponent = PieceComponentMap[props.piece?.type];
+
   return (
     <div className={getClassName()} onClick={onSelect}>
       {props.position.x === 1 && (
@@ -59,7 +62,7 @@ export function Square(props: SquareProps): JSX.Element {
 
       {!!props.piece && (
         <div className={`piece ${props.piece.colour === 'black' ? 'piece-black' : 'piece-white'}`}>
-          {props.piece.id} {props.piece.type !== props.piece.originalType ? `as ${props.piece.type}` : ''}
+          <PieceComponent colour={props.piece.colour} />
         </div>
       )}
     </div>

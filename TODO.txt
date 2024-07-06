@@ -1,8 +1,5 @@
-- Fix false check mate: https://prnt.sc/G--xsMutrbuD
 - Styling
 - Write tests
-
-- Imports and code cleanup (absolute imports, ordering)
 - ESLint rules
 
 - Create database
