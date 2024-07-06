@@ -191,18 +191,4 @@ function getCastlingRookPositionDetails(kingCurrentPosition: Position, kingTarge
 
 function updateGameStatus(state: GameState): GameStatus {
   return state.status;
-  // if (state.status !== 'running')
-  //   return state.status;
-
-  // const nextPlayerKing = getKing(state, state.turnColour);
-
-  // const piecePositionMap = getPiecePositionMap(state.positions);
-
-  // const kingVulnerabilities = getKingVulnerabilities(state, state.turnColour, piecePositionMap);
-  // const kingValidPositions = getValidKingPositions(nextPlayerKing, state, piecePositionMap);
-
-  // if (kingVulnerabilities.size && !kingValidPositions.size)
-  //   return 'ended';
-
-  // return 'running';
 }

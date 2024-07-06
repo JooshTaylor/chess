@@ -2,7 +2,7 @@ import React from 'react';
 import { Square } from '../square/Square';
 import './board.css';
 import { INITIAL_GAME_STATE } from '../../constants/InitialGameState';
-import { GameReducer } from '../../reducers/GameReducer';
+import { GameAction, GameReducer } from '../../reducers/GameReducer';
 import { BOARD } from '../../constants/Board';
 import { Position } from '../../interfaces/Position';
 import { canPromotePiece } from '../../utils/canPromotePiece';
@@ -15,6 +15,7 @@ import { getPieceValidPositionsMap } from '../../utils/getPieceValidPositionsMap
 import { isCastling } from '../../utils/isCastling';
 import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
 import { getPositionId } from '../../utils/getPositionId';
+import { getKing } from '../../utils/getKing';
 
 export function ChessBoard(): JSX.Element {
   const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);
@@ -22,6 +23,62 @@ export function ChessBoard(): JSX.Element {
 
   const piecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), [state.positions]);
   const pieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, piecePositionMap), [state, piecePositionMap]);
+
+  function getMoveAction(targetPosition: Position): GameAction {
+    if (state.selectedPiece === '')
+      return null;
+
+    const currentPosition = piecePositionMap[state.selectedPiece];
+    const selectedPiece = state.pieces[state.selectedPiece];
+    
+    if (isCastling(selectedPiece, currentPosition, targetPosition)) {
+      return {
+        type: 'castle',
+        payload: {
+          currentPosition,
+          targetPosition
+        }
+      };
+    }
+  
+    const pieceAtPosition = getPieceAtPosition(state, targetPosition);
+  
+    if (pieceAtPosition) {
+      return {
+        type: 'take-piece',
+        payload: {
+          currentPosition,
+          targetPosition
+        }
+      };
+    } else {
+      return {
+        type: 'move-piece',
+        payload: {
+          currentPosition,
+          targetPosition
+        }
+      };
+    }
+  }
+
+  function onSelectPiece(position: Position): void {
+    const piece = getPieceAtPosition(state, position);
+
+    if (!piece)
+      return;
+
+    if (piece.colour !== state.turnColour)
+      return;
+
+    dispatch({
+      type: 'select-piece',
+      payload: {
+        currentPosition: position,
+        targetPosition: null
+      }
+    });
+  }
 
   function onMovePiece(targetPosition: Position): void {
     if (state.selectedPiece === '')
@@ -39,38 +96,33 @@ export function ChessBoard(): JSX.Element {
         }
       });
     }
-  
-    const currentPosition = piecePositionMap[selectedPiece.id];
-  
-    if (isCastling(selectedPiece, currentPosition, targetPosition)) {
-      dispatch({
-        type: 'castle',
-        payload: {
-          currentPosition,
-          targetPosition
-        }
-      });
+
+    const moveAction = getMoveAction(targetPosition);
+
+    const futureState = GameReducer(state, moveAction);
+    const futurePositionsMap = getPiecePositionMap(futureState.positions);
+    const futureValidPositionsMap = getPieceValidPositionsMap(futureState, futurePositionsMap);
+
+    const currentKing = getKing(state, state.turnColour);
+    const kingPositionId = getPositionId(piecePositionMap[currentKing.id]);
+
+    for (const [ pieceId, validPositions ] of Object.entries(futureValidPositionsMap)) {
+      if (futureState.pieces[pieceId as PieceId].colour === state.turnColour)
+        continue;
+
+      if (validPositions.has(kingPositionId)) {
+        dispatch({
+          type: 'deselect-piece',
+          payload: {
+            currentPosition: null,
+            targetPosition: null
+          }
+        });
+        return;
+      }
     }
-  
-    const pieceAtPosition = getPieceAtPosition(state, targetPosition);
-  
-    if (pieceAtPosition) {
-      dispatch({
-        type: 'take-piece',
-        payload: {
-          currentPosition,
-          targetPosition
-        }
-      });
-    } else {
-      dispatch({
-        type: 'move-piece',
-        payload: {
-          currentPosition,
-          targetPosition
-        }
-      });
-    }
+
+    dispatch(moveAction);
 
     if (canPromotePiece(selectedPiece, targetPosition))
       setPromotionPiece(selectedPiece.id);
@@ -82,21 +134,7 @@ export function ChessBoard(): JSX.Element {
       return;
     }
 
-    const piece = getPieceAtPosition(state, position);
-
-    if (!piece)
-      return;
-
-    if (piece.colour !== state.turnColour)
-      return;
-
-    dispatch({
-      type: 'select-piece',
-      payload: {
-        currentPosition: position,
-        targetPosition: null
-      }
-    })
+    onSelectPiece(position);
   }
 
   function onPromote(currentPieceId: PieceId, promotionType: PieceType): void {

@@ -2,9 +2,8 @@ import { Piece } from "../../interfaces/Piece";
 import { PiecePositionMap } from "../../utils/getPiecePositionMap";
 import { GameState } from "../../reducers/GameReducer";
 import { getValidPositionSet } from "../getValidPositions";
-import { PieceValidPositionsMap } from "../getPieceValidPositionsMap";
 
-export function getValidRookPositions(piece: Piece, state: GameState, piecePositionMap: PiecePositionMap, pieceValidPositionMap: PieceValidPositionsMap): Set<string> {
+export function getValidRookPositions(piece: Piece, state: GameState, piecePositionMap: PiecePositionMap): Set<string> {
   const { validPositions, tryAddPosition } = getValidPositionSet();
 
   const { x: currentX, y: currentY } = piecePositionMap[piece.id];
@@ -14,7 +13,7 @@ export function getValidRookPositions(piece: Piece, state: GameState, piecePosit
   let targetY = currentY + 1;
 
   while (targetY < 9) {
-    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY }, piecePositionMap, pieceValidPositionMap);
+    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY });
 
     if (!canContinueInDirection)
       break;
@@ -27,7 +26,7 @@ export function getValidRookPositions(piece: Piece, state: GameState, piecePosit
   targetY = currentY;
 
   while (targetX < 9) {
-    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY }, piecePositionMap, pieceValidPositionMap);
+    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY });
 
     if (!canContinueInDirection)
       break;
@@ -40,7 +39,7 @@ export function getValidRookPositions(piece: Piece, state: GameState, piecePosit
   targetY = currentY - 1;
 
   while (targetY > 0) {
-    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY }, piecePositionMap, pieceValidPositionMap);
+    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY });
 
     if (!canContinueInDirection)
       break;
@@ -53,7 +52,7 @@ export function getValidRookPositions(piece: Piece, state: GameState, piecePosit
   targetY = currentY;
 
   while (targetX > 0) {
-    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY }, piecePositionMap, pieceValidPositionMap);
+    const { canContinueInDirection } = tryAddPosition(state, piece, { x: targetX, y: targetY });
 
     if (!canContinueInDirection)
       break;

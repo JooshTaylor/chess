@@ -1,6 +1,6 @@
 import { Piece } from "../interfaces/Piece";
 import { PiecePositionMap } from "../utils/getPiecePositionMap";
-import { GameReducer, GameState } from "../reducers/GameReducer";
+import { GameState } from "../reducers/GameReducer";
 import { getValidBishopPositions } from "./movements/getValidBishopPositions";
 import { getValidKingPositions } from "./movements/getValidKingPositions";
 import { getValidKnightPositions } from "./movements/getValidKnightPositions";
@@ -10,26 +10,23 @@ import { getValidRookPositions } from "./movements/getValidRookPositions";
 import { Position } from "../interfaces/Position";
 import { getPieceAtPosition } from "./getPieceAtPosition";
 import { getPositionId } from "./getPositionId";
-import { getMoveAction } from "./getMoveAction";
-import { isInCheck } from "./isInCheck";
-import { PieceValidPositionsMap } from "./getPieceValidPositionsMap";
 
-export function getValidPositions(state: GameState, piece: Piece, piecePositionMap: PiecePositionMap, pieceValidPositionMap: PieceValidPositionsMap): Set<string> {
+export function getValidPositions(state: GameState, piece: Piece, piecePositionMap: PiecePositionMap): Set<string> {
   const type = piece.promotionType || piece.type;
 
   switch (type) {
     case 'bishop':
-      return getValidBishopPositions(piece, state, piecePositionMap, pieceValidPositionMap);
+      return getValidBishopPositions(piece, state, piecePositionMap);
     case 'king':
-      return getValidKingPositions(piece, state, piecePositionMap, pieceValidPositionMap);
+      return getValidKingPositions(piece, state, piecePositionMap);
     case 'pawn':
-      return getValidPawnPositions(piece, state, piecePositionMap, pieceValidPositionMap);
+      return getValidPawnPositions(piece, state, piecePositionMap);
     case 'queen':
-      return getValidQueenPositions(piece, state, piecePositionMap, pieceValidPositionMap);
+      return getValidQueenPositions(piece, state, piecePositionMap);
     case 'rook':
-      return getValidRookPositions(piece, state, piecePositionMap, pieceValidPositionMap);
+      return getValidRookPositions(piece, state, piecePositionMap);
     case 'knight':
-      return getValidKnightPositions(piece, state, piecePositionMap, pieceValidPositionMap);
+      return getValidKnightPositions(piece, state, piecePositionMap);
   }
 }
 
@@ -42,40 +39,20 @@ export function getValidPositionSet() {
       state: GameState,
       piece: Piece,
       position: Position,
-      piecePositionMap: PiecePositionMap,
-      pieceValidPositionMap: PieceValidPositionsMap,
-      checkKingVulnerability: boolean = false,
       cannotTake: boolean = false
     ) => {
       if (position.x < 1 || position.y < 1 && position.x > 8 && position.y > 8)
         return { canContinueInDirection: false };
 
-      // If at the end of my move, my king is in a vulnerable position, the move is illegal
-
       const pieceAtPosition = getPieceAtPosition(state, position);
 
       if (!pieceAtPosition) {
-        if (checkKingVulnerability) {
-          const futureState = GameReducer(state, getMoveAction(state, piecePositionMap, pieceValidPositionMap, position));
-  
-          if (isInCheck(futureState, state.turnColour))
-            return { canContinueInDirection: true };
-        }
-
         validPositions.add(getPositionId(position));
         return { canContinueInDirection: true };
       }
 
-      if (!cannotTake && piece.colour !== pieceAtPosition.colour) {
-        if (checkKingVulnerability) {
-          const futureState = GameReducer(state, getMoveAction(state, piecePositionMap, pieceValidPositionMap, position));
-  
-          if (isInCheck(futureState, state.turnColour))
-            return { canContinueInDirection: true };
-        }
-
+      if (!cannotTake && piece.colour !== pieceAtPosition.colour)
         validPositions.add(getPositionId(position));
-      }
 
       return { canContinueInDirection: false };
     }
