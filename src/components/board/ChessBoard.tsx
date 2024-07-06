@@ -6,7 +6,6 @@ import { GameAction, GameReducer } from '../../reducers/GameReducer';
 import { BOARD } from '../../constants/Board';
 import { Position } from '../../interfaces/Position';
 import { canPromotePiece } from '../../utils/canPromotePiece';
-import { PieceId } from '../../interfaces/Piece';
 import { PromotionModal } from '../promotion-modal/PromotionModal';
 import { PieceType } from '../../interfaces/PieceType';
 import { Menu } from '../menu/Menu';
@@ -15,9 +14,10 @@ import { getPieceValidPositionsMap } from '../../utils/getPieceValidPositionsMap
 import { isCastling } from '../../utils/isCastling';
 import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
 import { getPositionId } from '../../utils/getPositionId';
-import { isInCheckMate } from '../../utils/isKingVulnerable';
+import { isInCheckMate } from '../../utils/isInCheckMate';
 import { Modal } from '../modal/Modal';
 import { isEnPassant } from '../../utils/isEnPassant';
+import { PieceId } from '../../interfaces/PieceId';
 
 export function ChessBoard(): JSX.Element {
   const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);

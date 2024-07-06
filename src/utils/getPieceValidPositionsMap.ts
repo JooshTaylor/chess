@@ -1,4 +1,4 @@
-import { PieceId } from "../interfaces/Piece";
+import { PieceId } from "../interfaces/PieceId";
 import { GameState } from "../reducers/GameReducer";
 import { PiecePositionMap } from "./getPiecePositionMap";
 import { getValidPositions } from "./getValidPositions";

@@ -1,8 +1,8 @@
 import { GameState } from "../../reducers/GameReducer";
 import { PieceColour } from "../../interfaces/PieceColour";
+import { PiecePositionMap } from "../../utils/getPiecePositionMap";
 
 import './menu.css';
-import { PiecePositionMap } from "../../utils/getPiecePositionMap";
 
 function getColourString(colour: PieceColour): string {
   if (colour === 'black')
@@ -27,10 +27,6 @@ export function Menu(props: MenuProps): JSX.Element {
             Game over! {getColourString(props.state.turnColour === 'black' ? 'white' : 'black')} is the winner!
           </div>
         )}
-
-        {/* {(isInCheck(props.state, props.state.turnColour, props.piecePositionMap) && props.state.status === 'running') && (
-          <div>{getColourString(props.state.turnColour)} is in check!</div>
-        )} */}
       </div>
     </div>
   );

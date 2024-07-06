@@ -1,5 +1,6 @@
-import { Piece, PieceId } from "../interfaces/Piece";
+import { Piece } from "../interfaces/Piece";
 import { PieceColour } from "../interfaces/PieceColour";
+import { PieceId } from "../interfaces/PieceId";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
 import { getEnPassantTargetPosition } from "../utils/getEnPassantTargetPosition";

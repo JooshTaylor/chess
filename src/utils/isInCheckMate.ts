@@ -1,4 +1,4 @@
-import { PieceId } from "../interfaces/Piece";
+import { PieceId } from "../interfaces/PieceId";
 import { PieceColour } from "../interfaces/PieceColour";
 import { GameState } from "../reducers/GameReducer";
 import { getKing } from "./getKing";
