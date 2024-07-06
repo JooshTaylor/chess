@@ -94,58 +94,74 @@ export const INITIAL_GAME_STATE: GameState = {
     'black-rook-1': {
       id: 'black-rook-1',
       type: 'rook',
+      originalType: 'rook',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'black-knight-1': {
       id: 'black-knight-1',
       type: 'knight',
+      originalType: 'knight',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'black-bishop-1': {
       id: 'black-bishop-1',
       type: 'bishop',
+      originalType: 'bishop',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'black-king': {
       id: 'black-king',
       type: 'king',
+      originalType: 'king',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'black-queen': {
       id: 'black-queen',
       type: 'queen',
+      originalType: 'queen',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'black-bishop-2': {
       id: 'black-bishop-2',
       type: 'bishop',
+      originalType: 'bishop',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'black-knight-2': {
       id: 'black-knight-2',
       type: 'knight',
+      originalType: 'knight',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'black-rook-2': {
       id: 'black-rook-2',
       type: 'rook',
+      originalType: 'rook',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     // BLACK: Second row
@@ -153,65 +169,81 @@ export const INITIAL_GAME_STATE: GameState = {
     'black-pawn-1': {
       id: 'black-pawn-1',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'black-pawn-2': {
       id: 'black-pawn-2',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'black-pawn-3': {
       id: 'black-pawn-3',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'black-pawn-4': {
       id: 'black-pawn-4',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'black-pawn-5': {
       id: 'black-pawn-5',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'black-pawn-6': {
       id: 'black-pawn-6',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'black-pawn-7': {
       id: 'black-pawn-7',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'black-pawn-8': {
       id: 'black-pawn-8',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'black',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     // WHITE: Seventh row
@@ -219,123 +251,155 @@ export const INITIAL_GAME_STATE: GameState = {
     'white-pawn-1': {
       id: 'white-pawn-1',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'white-pawn-2': {
       id: 'white-pawn-2',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'white-pawn-3': {
       id: 'white-pawn-3',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'white-pawn-4': {
       id: 'white-pawn-4',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'white-pawn-5': {
       id: 'white-pawn-5',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'white-pawn-6': {
       id: 'white-pawn-6',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'white-pawn-7': {
       id: 'white-pawn-7',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     'white-pawn-8': {
       id: 'white-pawn-8',
       type: 'pawn',
+      originalType: 'pawn',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
 
     // WHITE: Eighth row
     'white-rook-1': {
       id: 'white-rook-1',
       type: 'rook',
+      originalType: 'rook',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'white-knight-1': {
       id: 'white-knight-1',
       type: 'knight',
+      originalType: 'knight',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'white-bishop-1': {
       id: 'white-bishop-1',
       type: 'bishop',
+      originalType: 'bishop',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'white-king': {
       id: 'white-king',
       type: 'king',
+      originalType: 'king',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'white-queen': {
       id: 'white-queen',
       type: 'queen',
+      originalType: 'queen',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'white-bishop-2': {
       id: 'white-bishop-2',
       type: 'bishop',
+      originalType: 'bishop',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'white-knight-2': {
       id: 'white-knight-2',
       type: 'knight',
+      originalType: 'knight',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     },
     'white-rook-2': {
       id: 'white-rook-2',
       type: 'rook',
+      originalType: 'rook',
       colour: 'white',
       status: 'alive',
-      totalMoves: 0
+      totalMoves: 0,
+      turnsSinceLastMove: 0
     }
   }
 };

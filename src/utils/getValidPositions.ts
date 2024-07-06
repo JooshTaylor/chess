@@ -10,11 +10,10 @@ import { getValidRookPositions } from "./movements/getValidRookPositions";
 import { Position } from "../interfaces/Position";
 import { getPieceAtPosition } from "./getPieceAtPosition";
 import { getPositionId } from "./getPositionId";
+import { isValidPosition } from "./isValidPosition";
 
 export function getValidPositions(state: GameState, piece: Piece, piecePositionMap: PiecePositionMap): Set<string> {
-  const type = piece.promotionType || piece.type;
-
-  switch (type) {
+  switch (piece.type) {
     case 'bishop':
       return getValidBishopPositions(piece, state, piecePositionMap);
     case 'king':
@@ -38,10 +37,9 @@ export function getValidPositionSet() {
     tryAddPosition: (
       state: GameState,
       piece: Piece,
-      position: Position,
-      cannotTake: boolean = false
+      position: Position
     ) => {
-      if (position.x < 1 || position.y < 1 && position.x > 8 && position.y > 8)
+      if (!isValidPosition(position))
         return { canContinueInDirection: false };
 
       const pieceAtPosition = getPieceAtPosition(state, position);
@@ -51,7 +49,7 @@ export function getValidPositionSet() {
         return { canContinueInDirection: true };
       }
 
-      if (!cannotTake && piece.colour !== pieceAtPosition.colour)
+      if (piece.colour !== pieceAtPosition.colour)
         validPositions.add(getPositionId(position));
 
       return { canContinueInDirection: false };

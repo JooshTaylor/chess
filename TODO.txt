@@ -1,7 +1,9 @@
-- Try to DRY up the logic for adding valid moves
-- Bug where castling action was triggered
+- En passant capturing
+- Fix promotions
+- Styling
+- Write tests
 
-- Imports cleanup (absolute imports, ordering)
+- Imports and code cleanup (absolute imports, ordering)
 - ESLint rules
 
 - Create database
@@ -10,3 +12,5 @@
   - Websockets
 - Setup home page to create a game with invite link
 - Statuses for when the game hasn't started yet
+
+- AI?

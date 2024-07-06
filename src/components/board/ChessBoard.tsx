@@ -17,6 +17,7 @@ import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
 import { getPositionId } from '../../utils/getPositionId';
 import { isInCheckMate } from '../../utils/isKingVulnerable';
 import { Modal } from '../modal/Modal';
+import { isEnPassant } from '../../utils/isEnPassant';
 
 export function ChessBoard(): JSX.Element {
   const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);
@@ -54,6 +55,16 @@ export function ChessBoard(): JSX.Element {
           targetPosition
         }
       };
+    }
+
+    if (isEnPassant(state, selectedPiece, currentPosition, targetPosition)) {
+      return {
+        type: 'en-passant',
+        payload: {
+          currentPosition,
+          targetPosition
+        }
+      }
     }
   
     const pieceAtPosition = getPieceAtPosition(state, targetPosition);
@@ -110,6 +121,7 @@ export function ChessBoard(): JSX.Element {
           targetPosition: null
         }
       });
+      return;
     }
 
     const moveAction = getMoveAction(targetPosition);

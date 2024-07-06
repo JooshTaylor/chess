@@ -2,6 +2,7 @@ import { Piece, PieceId } from "../interfaces/Piece";
 import { PieceColour } from "../interfaces/PieceColour";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
+import { getEnPassantTargetPosition } from "../utils/getEnPassantTargetPosition";
 import { getMovePieceState } from "../utils/getMovePieceState";
 import { getPieceAtPosition } from "../utils/getPieceAtPosition";
 
@@ -22,7 +23,7 @@ interface MoveActionPayload {
 }
 
 interface MoveAction {
-  type: 'select-piece' | 'deselect-piece' | 'take-piece' | 'move-piece' | 'castle';
+  type: 'select-piece' | 'deselect-piece' | 'take-piece' | 'move-piece' | 'castle' | 'en-passant';
   payload: MoveActionPayload;
 }
 
@@ -151,6 +152,24 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
+    case 'en-passant': {
+      const { currentPosition, targetPosition } = action.payload;
+      const selectedPiece = getPieceAtPosition(state, currentPosition);
+
+      const newState: GameState = getMovePieceState(state, selectedPiece, currentPosition, targetPosition);
+
+      const targetPiecePosition = getEnPassantTargetPosition(state.turnColour, targetPosition);
+      const targetPiece = getPieceAtPosition(state, targetPiecePosition);
+
+      newState.pieces[targetPiece.id].status = 'dead';
+
+      return {
+        ...newState,
+        selectedPiece: '',
+        turnColour: getNextTurnColour(newState)
+      };
+    }
+
     case 'promote-piece': {
       const { pieceId, type } = action.payload;
 
@@ -160,7 +179,7 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
           ...state.pieces,
           [pieceId]: {
             ...state.pieces[pieceId],
-            promotionType: type
+            type
           }
         }
       };
