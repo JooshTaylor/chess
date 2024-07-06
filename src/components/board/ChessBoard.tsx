@@ -15,7 +15,8 @@ import { getPieceValidPositionsMap } from '../../utils/getPieceValidPositionsMap
 import { isCastling } from '../../utils/isCastling';
 import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
 import { getPositionId } from '../../utils/getPositionId';
-import { getKing } from '../../utils/getKing';
+import { isInCheckMate } from '../../utils/isKingVulnerable';
+import { Modal } from '../modal/Modal';
 
 export function ChessBoard(): JSX.Element {
   const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);
@@ -23,6 +24,20 @@ export function ChessBoard(): JSX.Element {
 
   const piecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), [state.positions]);
   const pieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, piecePositionMap), [state, piecePositionMap]);
+  
+  React.useEffect(() => {
+    if (state.status !== 'running')
+      return;
+
+    if (isInCheckMate(state, state.turnColour, piecePositionMap, pieceValidPositionsMap)) {
+      dispatch({
+        type: 'check-mate',
+        payload: {
+          winner: state.turnColour === 'black' ? 'white' : 'black'
+        }
+      });
+    }
+  }, [ state, pieceValidPositionsMap ]);
 
   function getMoveAction(targetPosition: Position): GameAction {
     if (state.selectedPiece === '')
@@ -103,23 +118,16 @@ export function ChessBoard(): JSX.Element {
     const futurePositionsMap = getPiecePositionMap(futureState.positions);
     const futureValidPositionsMap = getPieceValidPositionsMap(futureState, futurePositionsMap);
 
-    const currentKing = getKing(state, state.turnColour);
-    const kingPositionId = getPositionId(piecePositionMap[currentKing.id]);
-
-    for (const [ pieceId, validPositions ] of Object.entries(futureValidPositionsMap)) {
-      if (futureState.pieces[pieceId as PieceId].colour === state.turnColour)
-        continue;
-
-      if (validPositions.has(kingPositionId)) {
-        dispatch({
-          type: 'deselect-piece',
-          payload: {
-            currentPosition: null,
-            targetPosition: null
-          }
-        });
-        return;
-      }
+    // Prevent moves that will put the mover into check mate
+    if (isInCheckMate(futureState, state.turnColour, futurePositionsMap, futureValidPositionsMap)) {
+      dispatch({
+        type: 'deselect-piece',
+        payload: {
+          currentPosition: null,
+          targetPosition: null
+        }
+      });
+      return;
     }
 
     dispatch(moveAction);
@@ -180,6 +188,12 @@ export function ChessBoard(): JSX.Element {
         <PromotionModal
           onPromote={promotionType => onPromote(promotionPiece, promotionType)}
         />
+      )}
+
+      {state.status === 'ended' && (
+        <Modal title={`Game over`}>
+          <p>Game over! {state.winner} is the winner!</p>
+        </Modal>
       )}
     </>
   );
