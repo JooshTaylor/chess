@@ -1,7 +1,3 @@
-- Styling
-- Write tests
-- ESLint rules
-
 - Create database
 - Setup backend:
   - OAuth
@@ -10,3 +6,6 @@
 - Statuses for when the game hasn't started yet
 
 - AI?
+
+- Write tests
+- ESLint rules
