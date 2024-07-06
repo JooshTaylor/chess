@@ -1,5 +1,4 @@
-- En passant capturing
-- Fix promotions
+- Fix false check mate: https://prnt.sc/G--xsMutrbuD
 - Styling
 - Write tests
 
