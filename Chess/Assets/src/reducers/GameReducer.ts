@@ -3,10 +3,12 @@ import { PieceColour } from "../interfaces/PieceColour";
 import { PieceId } from "../interfaces/PieceId";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
-import { encodeNotation } from "../utils/encodeNotation";
+import { encodeNotation, encodePromotionNotation } from "../utils/encodeNotation";
 import { getEnPassantTargetPosition } from "../utils/getEnPassantTargetPosition";
+import { getMoveAction } from "../utils/getMoveAction";
 import { getMovePieceState } from "../utils/getMovePieceState";
 import { getPieceAtPosition } from "../utils/getPieceAtPosition";
+import { PiecePositionMap } from "../utils/getPiecePositionMap";
 
 type GameStatus = 'running' | 'ended';
 
@@ -33,6 +35,7 @@ interface MoveAction {
 interface PromoteActionPayload {
   pieceId: PieceId;
   type: PieceType;
+  piecePositionMap: PiecePositionMap;
 }
 
 interface PromoteAction {
@@ -83,7 +86,6 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         currentPiece,
         false,
         false,
-        false,
         false
       );
 
@@ -117,7 +119,6 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         currentPiece,
         true,
         false,
-        false,
         false
       );
 
@@ -135,25 +136,16 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
 
       const {
         currentPosition: rookCurrentPosition,
-        targetPosition: rookTargetPosition
+        targetPosition: rookTargetPosition,
+        side
       } = getCastlingRookPositionDetails(currentPosition, targetPosition);
 
       const king = getPieceAtPosition(state, currentPosition);
       const rook = getPieceAtPosition(state, rookCurrentPosition);
 
-      const nextNotation = encodeNotation(
-        currentPosition,
-        targetPosition,
-        king,
-        false,
-        false,
-        false,
-        true
-      );
-
       return {
         ...state,
-        moves: state.moves.concat(nextNotation),
+        moves: state.moves.concat(side === 'king' ? '0-0' : '0-0-0'),
         positions: {
           ...state.positions,
           [currentPosition.x]: {
@@ -206,7 +198,6 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         selectedPiece,
         true,
         false,
-        false,
         false
       );
 
@@ -221,14 +212,20 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'promote-piece': {
-      const { pieceId, type } = action.payload;
+      const { pieceId, type, piecePositionMap } = action.payload;
+
+      const targetPosition = piecePositionMap[pieceId];
+      const nextState = GameReducer(state, getMoveAction(state, pieceId, targetPosition, piecePositionMap));
+
+      nextState.moves.pop();
+      nextState.moves.push(encodePromotionNotation(targetPosition, type, false, false));
 
       return {
-        ...state,
+        ...nextState,
         pieces: {
-          ...state.pieces,
+          ...nextState.pieces,
           [pieceId]: {
-            ...state.pieces[pieceId],
+            ...nextState.pieces[pieceId],
             type
           }
         }
@@ -250,18 +247,20 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
   }
 }
 
-function getCastlingRookPositionDetails(kingCurrentPosition: Position, kingTargetPosition: Position): MoveActionPayload {
+function getCastlingRookPositionDetails(kingCurrentPosition: Position, kingTargetPosition: Position): MoveActionPayload & { side: 'king' | 'queen' } {
   // King side castling
   if (kingCurrentPosition.x < kingTargetPosition.x) {
     return {
       currentPosition: { x: kingCurrentPosition.x + 3, y: kingCurrentPosition.y },
-      targetPosition: { x: kingTargetPosition.x - 1, y: kingCurrentPosition.y }
+      targetPosition: { x: kingTargetPosition.x - 1, y: kingCurrentPosition.y },
+      side: 'king'
     };
   }
 
   // Queen side castling
   return {
     currentPosition: { x: kingCurrentPosition.x - 4, y: kingCurrentPosition.y },
-    targetPosition: { x: kingTargetPosition.x + 1, y: kingCurrentPosition.y }
+    targetPosition: { x: kingTargetPosition.x + 1, y: kingCurrentPosition.y },
+    side: 'queen'
   };
 }

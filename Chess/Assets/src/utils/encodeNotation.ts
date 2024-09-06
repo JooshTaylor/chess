@@ -2,7 +2,7 @@ import { Piece } from "../interfaces/Piece";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
 
-const getXPosition = (x: number) => String.fromCharCode(x + 96);
+const getPositionString = (position: Position) => `${String.fromCharCode(position.x + 96)}${position.y}`;
 
 const PieceSectionMap: Record<PieceType, string> = {
   pawn: '',
@@ -19,16 +19,8 @@ export function encodeNotation(
   piece: Piece,
   isCapture: boolean,
   isCheck: boolean,
-  isCheckMate: boolean,
-  isCastle: boolean
+  isCheckMate: boolean
 ): string {
-  if (isCastle) {
-    if (currentPosition.x < targetPosition.x)
-      return '0-0';
-
-    return '0-0-0';
-  }
-
   let notation = '';
 
   const pieceSection = PieceSectionMap[piece.type];
@@ -43,11 +35,37 @@ export function encodeNotation(
   if (isCapture)
     notation += 'x';
 
-  notation += `${getXPosition(targetPosition.x)}${targetPosition.y}`;
+  notation += getPositionString(targetPosition);
 
-  if (isCheck)
+  if (isCheckMate)
+    notation += '#';
+
+  if (isCheck && !isCheckMate)
     notation += '+';
 
+  return notation;
+}
+
+// What if I captured?
+export function encodePromotionNotation(
+  targetPosition: Position,
+  newType: PieceType,
+  isCheck: boolean,
+  isCheckMate: boolean
+): string {
+  let notation = '';
+
+  notation += getPositionString(targetPosition);
+
+  notation += '=';
+
+  notation += PieceSectionMap[newType];
+
+  if (isCheckMate)
+    notation += '#';
+
+  if (isCheck && !isCheckMate)
+    notation += '+';
 
   return notation;
 }

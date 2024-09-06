@@ -12,7 +12,6 @@ import { getPiecePositionMap } from '../../utils/getPiecePositionMap';
 import { getPieceValidPositionsMap } from '../../utils/getPieceValidPositionsMap';
 import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
 import { getPositionId } from '../../utils/getPositionId';
-import { isInCheck } from '../../utils/isInCheck';
 import { Modal } from '../modal/Modal';
 import { PieceId } from '../../interfaces/PieceId';
 import { isInCheckMate } from '../../utils/isInCheckMate';
@@ -23,7 +22,7 @@ export function ChessBoard(): JSX.Element {
   const [ promotionPiece, setPromotionPiece ] = React.useState<PieceId>(null);
 
   const piecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), [state.positions]);
-  const pieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, piecePositionMap), [state, piecePositionMap]);
+  const pieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, piecePositionMap, true), [state, piecePositionMap]);
 
   const validPositions = state.selectedPiece !== '' ? pieceValidPositionsMap[state.selectedPiece] : null;
   
@@ -76,28 +75,12 @@ export function ChessBoard(): JSX.Element {
       return;
     }
 
-    const moveAction = getMoveAction(state, targetPosition, piecePositionMap);
-
-    const futureState = GameReducer(state, moveAction);
-    const futurePositionsMap = getPiecePositionMap(futureState.positions);
-    const futureValidPositionsMap = getPieceValidPositionsMap(futureState, futurePositionsMap);
-
-    // Prevent moves that will put the mover into check
-    if (isInCheck(futureState, state.turnColour, futurePositionsMap, futureValidPositionsMap)) {
-      dispatch({
-        type: 'deselect-piece',
-        payload: {
-          currentPosition: null,
-          targetPosition: null
-        }
-      });
+    if (canPromotePiece(selectedPiece, targetPosition)) {
+      setPromotionPiece(selectedPiece.id);
       return;
     }
 
-    dispatch(moveAction);
-
-    if (canPromotePiece(selectedPiece, targetPosition))
-      setPromotionPiece(selectedPiece.id);
+    dispatch(getMoveAction(state, state.selectedPiece, targetPosition, piecePositionMap));
   }
 
   function onSelectSquare(position: Position): void {
@@ -114,7 +97,8 @@ export function ChessBoard(): JSX.Element {
       type: 'promote-piece',
       payload: {
         pieceId: currentPieceId,
-        type: promotionType
+        type: promotionType,
+        piecePositionMap
       }
     });
 

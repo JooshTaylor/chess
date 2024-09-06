@@ -20,3 +20,7 @@ Frontend:
 - Test out tactics like pins, skewers, and forks
 - Evaluation bar
 - Stalemate
+
+Given the current state of the board, we need to know every possible move for every single piece.
+To know every possible move for a piece, we need to simulate that move, then calculate every possible move for every piece in that position, to make
+sure that the move didn't put the person into check.
