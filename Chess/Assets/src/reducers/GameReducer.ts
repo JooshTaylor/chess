@@ -73,18 +73,31 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
 
     case 'move-piece': {
       const { currentPosition, targetPosition } = action.payload;
-      const newState: GameState = getMovePieceState(state, getPieceAtPosition(state, currentPosition), currentPosition, targetPosition);
+
+      const currentPiece = getPieceAtPosition(state, currentPosition);
+      const newState: GameState = getMovePieceState(state, currentPiece, currentPosition, targetPosition);
+
+      const nextNotation = encodeNotation(
+        currentPosition,
+        targetPosition,
+        currentPiece,
+        false,
+        false,
+        false,
+        false
+      );
 
       return {
         ...newState,
         selectedPiece: '',
-        moves: state.moves.concat(encodeNotation()),
+        moves: state.moves.concat(nextNotation),
         turnColour: getNextTurnColour(newState)
       };
     }
 
     case 'take-piece': {
       const { currentPosition, targetPosition } = action.payload;
+      const currentPiece = getPieceAtPosition(state, currentPosition);
       const targetPiece = getPieceAtPosition(state, targetPosition);
 
       const newState: GameState = {
@@ -98,11 +111,21 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         }
       };
 
+      const nextNotation = encodeNotation(
+        currentPosition,
+        targetPosition,
+        currentPiece,
+        true,
+        false,
+        false,
+        false
+      );
+
       return {
         ...newState,
         ...getMovePieceState(newState, getPieceAtPosition(state, currentPosition), currentPosition, targetPosition),
         selectedPiece: '',
-        moves: state.moves.concat(encodeNotation()),
+        moves: state.moves.concat(nextNotation),
         turnColour: getNextTurnColour(newState),
       };
     }
@@ -118,8 +141,19 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
       const king = getPieceAtPosition(state, currentPosition);
       const rook = getPieceAtPosition(state, rookCurrentPosition);
 
+      const nextNotation = encodeNotation(
+        currentPosition,
+        targetPosition,
+        king,
+        false,
+        false,
+        false,
+        true
+      );
+
       return {
         ...state,
+        moves: state.moves.concat(nextNotation),
         positions: {
           ...state.positions,
           [currentPosition.x]: {
@@ -166,10 +200,21 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
       const targetPiecePosition = getEnPassantTargetPosition(state.turnColour, targetPosition);
       const targetPiece = getPieceAtPosition(state, targetPiecePosition);
 
+      const nextNotation = encodeNotation(
+        currentPosition,
+        targetPosition,
+        selectedPiece,
+        true,
+        false,
+        false,
+        false
+      );
+
       newState.pieces[targetPiece.id].status = 'dead';
 
       return {
         ...newState,
+        moves: state.moves.concat(nextNotation),
         selectedPiece: '',
         turnColour: getNextTurnColour(newState)
       };
