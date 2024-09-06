@@ -24,6 +24,8 @@ export function ChessBoard(): JSX.Element {
 
   const piecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), [state.positions]);
   const pieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, piecePositionMap), [state, piecePositionMap]);
+
+  const validPositions = state.selectedPiece !== '' ? pieceValidPositionsMap[state.selectedPiece] : null;
   
   React.useEffect(() => {
     if (state.status !== 'running')
@@ -63,7 +65,6 @@ export function ChessBoard(): JSX.Element {
 
     const selectedPiece = state.pieces[state.selectedPiece];
   
-    const validPositions = pieceValidPositionsMap[state.selectedPiece];
     if (!validPositions.has(getPositionId(targetPosition))) {
       dispatch({
         type: 'deselect-piece',
@@ -134,7 +135,7 @@ export function ChessBoard(): JSX.Element {
                     isSelected={state.selectedPiece !== '' && getPositionId(position) === getPositionId(piecePositionMap[state.selectedPiece])}
                     position={position}
                     piece={getPieceAtPosition(state, position)}
-                    isTarget={false}
+                    isTarget={validPositions?.has(getPositionId(position))}
                     disabled={!!promotionPiece || state.status !== 'running'}
                   />
                 );
