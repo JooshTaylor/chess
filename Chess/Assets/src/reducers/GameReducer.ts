@@ -51,7 +51,7 @@ export type GameAction = MoveAction | PromoteAction | CheckMateAction;
 
 export function GameReducer(state: GameState, action: GameAction): GameState {
   function getNextTurnColour(state: GameState): PieceColour {
-    return state.turnColour === 'black' ? 'white' : 'black';
+    return state.turnColour === 'dark' ? 'light' : 'dark';
   }
 
   switch (action.type) {

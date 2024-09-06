@@ -1,7 +1,7 @@
 import { PieceProps } from "./PieceProps";
 
 export function Pawn(props: PieceProps): JSX.Element {
-  if (props.colour === 'black') {
+  if (props.colour === 'dark') {
     return (
       <svg width="45" height="45">
         <path 

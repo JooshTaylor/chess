@@ -1,1 +1,1 @@
-export type PieceColour = 'black' | 'white';
+export type PieceColour = 'dark' | 'light';

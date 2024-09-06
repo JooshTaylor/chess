@@ -9,3 +9,12 @@
 
 - Write tests
 - ESLint rules
+
+Frontend:
+- Change to process moves with chess notation
+- Record moves in RHS panel
+- Display the available positions for each piece when highlighted
+- Prevent castling if there's a sniper
+- Test out tactics like pins, skewers, and forks
+- Evaluation bar
+- Add tailwind

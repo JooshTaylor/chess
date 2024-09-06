@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -13,12 +17,14 @@
   -moz-osx-font-smoothing: grayscale;
 
   --square-size: 100px;
-  --light-square-colour: rgb(239,217,180);
-  --dark-square-colour: rgb(180,136,97);
   --spacer-1: 15px;
   --spacer-2: 30px;
   --spacer-3: 60px;
   --modal-width: 300px;
+}
+
+svg {
+  scale: 1.5;
 }
 
 a {

@@ -1,16 +1,14 @@
 import { PieceComponentMap } from '../../constants/PieceComponentMap';
 import { Piece } from '../../interfaces/Piece';
-import { PieceColour } from '../../interfaces/PieceColour';
 import { Position } from '../../interfaces/Position';
-import './square.css';
 
-function getColour(position: Position): PieceColour {
-  // If the first in the row is white
+function getColour(position: Position): string {
+  // If the first in the row is light
   if (position.y % 2 === 0)
-    return position.x % 2 === 0 ? 'black' : 'white';
+    return position.x % 2 === 0 ? 'bg-chess-dark' : 'bg-chess-light';
 
-  // If the first in the row is black
-  return position.x % 2 === 0 ? 'white' : 'black';
+  // If the first in the row is dark
+  return position.x % 2 === 0 ? 'bg-chess-light' : 'bg-chess-dark';
 }
 
 function convertNumberToChar(num: number): string {
@@ -22,18 +20,19 @@ interface SquareProps {
   piece: Piece;
   onSelect: () => void;
   isSelected: boolean;
+  isTarget: boolean;
   disabled: boolean;
 }
 
 export function Square(props: SquareProps): JSX.Element {
   function getClassName(): string {
-    let className = `square ${getColour(props.position)}`;
+    let className = `relative cursor-pointer w-24 h-24 ${getColour(props.position)}`;
 
     if (props.isSelected)
-      className += ' selected-square';
+      className += ' bg-green-600';
 
     if (props.disabled)
-      className += ' disabled';
+      className += ' cursor-default';
 
     return className;
   }
@@ -46,22 +45,26 @@ export function Square(props: SquareProps): JSX.Element {
   }
 
   const PieceComponent = PieceComponentMap[props.piece?.type];
-
+  
   return (
     <div className={getClassName()} onClick={onSelect}>
       {props.position.x === 1 && (
-        <div className='label numeric-label'>
+        <div className='absolute top-1 left-1'>
           {convertNumberToChar(props.position.y)}
         </div>
       )}
       {props.position.y === 1 && (
-        <div className='label character-label'>
+        <div className='absolute bottom-1 right-1'>
           {props.position.x}
         </div>
       )}
 
+      {!!props.isTarget && !props.piece && (
+          <div className='target'></div>
+      )}
+
       {!!props.piece && (
-        <div className={`piece ${props.piece.colour === 'black' ? 'piece-black' : 'piece-white'}`}>
+        <div className={`w-full h-full flex items-center justify-center ${props.piece.colour === 'dark' ? 'text-black' : 'text-white'}`}>
           <PieceComponent colour={props.piece.colour} />
         </div>
       )}

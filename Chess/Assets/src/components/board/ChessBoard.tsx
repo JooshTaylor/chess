@@ -1,6 +1,5 @@
 import React from 'react';
 import { Square } from '../square/Square';
-import './board.css';
 import { INITIAL_GAME_STATE } from '../../constants/InitialGameState';
 import { GameReducer } from '../../reducers/GameReducer';
 import { BOARD } from '../../constants/Board';
@@ -34,7 +33,7 @@ export function ChessBoard(): JSX.Element {
       dispatch({
         type: 'check-mate',
         payload: {
-          winner: state.turnColour === 'black' ? 'white' : 'black'
+          winner: state.turnColour === 'dark' ? 'light' : 'dark'
         }
       });
     }
@@ -123,10 +122,10 @@ export function ChessBoard(): JSX.Element {
 
   return (
     <>
-      <div className='board'>
+      <div className='flex items-center justify-center h-screen select-none'>
         <div>
           {BOARD.map((row, rowIndex) => (
-            <div key={rowIndex} className='board-row'>
+            <div key={rowIndex} className='flex'>
               {row.map(position => {
                 return (
                   <Square
@@ -135,6 +134,7 @@ export function ChessBoard(): JSX.Element {
                     isSelected={state.selectedPiece !== '' && getPositionId(position) === getPositionId(piecePositionMap[state.selectedPiece])}
                     position={position}
                     piece={getPieceAtPosition(state, position)}
+                    isTarget={false}
                     disabled={!!promotionPiece || state.status !== 'running'}
                   />
                 );

@@ -1,8 +1,6 @@
 import { PieceType } from "../../interfaces/PieceType";
 import { Modal } from "../modal/Modal";
 
-import './promotion-modal.css';
-
 interface PromotionOptionProps {
   type: PieceType;
   onSelect: () => void;
@@ -26,7 +24,7 @@ function PromotionOption(props: PromotionOptionProps): JSX.Element {
 
   return (
     <li>
-      <button onClick={props.onSelect} className='promotion-option'>
+      <button onClick={props.onSelect} className='w-full text-left mb-1'>
         {getName()}
       </button>
     </li>

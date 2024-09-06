@@ -1,18 +1,6 @@
 .menu {
-  position: fixed;
-  left: calc(50% + (var(--square-size) * 4) + var(--spacer-1));
-  top: calc(calc(100vh - (var(--square-size) * 8)) / 2);
-  bottom: calc(calc(100vh - (var(--square-size) * 8)) / 2);
-  width: calc(calc(100vw - (var(--square-size) * 8) - var(--spacer-3)) / 2);
-  max-width: 300px;
-
-  border-radius: var(--spacer-1);
-  border: 2px solid var(--dark-square-colour);
-
-  color: var(--dark-square-colour);
-  background-color: var(--light-square-colour);
-}
-
-.menu-contents {
-  padding: var(--spacer-1);
+  left: calc(50% + 384px);
+  top: calc(calc(100vh - 768px) / 2);
+  bottom: calc(calc(100vh - 768px) / 2);
+  width: calc(calc(100vw - 768px) / 2);
 }

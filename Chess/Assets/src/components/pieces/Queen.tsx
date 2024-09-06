@@ -1,7 +1,7 @@
 import { PieceProps } from "./PieceProps";
 
 export function Queen(props: PieceProps): JSX.Element {
-  if (props.colour === 'black') {
+  if (props.colour === 'dark') {
     return (
       <svg width="45" height="45">
         <g style={{fill: "#000000", stroke: "#000000", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round"}}>
