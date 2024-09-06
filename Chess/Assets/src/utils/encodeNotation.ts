@@ -19,8 +19,21 @@ export function encodeNotation(
   piece: Piece,
   isCapture: boolean,
   isCheck: boolean,
-  isCheckMate: boolean
+  isCheckMate: boolean,
+  castleSide: 'king' | 'queen' | 'none'
 ): string {
+  if (castleSide !== 'none') {
+    const notation = castleSide === 'king' ? '0-0' : '0-0-0';
+
+    if (isCheckMate)
+      return notation + '#';
+
+    if (isCheck)
+      return notation + '+';
+
+    return notation;
+  }
+
   let notation = '';
 
   const pieceSection = PieceSectionMap[piece.type];
