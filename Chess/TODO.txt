@@ -16,3 +16,4 @@ Frontend:
 - Prevent castling if there's a sniper
 - Test out tactics like pins, skewers, and forks
 - Evaluation bar
+- Stalemate

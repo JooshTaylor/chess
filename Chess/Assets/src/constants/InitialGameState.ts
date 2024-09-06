@@ -4,6 +4,7 @@ export const INITIAL_GAME_STATE: GameState = {
   turnColour: 'light',
   selectedPiece: '',
   status: 'running',
+  moves: [],
 
   positions: {
     // X pos then Y

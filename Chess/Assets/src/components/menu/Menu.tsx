@@ -2,8 +2,6 @@ import { GameState } from "../../reducers/GameReducer";
 import { PieceColour } from "../../interfaces/PieceColour";
 import { PiecePositionMap } from "../../utils/getPiecePositionMap";
 
-import './menu.css';
-
 function getColourString(colour: PieceColour): string {
   if (colour === 'dark')
     return 'Dark';
@@ -18,9 +16,19 @@ interface MenuProps {
 
 export function Menu(props: MenuProps): JSX.Element {
   return (
-    <div className='menu fixed max-w-40 rounded-lg border border-chess-dark text-chess-dark bg-chess-light ms-4'>
+    <div className='w-60 h-[768px] rounded-lg border border-chess-dark text-chess-dark bg-chess-light ms-4 font-semibold'>
       <div className='p-2'>
-        <h2>Menu</h2>
+        <h2>Moves</h2>
+
+        <ul>
+          {props.state.moves.map((move, index) => {
+            return (
+              <li key={index}>
+                {index + 1}. {move}
+              </li>
+            );
+          })}
+        </ul>
 
         {props.state.status === 'ended' && (
           <div>

@@ -3,6 +3,7 @@ import { PieceColour } from "../interfaces/PieceColour";
 import { PieceId } from "../interfaces/PieceId";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
+import { encodeNotation } from "../utils/encodeNotation";
 import { getEnPassantTargetPosition } from "../utils/getEnPassantTargetPosition";
 import { getMovePieceState } from "../utils/getMovePieceState";
 import { getPieceAtPosition } from "../utils/getPieceAtPosition";
@@ -14,6 +15,7 @@ export interface GameState {
   selectedPiece: PieceId | '';
   pieces: Record<PieceId, Piece>;
   positions: Record<number, Record<number, PieceId | ''>>;
+  moves: string[];
   status: GameStatus;
   winner?: PieceColour;
 }
@@ -76,6 +78,7 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...newState,
         selectedPiece: '',
+        moves: state.moves.concat(encodeNotation()),
         turnColour: getNextTurnColour(newState)
       };
     }
@@ -99,6 +102,7 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         ...newState,
         ...getMovePieceState(newState, getPieceAtPosition(state, currentPosition), currentPosition, targetPosition),
         selectedPiece: '',
+        moves: state.moves.concat(encodeNotation()),
         turnColour: getNextTurnColour(newState),
       };
     }

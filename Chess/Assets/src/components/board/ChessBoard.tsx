@@ -123,7 +123,7 @@ export function ChessBoard(): JSX.Element {
 
   return (
     <>
-      <div className='flex items-center justify-center h-screen select-none'>
+      <div className='flex flex-nowrap h-screen items-center justify-center'>
         <div>
           {BOARD.map((row, rowIndex) => (
             <div key={rowIndex} className='flex'>
@@ -143,11 +143,11 @@ export function ChessBoard(): JSX.Element {
             </div>
           ))}
         </div>
+        <Menu
+          state={state}
+          piecePositionMap={piecePositionMap}
+        />
       </div>
-      <Menu
-        state={state}
-        piecePositionMap={piecePositionMap}
-      />
 
       {!!promotionPiece && (
         <PromotionModal

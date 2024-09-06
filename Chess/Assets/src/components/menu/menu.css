@@ -1,6 +1,0 @@
-.menu {
-  left: calc(50% + 384px);
-  top: calc(calc(100vh - 768px) / 2);
-  bottom: calc(calc(100vh - 768px) / 2);
-  width: calc(calc(100vw - 768px) / 2);
-}
