@@ -25,6 +25,8 @@ export function ChessBoard(): JSX.Element {
 
   const validPositions = state.selectedPiece !== '' ? pieceValidPositionsMap[state.selectedPiece] : null;
 
+  console.log(pieceValidPositionsMap);
+
   // React.useEffect(() => {
   //   if (state.status !== 'running')
   //     return;
@@ -78,6 +80,10 @@ export function ChessBoard(): JSX.Element {
       setPromotionPiece(selectedPiece.id);
       return;
     }
+
+    const { isCheck, isCheckMate } = validPositions[getPositionId(targetPosition)];
+
+    console.log('is check', isCheck);
 
     dispatch(getMoveAction(state, state.selectedPiece, targetPosition, piecePositionMap));
   }
