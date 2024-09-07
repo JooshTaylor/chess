@@ -115,7 +115,7 @@ export function ChessBoard(): JSX.Element {
           }
         });
 
-        modalRoot.unmount();
+        modalRoot.render(<></>);
       };
 
       modalRoot.render(
