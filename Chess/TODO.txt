@@ -17,6 +17,7 @@ Frontend:
   - En passant?
   - Scrollbar
   - Turn number
+- Tracking material
 - Record moves in RHS panel
 - Prevent castling if there's a sniper
 - Test out tactics like pins, skewers, and forks

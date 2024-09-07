@@ -1,10 +1,15 @@
+import { Piece } from "../interfaces/Piece";
+import { PieceId } from "../interfaces/PieceId";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
 import { GameState, GameAction } from "../reducers/GameReducer";
 import { getPieceAtPosition } from "../utils/getPieceAtPosition";
+import { PiecePositionMap } from "./getPiecePositionMap";
 import { PieceValidPositionsMap } from "./getPieceValidPositionsMap";
+import { getPositionId } from "./getPositionId";
 
-const getPositionString = (position: Position) => `${String.fromCharCode(position.x + 96)}${position.y}`;
+const getXChar = (x: number) => String.fromCharCode(x + 96);
+
 const getCheckSection = (isCheck: boolean, isCheckMate: boolean) => {
   if (isCheckMate)
     return '#';
@@ -14,11 +19,60 @@ const getCheckSection = (isCheck: boolean, isCheckMate: boolean) => {
 
   return '';
 };
+
 const getPromotionSection = (promotedTo: PieceType) => {
   if (!promotedTo)
     return '';
 
   return `=${PieceSectionMap[promotedTo]}`;
+};
+
+/**
+ * To know if I need to disambiguate a move, I need to know:
+ * 1. If any other pieces could have moved to the same position.
+ * 2. If those pieces are of the same type as the one that moved.
+ */
+const getDisambiguationSection = (
+  state: GameState,
+  currentPiece: Piece,
+  targetPosition: Position,
+  piecePositionMap: PiecePositionMap,
+  pieceValidPositionsMap: PieceValidPositionsMap
+) => {
+  const otherPieces: Piece[] = [];
+
+  for (const [ pieceId, validPositions ] of Object.entries(pieceValidPositionsMap)) {
+    if (pieceId === currentPiece.id)
+      continue;
+
+    const otherPiece = state.pieces[pieceId as PieceId];
+
+    if (otherPiece.colour !== currentPiece.colour || otherPiece.type !== currentPiece.type)
+      continue;
+
+    if (validPositions.has(getPositionId(targetPosition)))
+      otherPieces.push(otherPiece);
+  }
+
+  if (otherPieces.length === 1) {
+    const otherPiece = otherPieces[0];
+
+    const { x: currentX, y: currentY } = piecePositionMap[currentPiece.id];
+    const { x: otherX, y: otherY } = piecePositionMap[otherPiece.id];
+
+    if (currentX !== otherX)
+      return getXChar(currentX);
+
+    if (currentY !== otherY)
+      return currentY;
+  }
+
+  // TODO: Work this out
+  if (otherPieces.length === 2) {
+    return '';
+  }
+
+  return '';
 };
 
 const PieceSectionMap: Record<PieceType, string> = {
@@ -34,7 +88,8 @@ const PieceSectionMap: Record<PieceType, string> = {
 // TODO: Double disambiguation
 export function encodeNotation(
   previousState: GameState,
-  pieceValidPositionsMap: PieceValidPositionsMap,
+  previousPiecePositionMap: PiecePositionMap,
+  previousPieceValidPositionsMap: PieceValidPositionsMap,
   actionPlayed: GameAction,
   isCheck: boolean,
   isCheckMate: boolean
@@ -50,8 +105,16 @@ export function encodeNotation(
       
       return [
         PieceSectionMap[piece.type],
+        getDisambiguationSection(
+          previousState,
+          piece,
+          targetPosition,
+          previousPiecePositionMap,
+          previousPieceValidPositionsMap
+        ),
         targetPiece ? 'x' : '',
-        getPositionString(targetPosition),
+        getXChar(targetPosition.x),
+        targetPosition.y,
         getCheckSection(isCheck, isCheckMate)
       ].join('');
     }
@@ -64,8 +127,16 @@ export function encodeNotation(
 
       return [
         PieceSectionMap[piece.type],
+        getDisambiguationSection(
+          previousState,
+          piece,
+          targetPosition,
+          previousPiecePositionMap,
+          previousPieceValidPositionsMap
+        ),
         targetPiece ? 'x' : '',
-        getPositionString(targetPosition),
+        getXChar(targetPosition.x),
+        targetPosition.y,
         getPromotionSection(promotionType),
         getCheckSection(isCheck, isCheckMate)
       ].join('');

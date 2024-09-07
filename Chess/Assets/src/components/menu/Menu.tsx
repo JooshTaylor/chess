@@ -16,7 +16,7 @@ interface MenuProps {
 
 export function Menu(props: MenuProps): JSX.Element {
   return (
-    <div className='w-60 h-[768px] rounded-lg border border-chess-dark text-chess-dark bg-chess-light ms-4 font-semibold'>
+    <div className='w-60 max-h-[768px] min-h-[768px] rounded-lg border border-chess-dark text-chess-dark bg-chess-light ms-4 font-semibold overflow-y-scroll'>
       <div className='p-2'>
         <h2>Moves</h2>
 

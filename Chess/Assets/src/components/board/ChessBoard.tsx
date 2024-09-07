@@ -38,13 +38,16 @@ export function ChessBoard(): JSX.Element {
       return;
     }
 
+    const previousPositionMap = piecePositionMap.current;
+    const previousValidPositions = pieceValidPositionsMap.current;
+
     piecePositionMap.current = getPiecePositionMap(futureState.positions);
     pieceValidPositionsMap.current = getPieceValidPositionsMap(futureState, piecePositionMap.current, true);
 
     const isCheck = isInCheck(futureState, futureState.turnColour, piecePositionMap.current, pieceValidPositionsMap.current);
     const isCheckMate = isInCheckMate(futureState, futureState.turnColour, piecePositionMap.current, pieceValidPositionsMap.current);
 
-    const notation = encodeNotation(state, pieceValidPositionsMap.current, action, isCheck, isCheckMate);
+    const notation = encodeNotation(state, previousPositionMap, previousValidPositions, action, isCheck, isCheckMate);
 
     _dispatch({
       ...futureState,
