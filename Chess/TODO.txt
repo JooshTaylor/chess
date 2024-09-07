@@ -9,7 +9,7 @@
 - ESLint rules
 
 Frontend:
-- Support loading in a game with moves only
+- Home page to create a game using react router
 - Clean up the state management. Try to submit notation when dispatching and go back to a normal reducer
 - Tracking material
 - Stockfish:
