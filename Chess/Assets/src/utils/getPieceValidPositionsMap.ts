@@ -3,14 +3,7 @@ import { GameState } from "../reducers/GameReducer";
 import { PiecePositionMap } from "./getPiecePositionMap";
 import { getValidPositions } from "./getValidPositions";
 
-export interface ValidPositionsMap {
-  [position: string]: {
-    isCheck: boolean;
-    isCheckMate: boolean;
-  }
-}
-
-export type PieceValidPositionsMap = Record<PieceId, ValidPositionsMap>;
+export type PieceValidPositionsMap = Record<PieceId, Set<string>>;
 
 export function getPieceValidPositionsMap(state: GameState, piecePositionMap: PiecePositionMap, filterUnsafeSquares: boolean): PieceValidPositionsMap {
   const map: Partial<PieceValidPositionsMap> = {};

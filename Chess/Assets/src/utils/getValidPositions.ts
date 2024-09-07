@@ -12,7 +12,8 @@ import { getPieceAtPosition } from "./getPieceAtPosition";
 import { getPositionId } from "./getPositionId";
 import { isValidPosition } from "./isValidPosition";
 import { getMoveAction } from "./getMoveAction";
-import { getPieceValidPositionsMap, ValidPositionsMap } from "./getPieceValidPositionsMap";
+import { getPieceValidPositionsMap } from "./getPieceValidPositionsMap";
+import { isInCheck } from "./isInCheck";
 
 function getAvailableSquares(state: GameState, piece: Piece, piecePositionMap: PiecePositionMap): Set<string> {
   switch (piece.type) {
@@ -31,23 +32,11 @@ function getAvailableSquares(state: GameState, piece: Piece, piecePositionMap: P
   }
 }
 
-export function getValidPositions(state: GameState, piece: Piece, piecePositionMap: PiecePositionMap, filterUnsafeSquares: boolean): ValidPositionsMap {
+export function getValidPositions(state: GameState, piece: Piece, piecePositionMap: PiecePositionMap, filterUnsafeSquares: boolean): Set<string> {
   const availableSquares = getAvailableSquares(state, piece, piecePositionMap);
 
-  if (!filterUnsafeSquares) {
-    return Array.from(availableSquares).reduce<ValidPositionsMap>((acc, square) => {
-      const [ x, y ] = square.split(':');
-      const position: Position = { x: Number(x), y: Number(y) };
-      position;
-
-      acc[square] = {
-        isCheck: false,
-        isCheckMate: false
-      };
-
-      return acc;
-    }, {});
-  }
+  if (!filterUnsafeSquares)
+    return availableSquares;
 
   const safeSquares = new Set<string>([]);
 
@@ -61,26 +50,14 @@ export function getValidPositions(state: GameState, piece: Piece, piecePositionM
     const futurePositionsMap = getPiecePositionMap(futureState.positions);
     const futureValidPositionsMap = getPieceValidPositionsMap(futureState, futurePositionsMap, false);
 
-    for (const [ , validPositions ] of Object.entries(futureValidPositionsMap)) {
-      if (Object.values(validPositions).some(pos => pos.isCheck))
-        continue;
+    if (isInCheck(futureState, state.turnColour, futurePositionsMap, futureValidPositionsMap)) {
+      continue;
     }
 
     safeSquares.add(availableSquare);
   }
 
-  return Array.from(safeSquares).reduce<ValidPositionsMap>((acc, square) => {
-    const [ x, y ] = square.split(':');
-    const position: Position = { x: Number(x), y: Number(y) };
-    position;
-
-    acc[square] = {
-      isCheck: false,
-      isCheckMate: false
-    };
-
-    return acc;
-  }, {});
+  return safeSquares;
 }
 
 export function getValidPositionSet() {

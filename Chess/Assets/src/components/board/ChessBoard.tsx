@@ -14,6 +14,7 @@ import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
 import { getPositionId } from '../../utils/getPositionId';
 import { Modal } from '../modal/Modal';
 import { PieceId } from '../../interfaces/PieceId';
+import { isInCheckMate } from '../../utils/isInCheckMate';
 import { getMoveAction } from '../../utils/getMoveAction';
 
 export function ChessBoard(): JSX.Element {
@@ -24,20 +25,20 @@ export function ChessBoard(): JSX.Element {
   const pieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, piecePositionMap, true), [state, piecePositionMap]);
 
   const validPositions = state.selectedPiece !== '' ? pieceValidPositionsMap[state.selectedPiece] : null;
+  
+  React.useEffect(() => {
+    if (state.status !== 'running')
+      return;
 
-  // React.useEffect(() => {
-  //   if (state.status !== 'running')
-  //     return;
-
-  //   if (isInCheckMate(state, state.turnColour, piecePositionMap, pieceValidPositionsMap)) {
-  //     dispatch({
-  //       type: 'check-mate',
-  //       payload: {
-  //         winner: state.turnColour === 'dark' ? 'light' : 'dark'
-  //       }
-  //     });
-  //   }
-  // }, [ state, pieceValidPositionsMap ]);
+    if (isInCheckMate(state, state.turnColour, piecePositionMap, pieceValidPositionsMap)) {
+      dispatch({
+        type: 'check-mate',
+        payload: {
+          winner: state.turnColour === 'dark' ? 'light' : 'dark'
+        }
+      });
+    }
+  }, [ state, pieceValidPositionsMap ]);
 
   function onSelectPiece(position: Position): void {
     const piece = getPieceAtPosition(state, position);
@@ -63,7 +64,7 @@ export function ChessBoard(): JSX.Element {
 
     const selectedPiece = state.pieces[state.selectedPiece];
   
-    if (!validPositions[getPositionId(targetPosition)]) {
+    if (!validPositions.has(getPositionId(targetPosition))) {
       dispatch({
         type: 'deselect-piece',
         payload: {
@@ -118,7 +119,7 @@ export function ChessBoard(): JSX.Element {
                     isSelected={state.selectedPiece !== '' && getPositionId(position) === getPositionId(piecePositionMap[state.selectedPiece])}
                     position={position}
                     piece={getPieceAtPosition(state, position)}
-                    isTarget={!!validPositions?.[getPositionId(position)]}
+                    isTarget={validPositions?.has(getPositionId(position))}
                     disabled={!!promotionPiece || state.status !== 'running'}
                   />
                 );

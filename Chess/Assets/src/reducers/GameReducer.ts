@@ -86,8 +86,7 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         currentPiece,
         false,
         false,
-        false,
-        'none'
+        false
       );
 
       return {
@@ -120,8 +119,7 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         currentPiece,
         true,
         false,
-        false,
-        'none'
+        false
       );
 
       return {
@@ -200,8 +198,7 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
         selectedPiece,
         true,
         false,
-        false,
-        'none'
+        false
       );
 
       newState.pieces[targetPiece.id].status = 'dead';
