@@ -9,7 +9,7 @@ import { getMovePieceState } from "../utils/getMovePieceState";
 import { getPieceAtPosition } from "../utils/getPieceAtPosition";
 
 type GameStatus = 'running' | 'ended';
-type GameResult = 'check-mate' | 'draw' | 'stalemate' | 'resign' | 'time-out' | 'abandon';
+export type GameResult = 'check-mate' | 'draw' | 'stalemate' | 'resign' | 'time-out' | 'abandon';
 
 export interface GameState {
   turnColour: PieceColour;

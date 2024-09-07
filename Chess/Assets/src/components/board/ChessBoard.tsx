@@ -13,11 +13,12 @@ import { getPiecePositionMap, PiecePositionMap } from '../../utils/getPiecePosit
 import { getPieceValidPositionsMap, PieceValidPositionsMap } from '../../utils/getPieceValidPositionsMap';
 import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
 import { getPositionId } from '../../utils/getPositionId';
-import { Modal } from '../modal/Modal';
 import { isInCheckMate } from '../../utils/isInCheckMate';
 import { getMoveAction } from '../../utils/getMoveAction';
 import { isInCheck } from '../../utils/isInCheck';
 import { encodeNotation } from '../../utils/encodeNotation';
+import { isInStalemate } from '../../utils/isInStalemate';
+import { EndGameModal } from '../end-game-modal/EndGameModal';
 
 const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
 
@@ -45,9 +46,10 @@ export function ChessBoard(): JSX.Element {
     pieceValidPositionsMap.current = getPieceValidPositionsMap(futureState, piecePositionMap.current, true);
 
     const isCheck = isInCheck(futureState, futureState.turnColour, piecePositionMap.current, pieceValidPositionsMap.current);
-    const isCheckMate = isInCheckMate(futureState, futureState.turnColour, pieceValidPositionsMap.current);
+    const isCheckMate = isInCheckMate(futureState, futureState.turnColour, pieceValidPositionsMap.current, isCheck);
+    const isStalemate = isInStalemate(futureState, futureState.turnColour, pieceValidPositionsMap.current, isCheck);
 
-    const notation = encodeNotation(state, previousPositionMap, previousValidPositions, action, isCheck, isCheckMate);
+    const notation = encodeNotation(state, previousPositionMap, previousValidPositions, action, isCheck, isCheckMate, isStalemate);
 
     _dispatch({
       ...futureState,
@@ -56,14 +58,20 @@ export function ChessBoard(): JSX.Element {
   };
 
   React.useEffect(() => {
-    const isCheckMate = state.moves[state.moves.length - 1]?.endsWith('#');
+    const latestMove = state.moves[state.moves.length - 1];
 
-    if (isCheckMate) {
+    if (!latestMove)
+      return;
+
+    const isCheckMate = latestMove.endsWith('#');
+    const isStalemate = latestMove.endsWith('1/2-1/2');
+
+    if (isCheckMate || isStalemate) {
       dispatch({
         type: 'end-game',
         payload: {
-          winner: state.turnColour === 'dark' ? 'light' : 'dark',
-          result: 'check-mate'
+          winner: isCheckMate ? (state.turnColour === 'dark' ? 'light' : 'dark') : null,
+          result: isCheckMate ? 'check-mate' : 'stalemate'
         }
       });
     }
@@ -169,9 +177,7 @@ export function ChessBoard(): JSX.Element {
       </div>
 
       {state.status === 'ended' && (
-        <Modal title={`Game over`}>
-          <p>Game over! {state.winner} is the winner!</p>
-        </Modal>
+        <EndGameModal result={state.result} winner={state.winner} />
       )}
     </>
   );

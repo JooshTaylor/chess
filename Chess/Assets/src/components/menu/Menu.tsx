@@ -29,21 +29,17 @@ export function Menu(props: MenuProps): JSX.Element {
   }
 
   return (
-    <div className='w-60 max-h-[768px] min-h-[768px] rounded-lg border border-chess-dark text-chess-dark bg-chess-light ms-4 font-semibold overflow-y-scroll'>
+    <div className='w-[300px] max-h-[768px] min-h-[768px] rounded-lg border border-chess-dark text-chess-dark bg-chess-light ms-4 font-semibold overflow-y-scroll'>
       <div className='p-2'>
         <h2>Moves</h2>
 
         <ul>
           {moves.map(([ moveNumber, lightMove, darkMove ]) => {
             return (
-              <li key={moveNumber} className='columns-7'>
+              <li key={moveNumber} className='columns-3'>
                 <div>{moveNumber}.</div>
                 <div>{lightMove}</div>
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
                 <div>{darkMove}</div>
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
               </li>
             );
           })}

@@ -10,7 +10,10 @@ import { getPositionId } from "./getPositionId";
 
 const getXChar = (x: number) => String.fromCharCode(x + 96);
 
-const getCheckSection = (isCheck: boolean, isCheckMate: boolean) => {
+const getCheckSection = (isCheck: boolean, isCheckMate: boolean, isStalemate: boolean) => {
+  if (isStalemate)
+    return ' 1/2-1/2'
+
   if (isCheckMate)
     return '#';
 
@@ -142,7 +145,8 @@ export function encodeNotation(
   previousPieceValidPositionsMap: PieceValidPositionsMap,
   actionPlayed: GameAction,
   isCheck: boolean,
-  isCheckMate: boolean
+  isCheckMate: boolean,
+  isStalemate: boolean
 ): string {
   switch (actionPlayed.type) {
     case 'move-piece':
@@ -165,7 +169,7 @@ export function encodeNotation(
         targetPiece ? 'x' : '',
         getXChar(targetPosition.x),
         targetPosition.y,
-        getCheckSection(isCheck, isCheckMate)
+        getCheckSection(isCheck, isCheckMate, isStalemate)
       ].join('');
     }
 
@@ -188,7 +192,7 @@ export function encodeNotation(
         getXChar(targetPosition.x),
         targetPosition.y,
         getPromotionSection(promotionType),
-        getCheckSection(isCheck, isCheckMate)
+        getCheckSection(isCheck, isCheckMate, isStalemate)
       ].join('');
     }
 
@@ -197,7 +201,7 @@ export function encodeNotation(
 
       return [
         currentPosition.x < targetPosition.x ? '0-0' : '0-0-0',
-        getCheckSection(isCheck, isCheckMate)
+        getCheckSection(isCheck, isCheckMate, isStalemate)
       ].join('');
     }
 
