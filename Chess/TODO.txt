@@ -15,11 +15,14 @@ Frontend:
   - How does promoting work?
   - Disambiguation
   - En passant?
+  - Scrollbar
+  - Turn number
 - Record moves in RHS panel
 - Prevent castling if there's a sniper
 - Test out tactics like pins, skewers, and forks
 - Evaluation bar
 - Stalemate
+- Drag and drop
 
 Given the current state of the board, we need to know every possible move for every single piece.
 To know every possible move for a piece, we need to simulate that move, then calculate every possible move for every piece in that position, to make

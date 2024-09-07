@@ -7,7 +7,6 @@ import { getEnPassantTargetPosition } from "../utils/getEnPassantTargetPosition"
 import { getMoveAction } from "../utils/getMoveAction";
 import { getMovePieceState } from "../utils/getMovePieceState";
 import { getPieceAtPosition } from "../utils/getPieceAtPosition";
-import { PiecePositionMap } from "../utils/getPiecePositionMap";
 
 type GameStatus = 'running' | 'ended';
 
@@ -31,10 +30,8 @@ interface MoveAction {
   payload: MoveActionPayload;
 }
 
-interface PromoteActionPayload {
-  pieceId: PieceId;
-  type: PieceType;
-  piecePositionMap: PiecePositionMap;
+interface PromoteActionPayload extends MoveActionPayload {
+  promotionType: PieceType;
 }
 
 interface PromoteAction {
@@ -63,7 +60,7 @@ interface PushNotationAction {
 export type GameAction = MoveAction | PromoteAction | CheckMateAction | PushNotationAction;
 
 export const isMoveAction = (actionType: GameAction['type']): boolean => {
-  return [ 'take-piece', 'move-piece', 'castle', 'en-passant' ].includes(actionType);
+  return [ 'take-piece', 'move-piece', 'castle', 'en-passant', 'promote-piece' ].includes(actionType);
 };
 
 export function GameReducer(state: GameState, action: GameAction): GameState {
@@ -191,18 +188,19 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
     }
 
     case 'promote-piece': {
-      const { pieceId, type, piecePositionMap } = action.payload;
+      const { currentPosition, promotionType, targetPosition } = action.payload;
+      const selectedPiece = getPieceAtPosition(state, currentPosition);
 
-      const targetPosition = piecePositionMap[pieceId];
-      const nextState = GameReducer(state, getMoveAction(state, pieceId, targetPosition, piecePositionMap));
+      const moveAction = getMoveAction(state, selectedPiece.id, currentPosition, targetPosition);
+      const nextState = GameReducer(state, moveAction);
 
       return {
         ...nextState,
         pieces: {
           ...nextState.pieces,
-          [pieceId]: {
-            ...nextState.pieces[pieceId],
-            type
+          [selectedPiece.id]: {
+            ...nextState.pieces[selectedPiece.id],
+            type: promotionType
           }
         }
       };

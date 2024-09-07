@@ -1,7 +1,8 @@
 import React from 'react';
+import ReactDOM from 'react-dom/client'
 import { Square } from '../square/Square';
 import { INITIAL_GAME_STATE } from '../../constants/InitialGameState';
-import { GameAction, GameReducer, GameState, isMoveAction } from '../../reducers/GameReducer';
+import { GameAction, GameReducer, isMoveAction } from '../../reducers/GameReducer';
 import { BOARD } from '../../constants/Board';
 import { Position } from '../../interfaces/Position';
 import { canPromotePiece } from '../../utils/canPromotePiece';
@@ -13,15 +14,15 @@ import { getPieceValidPositionsMap, PieceValidPositionsMap } from '../../utils/g
 import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
 import { getPositionId } from '../../utils/getPositionId';
 import { Modal } from '../modal/Modal';
-import { PieceId } from '../../interfaces/PieceId';
 import { isInCheckMate } from '../../utils/isInCheckMate';
 import { getMoveAction } from '../../utils/getMoveAction';
 import { isInCheck } from '../../utils/isInCheck';
 import { encodeNotation } from '../../utils/encodeNotation';
 
+const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
+
 export function ChessBoard(): JSX.Element {
   const [ state, _dispatch ] = React.useState(INITIAL_GAME_STATE);
-  const [ promotionPiece, setPromotionPiece ] = React.useState<PieceId>(null);
 
   const initialPiecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), []);
   const initialPieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, initialPiecePositionMap, true), []);
@@ -31,7 +32,6 @@ export function ChessBoard(): JSX.Element {
 
   const dispatch = (action: GameAction) => {
     const futureState = GameReducer(state, action);
-    _dispatch(futureState);
 
     if (!isMoveAction(action.type)) {
       _dispatch(futureState);
@@ -44,7 +44,7 @@ export function ChessBoard(): JSX.Element {
     const isCheck = isInCheck(futureState, futureState.turnColour, piecePositionMap.current, pieceValidPositionsMap.current);
     const isCheckMate = isInCheckMate(futureState, futureState.turnColour, piecePositionMap.current, pieceValidPositionsMap.current);
 
-    const notation = encodeNotation(state, action, isCheck, isCheckMate);
+    const notation = encodeNotation(state, pieceValidPositionsMap.current, action, isCheck, isCheckMate);
 
     _dispatch({
       ...futureState,
@@ -83,11 +83,12 @@ export function ChessBoard(): JSX.Element {
     });
   }
 
-  function onMovePiece(targetPosition: Position): void {
+  async function onMovePiece(targetPosition: Position): Promise<void> {
     if (state.selectedPiece === '')
       return;
 
     const selectedPiece = state.pieces[state.selectedPiece];
+    const currentPosition = piecePositionMap.current[selectedPiece.id];
   
     if (!validPositions.has(getPositionId(targetPosition))) {
       dispatch({
@@ -101,11 +102,27 @@ export function ChessBoard(): JSX.Element {
     }
 
     if (canPromotePiece(selectedPiece, targetPosition)) {
-      setPromotionPiece(selectedPiece.id);
+      const onPromote = (promotionType: PieceType) => {
+        dispatch({
+          type: 'promote-piece',
+          payload: {
+            targetPosition,
+            currentPosition,
+            promotionType
+          }
+        });
+
+        modalRoot.unmount();
+      };
+
+      modalRoot.render(
+        <PromotionModal onPromote={onPromote} />
+      );
+
       return;
     }
 
-    dispatch(getMoveAction(state, state.selectedPiece, targetPosition, piecePositionMap.current));
+    dispatch(getMoveAction(state, state.selectedPiece, currentPosition, targetPosition));
   }
 
   function onSelectSquare(position: Position): void {
@@ -115,19 +132,6 @@ export function ChessBoard(): JSX.Element {
     }
 
     onSelectPiece(position);
-  }
-
-  function onPromote(currentPieceId: PieceId, promotionType: PieceType): void {
-    dispatch({
-      type: 'promote-piece',
-      payload: {
-        pieceId: currentPieceId,
-        type: promotionType,
-        piecePositionMap: piecePositionMap.current
-      }
-    });
-
-    setPromotionPiece(null);
   }
 
   return (
@@ -145,7 +149,7 @@ export function ChessBoard(): JSX.Element {
                     position={position}
                     piece={getPieceAtPosition(state, position)}
                     isTarget={validPositions?.has(getPositionId(position))}
-                    disabled={!!promotionPiece || state.status !== 'running'}
+                    disabled={state.status !== 'running'}
                   />
                 );
               })}
@@ -157,12 +161,6 @@ export function ChessBoard(): JSX.Element {
           piecePositionMap={piecePositionMap.current}
         />
       </div>
-
-      {!!promotionPiece && (
-        <PromotionModal
-          onPromote={promotionType => onPromote(promotionPiece, promotionType)}
-        />
-      )}
 
       {state.status === 'ended' && (
         <Modal title={`Game over`}>

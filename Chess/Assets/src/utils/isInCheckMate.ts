@@ -37,7 +37,7 @@ export function isInCheckMate(state: GameState, colour: PieceColour, piecePositi
       const [ x, y ] = validPosition.split(':');
 
       // For each valid move, we want to get the state that the game would be in after making that move
-      const futureState = GameReducer(mockState, getMoveAction(mockState, piece.id, { x: Number(x), y: Number(y) }, piecePositionMap));
+      const futureState = GameReducer(mockState, getMoveAction(mockState, piece.id, piecePositionMap[piece.id], { x: Number(x), y: Number(y) }));
       const futurePositionsMap = getPiecePositionMap(futureState.positions);
       const futureValidPositionsMap = getPieceValidPositionsMap(futureState, futurePositionsMap, false);
 

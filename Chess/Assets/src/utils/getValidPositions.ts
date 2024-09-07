@@ -44,7 +44,7 @@ export function getValidPositions(state: GameState, piece: Piece, piecePositionM
     const [ x, y ] = availableSquare.split(':');
     const targetPosition: Position = { x: Number(x), y: Number(y) };
 
-    const moveAction = getMoveAction(state, piece.id, targetPosition, piecePositionMap);
+    const moveAction = getMoveAction(state, piece.id, piecePositionMap[piece.id], targetPosition);
 
     const futureState = GameReducer(state, moveAction);
     const futurePositionsMap = getPiecePositionMap(futureState.positions);

@@ -2,15 +2,13 @@ import { PieceId } from "../interfaces/PieceId";
 import { Position } from "../interfaces/Position";
 import { GameAction, GameState } from "../reducers/GameReducer";
 import { getPieceAtPosition } from "./getPieceAtPosition";
-import { PiecePositionMap } from "./getPiecePositionMap";
 import { isCastling } from "./isCastling";
 import { isEnPassant } from "./isEnPassant";
 
-export function getMoveAction(state: GameState, selectedPieceId: PieceId | '', targetPosition: Position, piecePositionMap: PiecePositionMap): GameAction {
+export function getMoveAction(state: GameState, selectedPieceId: PieceId | '', currentPosition: Position, targetPosition: Position): GameAction {
   if (selectedPieceId === '')
     return null;
 
-  const currentPosition = piecePositionMap[selectedPieceId];
   const selectedPiece = state.pieces[selectedPieceId];
   
   if (isCastling(selectedPiece, currentPosition, targetPosition)) {
