@@ -11,15 +11,11 @@
 - ESLint rules
 
 Frontend:
-- Change to process moves with chess notation
-  - How does promoting work?
-  - En passant?
-  - Turn number
+- Stalemate
 - Tracking material
 - Prevent castling if there's a sniper
 - Test out tactics like pins, skewers, and forks
 - Evaluation bar
-- Stalemate
 - Drag and drop
 
 Given the current state of the board, we need to know every possible move for every single piece.

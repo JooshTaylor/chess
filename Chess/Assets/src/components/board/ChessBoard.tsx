@@ -45,7 +45,7 @@ export function ChessBoard(): JSX.Element {
     pieceValidPositionsMap.current = getPieceValidPositionsMap(futureState, piecePositionMap.current, true);
 
     const isCheck = isInCheck(futureState, futureState.turnColour, piecePositionMap.current, pieceValidPositionsMap.current);
-    const isCheckMate = isInCheckMate(futureState, futureState.turnColour, piecePositionMap.current, pieceValidPositionsMap.current);
+    const isCheckMate = isInCheckMate(futureState, futureState.turnColour, pieceValidPositionsMap.current);
 
     const notation = encodeNotation(state, previousPositionMap, previousValidPositions, action, isCheck, isCheckMate);
 
@@ -56,15 +56,18 @@ export function ChessBoard(): JSX.Element {
   };
 
   React.useEffect(() => {
-    if (isInCheckMate(state, state.turnColour, piecePositionMap.current, pieceValidPositionsMap.current)) {
+    const isCheckMate = state.moves[state.moves.length - 1]?.endsWith('#');
+
+    if (isCheckMate) {
       dispatch({
-        type: 'check-mate',
+        type: 'end-game',
         payload: {
-          winner: state.turnColour === 'dark' ? 'light' : 'dark'
+          winner: state.turnColour === 'dark' ? 'light' : 'dark',
+          result: 'check-mate'
         }
       });
     }
-  }, [state.positions]);
+  }, [state.moves]);
 
   const validPositions = state.selectedPiece !== '' ? pieceValidPositionsMap.current[state.selectedPiece] : null;
 

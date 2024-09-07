@@ -9,6 +9,7 @@ import { getMovePieceState } from "../utils/getMovePieceState";
 import { getPieceAtPosition } from "../utils/getPieceAtPosition";
 
 type GameStatus = 'running' | 'ended';
+type GameResult = 'check-mate' | 'draw' | 'stalemate' | 'resign' | 'time-out' | 'abandon';
 
 export interface GameState {
   turnColour: PieceColour;
@@ -17,6 +18,7 @@ export interface GameState {
   positions: Record<number, Record<number, PieceId | ''>>;
   moves: string[];
   status: GameStatus;
+  result: GameResult;
   winner?: PieceColour;
 }
 
@@ -39,13 +41,14 @@ interface PromoteAction {
   payload: PromoteActionPayload;
 }
 
-interface CheckMateActionPayload {
+interface EndGameActionPayload {
   winner: PieceColour;
+  result: GameResult;
 }
 
-interface CheckMateAction {
-  type: 'check-mate';
-  payload: CheckMateActionPayload;
+interface EndGameAction {
+  type: 'end-game';
+  payload: EndGameActionPayload;
 }
 
 interface PushNotationActionPayload {
@@ -57,7 +60,7 @@ interface PushNotationAction {
   payload: PushNotationActionPayload;
 }
 
-export type GameAction = MoveAction | PromoteAction | CheckMateAction | PushNotationAction;
+export type GameAction = MoveAction | PromoteAction | EndGameAction | PushNotationAction;
 
 export const isMoveAction = (actionType: GameAction['type']): boolean => {
   return [ 'take-piece', 'move-piece', 'castle', 'en-passant', 'promote-piece' ].includes(actionType);
@@ -206,12 +209,13 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'check-mate': {
-      const { winner } = action.payload;
+    case 'end-game': {
+      const { winner, result } = action.payload;
 
       return {
         ...state,
         status: 'ended',
+        result,
         winner
       };
     }
