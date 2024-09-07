@@ -67,9 +67,61 @@ const getDisambiguationSection = (
       return currentY;
   }
 
-  // TODO: Work this out
   if (otherPieces.length === 2) {
+    const [ otherPieceOne, otherPieceTwo ] = otherPieces;
+    
+    const { x: currentX, y: currentY } = piecePositionMap[currentPiece.id];
+    const { x: otherPieceOneX, y: otherPieceOneY } = piecePositionMap[otherPieceOne.id];
+    const { x: otherPieceTwoX, y: otherPieceTwoY } = piecePositionMap[otherPieceTwo.id];
+
+    // If the doubly disambiguous piece performed the capture, use it's starting position
+    if (
+      (currentX === otherPieceOneX || currentX === otherPieceTwoX) &&
+      (currentY === otherPieceOneY || currentY === otherPieceTwoY)
+    ) {
+      return `${getXChar(currentX)}${currentY}`;
+    }
+
+    /**
+     * In order to disambiguate a move where there are 3 of the same piece types
+     * attacking one piece, but the doubly disambiguated piece did not perform
+     * the capture, then we must find the double disambiguated piece so that
+     * we can work out if we need to disambiguate the move using either the
+     * file or the rank (the x or the y)
+     */
+    const getOtherPieceDoublyDisambiguous = () => {
+      // Check other piece one
+      if (
+        (otherPieceOneX === currentX || otherPieceOneX === otherPieceTwoX) &&
+        (otherPieceOneY === currentY || otherPieceOneY === otherPieceTwoY)
+      ) return otherPieceOne;
+
+      return otherPieceTwo;
+    };
+
+    const doublyDisambiguousPiece = getOtherPieceDoublyDisambiguous();
+
+    const { x: doublyDisambiguousPieceX, y: doublyDisambiguousPieceY } = piecePositionMap[doublyDisambiguousPiece.id];
+
+    if (currentX === doublyDisambiguousPieceX)
+      return currentY;
+
+    if (currentY === doublyDisambiguousPieceY)
+      return getXChar(currentX);
+
     return '';
+  }
+
+  // Pawn captures always show the file the pawn came from
+  if (currentPiece.type === 'pawn') {
+    const targetPiece = getPieceAtPosition(state, targetPosition);
+
+    if (!targetPiece)
+      return '';
+
+    const file = piecePositionMap[currentPiece.id].x;
+
+    return getXChar(file);
   }
 
   return '';
@@ -84,8 +136,6 @@ const PieceSectionMap: Record<PieceType, string> = {
   rook: 'R'
 };
 
-// TODO: Disambiguation
-// TODO: Double disambiguation
 export function encodeNotation(
   previousState: GameState,
   previousPiecePositionMap: PiecePositionMap,

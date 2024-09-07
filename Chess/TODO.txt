@@ -13,12 +13,9 @@
 Frontend:
 - Change to process moves with chess notation
   - How does promoting work?
-  - Disambiguation
   - En passant?
-  - Scrollbar
   - Turn number
 - Tracking material
-- Record moves in RHS panel
 - Prevent castling if there's a sniper
 - Test out tactics like pins, skewers, and forks
 - Evaluation bar
