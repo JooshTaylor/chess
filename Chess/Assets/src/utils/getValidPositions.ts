@@ -13,8 +13,6 @@ import { getPositionId } from "./getPositionId";
 import { isValidPosition } from "./isValidPosition";
 import { getMoveAction } from "./getMoveAction";
 import { getPieceValidPositionsMap, ValidPositionsMap } from "./getPieceValidPositionsMap";
-import { getKing } from "./getKing";
-import { PieceId } from "../interfaces/PieceId";
 
 function getAvailableSquares(state: GameState, piece: Piece, piecePositionMap: PiecePositionMap): Set<string> {
   switch (piece.type) {
@@ -74,31 +72,7 @@ export function getValidPositions(state: GameState, piece: Piece, piecePositionM
   return Array.from(safeSquares).reduce<ValidPositionsMap>((acc, square) => {
     const [ x, y ] = square.split(':');
     const position: Position = { x: Number(x), y: Number(y) };
-
-    const futureState = GameReducer(state, getMoveAction(state, piece.id, position, piecePositionMap));
-    const futurePositionsMap = getPiecePositionMap(futureState.positions);
-    const futureValidPositionsMap = getPieceValidPositionsMap(futureState, futurePositionsMap, false);
-
-    const opposingKing = getKing(futureState, futureState.turnColour);
-    const opposingKingPosition = futurePositionsMap[opposingKing.id];
-    
-    for (const pieceId in futureValidPositionsMap) {
-      const validPositions = futureValidPositionsMap[pieceId as PieceId];
-      const positions = Object.keys(validPositions);
-
-      for (const position of positions) {
-        const [ x, y ] = position.split(':');
-
-        if (opposingKingPosition.x === Number(x) && opposingKingPosition.y === Number(y)) {
-          acc[square] = {
-            isCheck: true,
-            isCheckMate: false
-          };
-
-          return acc;
-        }
-      }
-    }
+    position;
 
     acc[square] = {
       isCheck: false,
