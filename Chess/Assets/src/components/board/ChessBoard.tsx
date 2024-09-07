@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'
 import { Square } from '../square/Square';
-import { INITIAL_GAME_STATE } from '../../constants/InitialGameState';
 import { GameAction, GameReducer, isMoveAction } from '../../reducers/GameReducer';
 import { BOARD } from '../../constants/Board';
 import { Position } from '../../interfaces/Position';
@@ -19,11 +18,17 @@ import { isInCheck } from '../../utils/isInCheck';
 import { encodeNotation } from '../../utils/encodeNotation';
 import { isInStalemate } from '../../utils/isInStalemate';
 import { EndGameModal } from '../end-game-modal/EndGameModal';
+import { getInitialState } from '../../utils/getInitialState';
+
+const INITIAL_MOVES: string[] = [
+  'Qh3xh5',
+];
 
 const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
 
 export function ChessBoard(): JSX.Element {
-  const [ state, _dispatch ] = React.useState(INITIAL_GAME_STATE);
+  const initialState = React.useMemo(() => getInitialState(INITIAL_MOVES), []);
+  const [ state, _dispatch ] = React.useState(initialState);
 
   const initialPiecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), []);
   const initialPieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, initialPiecePositionMap, true), []);

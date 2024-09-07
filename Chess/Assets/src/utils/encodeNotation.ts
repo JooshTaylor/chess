@@ -130,7 +130,7 @@ const getDisambiguationSection = (
   return '';
 };
 
-const PieceSectionMap: Record<PieceType, string> = {
+export const PieceSectionMap: Record<PieceType, string> = {
   pawn: '',
   bishop: 'B',
   knight: 'N',
@@ -138,6 +138,11 @@ const PieceSectionMap: Record<PieceType, string> = {
   queen: 'Q',
   rook: 'R'
 };
+
+export const ReversePieceSectionMap = Object.entries(PieceSectionMap).reduce<Record<string, PieceType>>((acc, [ pieceType, notation ]) => {
+  acc[notation] = pieceType as PieceType;
+  return acc;
+}, {});
 
 export function encodeNotation(
   previousState: GameState,

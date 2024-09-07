@@ -5,18 +5,18 @@
 - Setup home page to create a game with invite link
 - Statuses for when the game hasn't started yet
 
-- AI?
-
 - Write tests
 - ESLint rules
 
 Frontend:
-- Stalemate
+- Support loading in a game with moves only
+- Clean up the state management. Try to submit notation when dispatching and go back to a normal reducer
 - Tracking material
-- Prevent castling if there's a sniper
-- Test out tactics like pins, skewers, and forks
-- Evaluation bar
+- Stockfish:
+  - Eval bar
+  - Analysis
 - Drag and drop
+- Going back through moves
 
 Given the current state of the board, we need to know every possible move for every single piece.
 To know every possible move for a piece, we need to simulate that move, then calculate every possible move for every piece in that position, to make

@@ -18,7 +18,7 @@ export interface GameState {
   positions: Record<number, Record<number, PieceId | ''>>;
   moves: string[];
   status: GameStatus;
-  result: GameResult;
+  result?: GameResult;
   winner?: PieceColour;
 }
 
