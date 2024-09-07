@@ -1,8 +1,18 @@
-import { Piece } from "../interfaces/Piece";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
+import { GameState, GameAction } from "../reducers/GameReducer";
+import { getPieceAtPosition } from "../utils/getPieceAtPosition";
 
 const getPositionString = (position: Position) => `${String.fromCharCode(position.x + 96)}${position.y}`;
+const getCheckSection = (isCheck: boolean, isCheckMate: boolean) => {
+  if (isCheckMate)
+    return '#';
+
+  if (isCheck)
+    return '+';
+
+  return '';
+};
 
 const PieceSectionMap: Record<PieceType, string> = {
   pawn: '',
@@ -13,59 +23,37 @@ const PieceSectionMap: Record<PieceType, string> = {
   rook: 'R'
 };
 
+// TODO: Disambiguation
 export function encodeNotation(
-  currentPosition: Position,
-  targetPosition: Position,
-  piece: Piece,
-  isCapture: boolean,
+  previousState: GameState,
+  actionPlayed: GameAction,
   isCheck: boolean,
   isCheckMate: boolean
 ): string {
-  let notation = '';
+  switch (actionPlayed.type) {
+    case 'move-piece': {
+      const { currentPosition, targetPosition } = actionPlayed.payload;
 
-  const pieceSection = PieceSectionMap[piece.type];
+      const piece = getPieceAtPosition(previousState, currentPosition);
 
-  if (piece.type === 'pawn') {
-    if (isCapture)
-      notation += pieceSection;
-  } else {
-    notation += pieceSection;
+      return `${PieceSectionMap[piece.type]}${getPositionString(targetPosition)}${getCheckSection(isCheck, isCheckMate)}`;
+    }
+
+    case 'take-piece':
+    case 'en-passant': {
+      const { currentPosition, targetPosition } = actionPlayed.payload;
+
+      const piece = getPieceAtPosition(previousState, currentPosition);
+      
+      return `${PieceSectionMap[piece.type]}x${getPositionString(targetPosition)}${getCheckSection(isCheck, isCheckMate)}`;
+    }
+
+    case 'castle': {
+      const { currentPosition, targetPosition } = actionPlayed.payload;
+      return `${currentPosition.x < targetPosition.x ? '0-0' : '0-0-0'}${getCheckSection(isCheck, isCheckMate)}`;
+    }
+
+    default:
+      return;
   }
-
-  if (isCapture)
-    notation += 'x';
-
-  notation += getPositionString(targetPosition);
-
-  if (isCheckMate)
-    notation += '#';
-
-  if (isCheck && !isCheckMate)
-    notation += '+';
-
-  return notation;
-}
-
-// What if I captured?
-export function encodePromotionNotation(
-  targetPosition: Position,
-  newType: PieceType,
-  isCheck: boolean,
-  isCheckMate: boolean
-): string {
-  let notation = '';
-
-  notation += getPositionString(targetPosition);
-
-  notation += '=';
-
-  notation += PieceSectionMap[newType];
-
-  if (isCheckMate)
-    notation += '#';
-
-  if (isCheck && !isCheckMate)
-    notation += '+';
-
-  return notation;
 }

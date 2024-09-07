@@ -1,36 +1,59 @@
 import React from 'react';
 import { Square } from '../square/Square';
 import { INITIAL_GAME_STATE } from '../../constants/InitialGameState';
-import { GameReducer } from '../../reducers/GameReducer';
+import { GameAction, GameReducer, GameState, isMoveAction } from '../../reducers/GameReducer';
 import { BOARD } from '../../constants/Board';
 import { Position } from '../../interfaces/Position';
 import { canPromotePiece } from '../../utils/canPromotePiece';
 import { PromotionModal } from '../promotion-modal/PromotionModal';
 import { PieceType } from '../../interfaces/PieceType';
 import { Menu } from '../menu/Menu';
-import { getPiecePositionMap } from '../../utils/getPiecePositionMap';
-import { getPieceValidPositionsMap } from '../../utils/getPieceValidPositionsMap';
+import { getPiecePositionMap, PiecePositionMap } from '../../utils/getPiecePositionMap';
+import { getPieceValidPositionsMap, PieceValidPositionsMap } from '../../utils/getPieceValidPositionsMap';
 import { getPieceAtPosition } from '../../utils/getPieceAtPosition';
 import { getPositionId } from '../../utils/getPositionId';
 import { Modal } from '../modal/Modal';
 import { PieceId } from '../../interfaces/PieceId';
 import { isInCheckMate } from '../../utils/isInCheckMate';
 import { getMoveAction } from '../../utils/getMoveAction';
+import { isInCheck } from '../../utils/isInCheck';
+import { encodeNotation } from '../../utils/encodeNotation';
 
 export function ChessBoard(): JSX.Element {
-  const [ state, dispatch ] = React.useReducer(GameReducer, INITIAL_GAME_STATE);
+  const [ state, _dispatch ] = React.useState(INITIAL_GAME_STATE);
   const [ promotionPiece, setPromotionPiece ] = React.useState<PieceId>(null);
 
-  const piecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), [state.positions]);
-  const pieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, piecePositionMap, true), [state, piecePositionMap]);
+  const initialPiecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), []);
+  const initialPieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, initialPiecePositionMap, true), []);
 
-  const validPositions = state.selectedPiece !== '' ? pieceValidPositionsMap[state.selectedPiece] : null;
-  
-  React.useEffect(() => {
-    if (state.status !== 'running')
+  const piecePositionMap = React.useRef<PiecePositionMap>(initialPiecePositionMap);
+  const pieceValidPositionsMap = React.useRef<PieceValidPositionsMap>(initialPieceValidPositionsMap);
+
+  const dispatch = (action: GameAction) => {
+    const futureState = GameReducer(state, action);
+    _dispatch(futureState);
+
+    if (!isMoveAction(action.type)) {
+      _dispatch(futureState);
       return;
+    }
 
-    if (isInCheckMate(state, state.turnColour, piecePositionMap, pieceValidPositionsMap)) {
+    piecePositionMap.current = getPiecePositionMap(futureState.positions);
+    pieceValidPositionsMap.current = getPieceValidPositionsMap(futureState, piecePositionMap.current, true);
+
+    const isCheck = isInCheck(futureState, futureState.turnColour, piecePositionMap.current, pieceValidPositionsMap.current);
+    const isCheckMate = isInCheckMate(futureState, futureState.turnColour, piecePositionMap.current, pieceValidPositionsMap.current);
+
+    const notation = encodeNotation(state, action, isCheck, isCheckMate);
+
+    _dispatch({
+      ...futureState,
+      moves: futureState.moves.concat(notation)
+    });
+  };
+
+  React.useEffect(() => {
+    if (isInCheckMate(state, state.turnColour, piecePositionMap.current, pieceValidPositionsMap.current)) {
       dispatch({
         type: 'check-mate',
         payload: {
@@ -38,7 +61,9 @@ export function ChessBoard(): JSX.Element {
         }
       });
     }
-  }, [ state, pieceValidPositionsMap ]);
+  }, [state.positions]);
+
+  const validPositions = state.selectedPiece !== '' ? pieceValidPositionsMap.current[state.selectedPiece] : null;
 
   function onSelectPiece(position: Position): void {
     const piece = getPieceAtPosition(state, position);
@@ -80,7 +105,7 @@ export function ChessBoard(): JSX.Element {
       return;
     }
 
-    dispatch(getMoveAction(state, state.selectedPiece, targetPosition, piecePositionMap));
+    dispatch(getMoveAction(state, state.selectedPiece, targetPosition, piecePositionMap.current));
   }
 
   function onSelectSquare(position: Position): void {
@@ -98,7 +123,7 @@ export function ChessBoard(): JSX.Element {
       payload: {
         pieceId: currentPieceId,
         type: promotionType,
-        piecePositionMap
+        piecePositionMap: piecePositionMap.current
       }
     });
 
@@ -116,7 +141,7 @@ export function ChessBoard(): JSX.Element {
                   <Square
                     key={getPositionId(position)}
                     onSelect={() => onSelectSquare(position)}
-                    isSelected={state.selectedPiece !== '' && getPositionId(position) === getPositionId(piecePositionMap[state.selectedPiece])}
+                    isSelected={state.selectedPiece !== '' && getPositionId(position) === getPositionId(piecePositionMap.current[state.selectedPiece])}
                     position={position}
                     piece={getPieceAtPosition(state, position)}
                     isTarget={validPositions?.has(getPositionId(position))}
@@ -129,7 +154,7 @@ export function ChessBoard(): JSX.Element {
         </div>
         <Menu
           state={state}
-          piecePositionMap={piecePositionMap}
+          piecePositionMap={piecePositionMap.current}
         />
       </div>
 
