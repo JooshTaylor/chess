@@ -1,10 +1,11 @@
 ﻿using Chess.Models.Requests;
 using Chess.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chess.Controllers;
 
-[Route("api/game")]
+[Authorize, Route("api/games")]
 public class GameController : Controller
 {
     private readonly IGameService _gameService;

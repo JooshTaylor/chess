@@ -8,7 +8,7 @@ export function DashboardView(): JSX.Element {
   const navigate = useNavigate();
 
   const createGameMutation = useMutation({
-    mutationFn: () => axios.post<Game>('/api/game', {}),
+    mutationFn: () => axios.post<Game>('/api/games', {}),
     onSuccess: data => {
       navigate(`/chess/${data.data.id}`);
     }

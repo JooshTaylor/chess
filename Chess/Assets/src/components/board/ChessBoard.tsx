@@ -31,7 +31,7 @@ export function ChessBoard(): JSX.Element {
 
   const game = useQuery({
     queryKey: [`game:${params.id}`],
-    queryFn: () => axios.get<Game>(`/api/game/${params.id}`)
+    queryFn: () => axios.get<Game>(`/api/games/${params.id}`)
   });
 
   console.log('game', game.data);
