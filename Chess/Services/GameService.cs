@@ -7,9 +7,9 @@ namespace Chess.Services;
 
 public class GameService : IGameService
 {
-    private readonly ChessDbContext _context;
+    private readonly ApplicationDbContext _context;
 
-    public GameService(ChessDbContext context)
+    public GameService(ApplicationDbContext context)
     {
         _context = context;
     }

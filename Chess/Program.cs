@@ -21,7 +21,7 @@ builder.Services.AddCors(options =>
 var folder = Environment.SpecialFolder.LocalApplicationData;
 var path = Environment.GetFolderPath(folder);
 var dbPath = Path.Join(path, "chess.db");
-builder.Services.AddDbContext<ChessDbContext>(
+builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlite($"Data Source={dbPath}"));
 
 builder.Services.AddScoped<IGameService, GameService>();

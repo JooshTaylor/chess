@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chess.Data;
 
-public class ChessDbContext : DbContext
+public class ApplicationDbContext : DbContext
 {
     public DbSet<Game> Games { get; set; }
 
-    public ChessDbContext(DbContextOptions<ChessDbContext> options) : base(options)
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         
     }
