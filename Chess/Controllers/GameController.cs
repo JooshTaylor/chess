@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chess.Controllers;
 
-[Route("api/game")]
+[Route("api/games")]
 public class GameController : Controller
 {
     private readonly IGameService _gameService;
