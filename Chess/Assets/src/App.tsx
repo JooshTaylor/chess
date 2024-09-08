@@ -5,18 +5,23 @@ import {
 import { ChessBoard } from './components/board/ChessBoard';
 import { DashboardView } from "./views/dashboard/DashboardView";
 import { Layout } from "./layouts/Layout";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ErrorView } from "./views/error/ErrorView";
+
+const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
+    errorElement: <ErrorView />,
     children: [
       {
         index: true,
         element: <DashboardView />
       },
       {
-        path: "chess",
+        path: "chess/:id",
         element: <ChessBoard />,
       },
     ],
@@ -25,7 +30,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   );
 }
 export default App;

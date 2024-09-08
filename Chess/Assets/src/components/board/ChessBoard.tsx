@@ -19,10 +19,23 @@ import { encodeNotation } from '../../utils/encodeNotation';
 import { isInStalemate } from '../../utils/isInStalemate';
 import { EndGameModal } from '../end-game-modal/EndGameModal';
 import { getInitialState } from '../../utils/getInitialState';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { Game } from '../../interfaces/Game';
+import axios from 'axios';
 
 const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
 
 export function ChessBoard(): JSX.Element {
+  const params = useParams();
+
+  const game = useQuery({
+    queryKey: [`game:${params.id}`],
+    queryFn: () => axios.get<Game>(`/api/game/${params.id}`)
+  });
+
+  console.log('game', game.data);
+
   const initialState = React.useMemo(() => getInitialState(), []);
   const [ state, _dispatch ] = React.useState(initialState);
 

@@ -14,10 +14,16 @@ public class GameService : IGameService
         _context = context;
     }
 
+    public IEnumerable<Game> GetGames()
+    {
+        var games = _context.Games;
+        return games;
+    }
+
     public Game GetGame(ulong id)
     {
         var game = _context.Games
-            .Where(g => g.Id > id)
+            .Where(g => g.Id == id)
             .FirstOrDefault();
 
         return game;
