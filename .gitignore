@@ -23,6 +23,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.DotSettings.User
 Chess/bin/*
 Chess/obj/*
 Chess/wwwroot/*

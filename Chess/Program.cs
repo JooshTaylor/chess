@@ -1,3 +1,8 @@
+using Chess.Data;
+using Chess.Services;
+using Chess.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
@@ -12,6 +17,14 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+
+var folder = Environment.SpecialFolder.LocalApplicationData;
+var path = Environment.GetFolderPath(folder);
+var dbPath = Path.Join(path, "chess.db");
+builder.Services.AddDbContext<ChessDbContext>(
+    options => options.UseSqlite($"Data Source={dbPath}"));
+
+builder.Services.AddScoped<IGameService, GameService>();
 
 var app = builder.Build();
 
