@@ -7,6 +7,8 @@ import { DashboardView } from "./views/dashboard/DashboardView";
 import { Layout } from "./layouts/Layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorView } from "./views/error/ErrorView";
+import { RegisterView } from "./views/register/RegisterView";
+import { LoginView } from "./views/login/LoginView";
 
 const queryClient = new QueryClient()
 
@@ -19,6 +21,14 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <DashboardView />
+      },
+      {
+        path: "register",
+        element: <RegisterView />
+      },
+      {
+        path: "login",
+        element: <LoginView />
       },
       {
         path: "chess/:id",
