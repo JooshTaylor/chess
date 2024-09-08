@@ -20,31 +20,10 @@ import { isInStalemate } from '../../utils/isInStalemate';
 import { EndGameModal } from '../end-game-modal/EndGameModal';
 import { getInitialState } from '../../utils/getInitialState';
 
-const INITIAL_MOVES: string[] = [
-  'e4',
-  'c6',
-  'd4',
-  'd5',
-  'Nc3',
-  'e6',
-  'Bf4',
-  'Bd6',
-  'Bxd6',
-  'Qxd6',
-  'e5',
-  'Qc7',
-  'Nf3',
-  'Ne7',
-  'Bd3',
-  '0-0',
-  '0-0',
-  'c5'
-];
-
 const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
 
 export function ChessBoard(): JSX.Element {
-  const initialState = React.useMemo(() => getInitialState(INITIAL_MOVES), []);
+  const initialState = React.useMemo(() => getInitialState(), []);
   const [ state, _dispatch ] = React.useState(initialState);
 
   const initialPiecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), []);

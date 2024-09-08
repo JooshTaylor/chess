@@ -98,7 +98,7 @@ function getSelectedPiece(
   });
 }
 
-export function getInitialState(moves: string[]): GameState {
+export function getInitialState(moves: string[] = []): GameState {
   let currentState = INITIAL_GAME_STATE;
 
   for (let move of moves) {

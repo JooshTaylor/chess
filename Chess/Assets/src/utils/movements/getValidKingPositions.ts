@@ -4,6 +4,12 @@ import { GameState } from "../../reducers/GameReducer";
 import { getValidPositionSet } from "../getValidPositions";
 import { getPieceAtPosition } from "../getPieceAtPosition";
 
+/**
+ * This gets all of the valid moves a king can make, but doesn't prevent
+ * castling if the square that the king must travel through to castle
+ * is being attacked by another piece. This is identified and handled in the
+ * `getValidPositions` function instead.
+ */
 export function getValidKingPositions(piece: Piece, state: GameState, piecePositionMap: PiecePositionMap): Set<string> {
   const { validPositions, tryAddPosition } = getValidPositionSet();
 
