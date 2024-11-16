@@ -1,12 +1,19 @@
+using System.Text.Json.Serialization;
 using Chess.Data;
 using Chess.Services;
 using Chess.Services.Interfaces;
+using Chess.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new KebabCaseEnumConverterFactory());
+    });
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("DevCorsPolicy", builder =>

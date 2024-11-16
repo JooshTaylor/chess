@@ -23,15 +23,20 @@ public class GameService : IGameService
     public Game GetGame(ulong id)
     {
         var game = _context.Games
-            .Where(g => g.Id == id)
-            .FirstOrDefault();
+            .FirstOrDefault(g => g.Id == id);
 
         return game;
     }
 
     public Game CreateGame(CreateGameRequest request)
     {
-        var newGame = new Game {};
+        var newGame = new Game()
+        {
+            TimeControl = request.TimeControl,
+            TimeRemainingBlack = request.TimeControl.Time,
+            TimeRemainingWhite = request.TimeControl.Time
+        };
+
         var game = _context.Games.Add(newGame);
         _context.SaveChanges();
         return game.Entity;
