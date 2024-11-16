@@ -3,7 +3,7 @@ import { GameState } from "../reducers/GameReducer";
 export const INITIAL_GAME_STATE: GameState = {
   turnColour: 'light',
   selectedPiece: '',
-  status: 'running',
+  status: 'pending',
   moves: [],
 
   positions: {

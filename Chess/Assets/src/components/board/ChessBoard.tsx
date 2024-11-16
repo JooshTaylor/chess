@@ -1,5 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'
+import axios from 'axios';
+import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+
 import { Square } from '../square/Square';
 import { GameAction, GameReducer, isMoveAction } from '../../reducers/GameReducer';
 import { BOARD } from '../../constants/Board';
@@ -19,15 +24,14 @@ import { encodeNotation } from '../../utils/encodeNotation';
 import { isInStalemate } from '../../utils/isInStalemate';
 import { EndGameModal } from '../end-game-modal/EndGameModal';
 import { getInitialState } from '../../utils/getInitialState';
-import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { Game } from '../../interfaces/Game';
-import axios from 'axios';
+import { PendingGameModal } from '../pending-game-modal/PendingGameModal';
 
 const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
 
 export function ChessBoard(): JSX.Element {
   const params = useParams();
+
 
   const game = useQuery({
     queryKey: [`game:${params.id}`],
@@ -190,8 +194,12 @@ export function ChessBoard(): JSX.Element {
         />
       </div>
 
-      {state.status === 'ended' && (
+      {state.status === 'complete' && (
         <EndGameModal result={state.result} winner={state.winner} />
+      )}
+
+      {state.status === 'pending' && (
+        <PendingGameModal />
       )}
     </>
   );

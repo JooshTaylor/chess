@@ -1,5 +1,5 @@
 export type GameStatus =
-  'Pending' |
-  'Running' |
-  'Complete' |
-  'Aborted';
+  'pending' |
+  'running' |
+  'complete' |
+  'aborted';

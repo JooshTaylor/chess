@@ -1,4 +1,5 @@
 ﻿using Chess.Data;
+using Chess.Enums;
 using Chess.Models.Entities;
 using Chess.Models.Requests;
 using Chess.Services.Interfaces;
@@ -40,5 +41,28 @@ public class GameService : IGameService
         var game = _context.Games.Add(newGame);
         _context.SaveChanges();
         return game.Entity;
+    }
+
+    public void AddPlayer(ulong id, Guid playerId)
+    {
+        var game = GetGame(id);
+        
+        if (game.PlayerOneId == null)
+            game.PlayerOneId = playerId;
+        else if (game.PlayerTwoId == null)
+            game.PlayerTwoId = playerId;
+        else
+            throw new InvalidOperationException($"Player {playerId} already added");
+        
+        _context.SaveChanges();
+    }
+
+    public void StartGame(ulong id)
+    {
+        var game = GetGame(id);
+
+        game.Status = GameStatus.Running;
+        
+        _context.SaveChanges();
     }
 }

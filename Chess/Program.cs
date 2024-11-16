@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Chess.Data;
+using Chess.Hubs;
 using Chess.Services;
 using Chess.Services.Interfaces;
 using Chess.Utilities;
@@ -13,6 +14,8 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.Converters.Add(new KebabCaseEnumConverterFactory());
     });
+
+builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
@@ -67,6 +70,8 @@ app.UseAuthorization();
 
 app.MapGroup("/api")
     .MapIdentityApi<IdentityUser>();
+
+app.MapHub<GameHub>("/gameHub");
 
 app.MapControllers();
 

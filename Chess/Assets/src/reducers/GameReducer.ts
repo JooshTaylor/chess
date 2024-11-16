@@ -1,3 +1,4 @@
+import { GameStatus } from "../interfaces/GameStatus";
 import { Piece } from "../interfaces/Piece";
 import { PieceColour } from "../interfaces/PieceColour";
 import { PieceId } from "../interfaces/PieceId";
@@ -8,7 +9,6 @@ import { getMoveAction } from "../utils/getMoveAction";
 import { getMovePieceState } from "../utils/getMovePieceState";
 import { getPieceAtPosition } from "../utils/getPieceAtPosition";
 
-type GameStatus = 'running' | 'ended';
 export type GameResult = 'check-mate' | 'draw' | 'stalemate' | 'resign' | 'time-out' | 'abandon';
 
 export interface GameState {
@@ -214,7 +214,7 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
 
       return {
         ...state,
-        status: 'ended',
+        status: 'complete',
         result,
         winner
       };
