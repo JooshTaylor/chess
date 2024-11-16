@@ -19,27 +19,30 @@ builder.Services.AddCors(options =>
     });
 });
 
-var folder = Environment.SpecialFolder.MyDocuments;
-var path = Environment.GetFolderPath(folder);
-var dbPath = Path.Join(path, "chess.db");
+var dbPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "chess.db");
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlite($"Data Source={dbPath}"));
 
 builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+});
 
 builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+builder.Services.AddIdentityApiEndpoints<IdentityUser>(opts =>
+    {
+        // For testing purposes, don't really care about password strength
+        opts.Password.RequireDigit = false;
+        opts.Password.RequireLowercase = false;
+        opts.Password.RequireNonAlphanumeric = false;
+        opts.Password.RequireUppercase = false;
+        opts.Password.RequiredLength = 4;
+        opts.User.RequireUniqueEmail = true;
+        opts.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+        opts.Lockout.MaxFailedAccessAttempts = 3;
+    })
     .AddEntityFrameworkStores<ApplicationDbContext>();
-
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    // For testing purposes, don't really care about password strength
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 4;
-});
 
 var app = builder.Build();
 
