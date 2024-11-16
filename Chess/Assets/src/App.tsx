@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorView } from "./views/error/ErrorView";
 import { RegisterView } from "./views/register/RegisterView";
 import { LoginView } from "./views/login/LoginView";
+import { SignalRProvider } from "./context/SignalRContext";
 
 const queryClient = new QueryClient()
 
@@ -40,9 +41,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <SignalRProvider url="/gameHub">
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </SignalRProvider>
   );
 }
 export default App;

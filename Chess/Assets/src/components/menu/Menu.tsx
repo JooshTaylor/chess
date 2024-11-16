@@ -45,7 +45,7 @@ export function Menu(props: MenuProps): JSX.Element {
           })}
         </ul>
 
-        {props.state.status === 'ended' && (
+        {props.state.status === 'complete' && (
           <div>
             Game over! {getColourString(props.state.turnColour === 'dark' ? 'light' : 'dark')} is the winner!
           </div>

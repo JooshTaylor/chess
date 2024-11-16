@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'
 import axios from 'axios';
-import { HubConnectionBuilder, HubConnection } from '@microsoft/signalr';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
@@ -26,19 +25,28 @@ import { EndGameModal } from '../end-game-modal/EndGameModal';
 import { getInitialState } from '../../utils/getInitialState';
 import { Game } from '../../interfaces/Game';
 import { PendingGameModal } from '../pending-game-modal/PendingGameModal';
+import { useSignalR } from '../../context/SignalRContext';
 
 const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
 
 export function ChessBoard(): JSX.Element {
   const params = useParams();
 
+  const signalR = useSignalR();
 
   const game = useQuery({
     queryKey: [`game:${params.id}`],
     queryFn: () => axios.get<Game>(`/api/games/${params.id}`)
   });
 
-  console.log('game', game.data);
+  React.useEffect(() => {
+    if (!game.data?.data || game.data.data.status !== 'pending')
+      return;
+
+    console.log('joining');
+
+    signalR.onJoinGame(game.data.data.id);
+  }, [game.data.data.status]);
 
   const initialState = React.useMemo(() => getInitialState(), []);
   const [ state, _dispatch ] = React.useState(initialState);
