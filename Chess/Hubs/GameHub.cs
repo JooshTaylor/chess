@@ -16,7 +16,7 @@ public class GameHub : Hub
     
     public async Task JoinGame(ulong id)
     {
-        var game = _gameService.GetGame(id);
+        var game = await _gameService.GetGameAsync(id);
 
         if (game.Status != GameStatus.Pending)
             throw new Exception("Game has already started.");
@@ -24,15 +24,15 @@ public class GameHub : Hub
         Guid playerId = Guid.NewGuid();
 
         // Until we have actual accounts, this is our poor mans way of adding players to a game.
-        _gameService.AddPlayer(id, playerId);
+        await _gameService.AddPlayerAsync(id, playerId);
 
-        game = _gameService.GetGame(id);
+        game = await _gameService.GetGameAsync(id);
 
         await Clients.Caller.SendAsync("JoinGameSuccess", playerId.ToString());
 
         if (game.PlayerOneId != null && game.PlayerTwoId != null)
         {
-            _gameService.StartGame(id);
+            await _gameService.StartGameAsync(id);
 
             await Clients.All.SendAsync("StartGame", game);
         }

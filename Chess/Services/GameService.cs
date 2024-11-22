@@ -17,35 +17,39 @@ public class GameService : IGameService
 
     public IEnumerable<Game> GetGames()
     {
-        var games = _context.Games;
-        return games;
+        return _context.Games;
     }
 
-    public Game GetGame(ulong id)
+    public async Task<Game> GetGameAsync(ulong id)
     {
-        var game = _context.Games
-            .FirstOrDefault(g => g.Id == id);
-
+        var game = await _context.Games.FindAsync(id);
         return game;
     }
 
-    public Game CreateGame(CreateGameRequest request)
+    public async Task<Game> CreateGameAsync(CreateGameRequest request)
     {
-        var newGame = new Game()
+        var timeControl = await _context.TimeControls.FindAsync(request.TimeControl.Time, request.TimeControl.Increment);
+
+        if (timeControl == null)
         {
-            TimeControl = request.TimeControl,
+            throw new Exception($"Time control {request.TimeControl.Type} not found");
+        }
+        
+        var newGame = new Game
+        {
+            TimeControl = timeControl,
             TimeRemainingBlack = request.TimeControl.Time,
             TimeRemainingWhite = request.TimeControl.Time
         };
 
-        var game = _context.Games.Add(newGame);
-        _context.SaveChanges();
+        var game = await _context.Games.AddAsync(newGame);
+        await _context.SaveChangesAsync();
         return game.Entity;
     }
 
-    public void AddPlayer(ulong id, Guid playerId)
+    public async Task AddPlayerAsync(ulong id, Guid playerId)
     {
-        var game = GetGame(id);
+        var game = await GetGameAsync(id);
         
         if (game.PlayerOneId == null)
             game.PlayerOneId = playerId;
@@ -54,15 +58,15 @@ public class GameService : IGameService
         else
             throw new InvalidOperationException($"Player {playerId} already added");
         
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void StartGame(ulong id)
+    public async Task StartGameAsync(ulong id)
     {
-        var game = GetGame(id);
+        var game = await GetGameAsync(id);
 
         game.Status = GameStatus.Running;
         
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }

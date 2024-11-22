@@ -21,14 +21,16 @@ public class GameController : Controller
     }
 
     [HttpGet("{id}")]
-    public ActionResult GetGame(ulong id)
+    public async Task<IActionResult> GetGame(ulong id)
     {
-        return Ok(_gameService.GetGame(id));
+        var game = await _gameService.GetGameAsync(id);
+        return Ok();
     }
 
     [HttpPost("")]
-    public ActionResult CreateGame([FromBody] CreateGameRequest request)
+    public async Task<IActionResult> CreateGame([FromBody] CreateGameRequest request)
     {
-        return Ok(_gameService.CreateGame(request));
+        var game = await _gameService.CreateGameAsync(request);
+        return Ok(game);
     }
 }
