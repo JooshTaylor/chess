@@ -1,10 +1,8 @@
-using System.Text.Json.Serialization;
 using Chess.Data;
 using Chess.Hubs;
 using Chess.Services;
 using Chess.Services.Interfaces;
 using Chess.Utilities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,20 +35,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 builder.Services.AddScoped<IGameService, GameService>();
 
-builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    // For testing purposes, don't really care about password strength
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 4;
-});
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -64,12 +48,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseCors("DevCorsPolicy");
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapGroup("/api")
-    .MapIdentityApi<IdentityUser>();
 
 app.MapHub<GameHub>("/gameHub");
 
