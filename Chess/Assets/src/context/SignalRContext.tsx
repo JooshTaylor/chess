@@ -63,6 +63,13 @@ export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderPr
     };
   }, [props.url]);
 
+  /**
+   * This is really silly. Basically when my client first tries to connect to our game hub socket,
+   * it fails like twice, but it also immediately tries to join whatever game it's on, which fails
+   * too because the socket isnt connected. On like the third try the socket succeeds, and so I basically
+   * just queue connection requests until the connection succeeds then fire them all. Ideally I shouldn't
+   * need this.
+   */
   function queueOrExecuteTask(fn: () => void): void {
     if (isConnected)
       return fn();
