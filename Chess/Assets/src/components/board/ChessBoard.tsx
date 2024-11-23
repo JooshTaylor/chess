@@ -26,6 +26,7 @@ import { getInitialState } from '../../utils/getInitialState';
 import { Game } from '../../interfaces/Game';
 import { PendingGameModal } from '../pending-game-modal/PendingGameModal';
 import { useSignalR } from '../../context/SignalRContext';
+import { getPlayerId } from '../../utils/getPlayerId';
 
 const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
 
@@ -40,16 +41,20 @@ export function ChessBoard(): JSX.Element {
   });
 
   React.useEffect(() => {
-    if (!game.data?.data || game.data.data.status !== 'pending')
+    if (!game.data?.data?.id)
       return;
 
-    console.log('joining');
+    const currentPlayerId = getPlayerId(game.data.data.id);
 
-    signalR.onJoinGame(game.data.data.id);
-  }, [game.data?.data?.status]);
+    signalR.onJoinGame(game.data.data.id, currentPlayerId);
+  }, [game.data?.data]);
 
-  const initialState = React.useMemo(() => getInitialState(), []);
+  const initialState = React.useMemo(() => getInitialState(game.data?.data), [game.isFetched]);
   const [ state, _dispatch ] = React.useState(initialState);
+
+  React.useEffect(() => {
+    _dispatch(initialState);
+  }, [initialState]);
 
   const initialPiecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), []);
   const initialPieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, initialPiecePositionMap, true), []);

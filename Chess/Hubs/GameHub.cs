@@ -23,14 +23,33 @@ public class GameHub(IGameService gameService) : Hub
         await base.OnDisconnectedAsync(exception);
     }
     
-    public async Task JoinGame(ulong id)
+    public async Task JoinGame(ulong id, Guid? playerId = null)
     {
-        var player = await gameService.AddPlayerAsync(id);
+        
         var game = await gameService.GetGameAsync(id);
 
-        await Clients.Caller.SendAsync("JoinGameSuccess", player.ToString());
+        if (game == null)
+        {
+            throw new Exception("Game not found");
+        }
+        
+        if (playerId.HasValue)
+        {
+            if (game.PlayerOneId != playerId && game.PlayerTwoId != playerId)
+            {
+                throw new Exception("Invalid player ID");
+            }
+            
+            await Clients.Caller.SendAsync("JoinGameSuccess", id, playerId);
+        }
+        else
+        {
+            var player = await gameService.AddPlayerAsync(id);
+            await Clients.Caller.SendAsync("JoinGameSuccess", player.ToString());
+        }
+        
 
-        if (game.PlayerOneId != null && game.PlayerTwoId != null)
+        if (game.Status == GameStatus.Pending && game.PlayerOneId != null && game.PlayerTwoId != null)
         {
             await gameService.StartGameAsync(id);
 

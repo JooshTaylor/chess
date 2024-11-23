@@ -2,7 +2,7 @@ import React from 'react';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 
 interface SignalRContextType {
-  onJoinGame: (id: number) => void;
+  onJoinGame: (id: number, currentPlayerId?: string) => void;
 }
 
 const SignalRContext = React.createContext<SignalRContextType>(null);
@@ -21,8 +21,10 @@ interface SignalRProviderProps {
 }
 
 export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderProps>) {
-  const [connection, setConnection] = React.useState<HubConnection>(null);
+  const connection = React.useRef<HubConnection>(null);
+
   const [isConnected, setIsConnected] = React.useState<boolean>(false);
+  const [queue, setQueue] = React.useState([]);
 
   React.useEffect(() => {
     const newConnection = new HubConnectionBuilder()
@@ -40,9 +42,15 @@ export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderPr
 
     newConnection.start()
       .then(() => {
-          setConnection(newConnection);
+          connection.current = newConnection;
           setIsConnected(true);
           console.log("Connected successfully");
+
+          for (const fn of queue) {
+            fn();
+          }
+
+          setQueue([]);
       })
       .catch((err) => {
           console.error("Connection failed:", err);
@@ -55,14 +63,20 @@ export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderPr
     };
   }, [props.url]);
 
-  function onJoinGame(id: number): void {
-    if (!isConnected)
-      return;
+  function queueOrExecuteTask(fn: () => void): void {
+    if (isConnected)
+      return fn();
 
-    connection.invoke("JoinGame", id)
-      .catch(err => {
-        console.log('Cannot join game', err);
-      });
+    queue.push(fn);
+  }
+
+  function onJoinGame(id: number, currentPlayerId?: string): void {
+    queueOrExecuteTask(() => {
+      connection.current.invoke("JoinGame", id, currentPlayerId)
+        .catch(err => {
+          console.log('Cannot join game', err);
+        });
+    });
   }
 
   return (

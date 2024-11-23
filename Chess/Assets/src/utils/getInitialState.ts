@@ -1,4 +1,5 @@
 import { INITIAL_GAME_STATE } from "../constants/InitialGameState";
+import { Game } from "../interfaces/Game";
 import { Piece } from "../interfaces/Piece";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
@@ -98,8 +99,11 @@ function getSelectedPiece(
   });
 }
 
-export function getInitialState(moves: string[] = []): GameState {
+export function getInitialState(game: Game, moves: string[] = []): GameState {
   let currentState = INITIAL_GAME_STATE;
+
+  if (game)
+    currentState.status = game.status;
 
   for (let move of moves) {
     const piecePositionMap = getPiecePositionMap(currentState.positions);
