@@ -46,7 +46,7 @@ export function ChessBoard(): JSX.Element {
     console.log('joining');
 
     signalR.onJoinGame(game.data.data.id);
-  }, [game.data.data.status]);
+  }, [game.data?.data?.status]);
 
   const initialState = React.useMemo(() => getInitialState(), []);
   const [ state, _dispatch ] = React.useState(initialState);

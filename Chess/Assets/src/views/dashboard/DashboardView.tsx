@@ -4,7 +4,6 @@ import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { Game } from "../../interfaces/Game";
 import { CreateGameRequest } from "../../interfaces/requests/CreateGameRequest";
-import { HubConnectionBuilder } from "@microsoft/signalr";
 
 export function DashboardView(): JSX.Element {
   const navigate = useNavigate();
@@ -20,9 +19,6 @@ export function DashboardView(): JSX.Element {
   const createGameMutation = useMutation({
     mutationFn: () => axios.post<Game>('/api/games', body),
     onSuccess: async data => {
-      const hubConnection = new HubConnectionBuilder().withUrl('/gameHub').build();
-      await hubConnection.start();
-
       navigate(`/chess/${data.data.id}`);
     }
   });

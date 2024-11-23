@@ -5,12 +5,18 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173, // or any port you prefer
+    port: 5173,
     proxy: {
       '/api': {
-        target: 'https://localhost:3000', // your ASP.NET Core backend URL
+        target: 'https://localhost:3000',
         changeOrigin: true,
         secure: false,
+      },
+      '/gameHub': {
+        target: 'https://localhost:3000',
+        ws: true,
+        secure: false,
+        changeOrigin: true
       }
     }
   },

@@ -26,9 +26,11 @@ public class GameService(ApplicationDbContext context) : IGameService
 
         if (timeControl == null)
         {
-            throw new Exception($"Time control {request.TimeControl.Type} not found");
+            throw new InvalidOperationException(
+                $"Time control with Time={request.TimeControl.Time} and Increment={request.TimeControl.Increment} not found. " +
+                "Please use an existing time control configuration.");
         }
-        
+    
         var newGame = new Game
         {
             TimeControl = timeControl,
@@ -36,9 +38,9 @@ public class GameService(ApplicationDbContext context) : IGameService
             TimeRemainingWhite = request.TimeControl.Time
         };
 
-        var game = await context.Games.AddAsync(newGame);
+        await context.Games.AddAsync(newGame);
         await context.SaveChangesAsync();
-        return game.Entity;
+        return newGame;
     }
 
     public async Task<Guid> AddPlayerAsync(ulong id)

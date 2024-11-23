@@ -16,8 +16,7 @@ public class ApplicationDbContext : DbContext
         var dbPath = Path.Join(path, "chess.db");
 
         optionsBuilder
-            .UseSqlite($"Data Source={dbPath}")
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            .UseSqlite($"Data Source={dbPath}");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

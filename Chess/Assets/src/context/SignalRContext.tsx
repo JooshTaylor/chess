@@ -1,5 +1,5 @@
 import React from 'react';
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { HttpTransportType, HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 
 interface SignalRContextType {
   onJoinGame: (id: number) => void;
@@ -25,8 +25,10 @@ export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderPr
   const [isConnected, setIsConnected] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    const connectionBuilder = new HubConnectionBuilder().withUrl(props.url);
-    const newConnection = connectionBuilder.build();
+    const newConnection = new HubConnectionBuilder()
+      .withUrl(props.url, { logger: LogLevel.Information, skipNegotiation: false, transport: HttpTransportType.WebSockets })
+      .withAutomaticReconnect()
+      .build();
 
     newConnection.on('JoinGameSuccess', (playerId: string) => {
       console.log('joined game', playerId);
@@ -36,12 +38,15 @@ export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderPr
       setIsConnected(false);
     });
 
-    newConnection.start().then(() => {
-      setConnection(newConnection);
-      setIsConnected(true);
-    }).catch((err) => {
-      console.log(err.message);
-    });
+    newConnection.start()
+      .then(() => {
+          setConnection(newConnection);
+          setIsConnected(true);
+          console.log("Connected successfully");
+      })
+      .catch((err) => {
+          console.error("Connection failed:", err);
+      });
 
     return () => {
       if (newConnection) {

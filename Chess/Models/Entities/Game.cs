@@ -11,7 +11,7 @@ public class Game
     
     public ulong TimeRemainingWhite { get; init; }
     public ulong TimeRemainingBlack { get; init; }
-    public TimeControl TimeControl { get; init; }
+    public required TimeControl TimeControl { get; init; }
 
     public Guid? PlayerOneId { get; set; } = null;
     public Guid? PlayerTwoId { get; set; } = null;

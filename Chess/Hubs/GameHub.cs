@@ -5,25 +5,34 @@ namespace Chess.Hubs;
 
 using Microsoft.AspNetCore.SignalR;
 
-public class GameHub : Hub
+public class GameHub(IGameService gameService) : Hub
 {
-    private readonly IGameService _gameService;
-    
-    public GameHub(IGameService gameService)
+    public override async Task OnConnectedAsync()
     {
-        _gameService = gameService;
+        Console.WriteLine($"Client connected: {Context.ConnectionId}");
+        await base.OnConnectedAsync();
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        Console.WriteLine($"Client disconnected: {Context.ConnectionId}");
+        if (exception != null)
+        {
+            Console.WriteLine($"Disconnection error: {exception.Message}");
+        }
+        await base.OnDisconnectedAsync(exception);
     }
     
     public async Task JoinGame(ulong id)
     {
-        var player = await _gameService.AddPlayerAsync(id);
-        var game = await _gameService.GetGameAsync(id);
+        var player = await gameService.AddPlayerAsync(id);
+        var game = await gameService.GetGameAsync(id);
 
         await Clients.Caller.SendAsync("JoinGameSuccess", player.ToString());
 
         if (game.PlayerOneId != null && game.PlayerTwoId != null)
         {
-            await _gameService.StartGameAsync(id);
+            await gameService.StartGameAsync(id);
 
             await Clients.All.SendAsync("StartGame", game);
         }
