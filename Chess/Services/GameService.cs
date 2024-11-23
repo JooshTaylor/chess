@@ -54,6 +54,7 @@ public class GameService(ApplicationDbContext context) : IGameService
 
         if (game.Status != GameStatus.Pending)
         {
+            // TODO: Spectator support
             throw new Exception($"Game {id} has already started.");
         }
         

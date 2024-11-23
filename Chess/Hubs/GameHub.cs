@@ -45,7 +45,7 @@ public class GameHub(IGameService gameService) : Hub
         else
         {
             var player = await gameService.AddPlayerAsync(id);
-            await Clients.Caller.SendAsync("JoinGameSuccess", player.ToString());
+            await Clients.Caller.SendAsync("JoinGameSuccess", game.Id, player.ToString());
         }
         
 

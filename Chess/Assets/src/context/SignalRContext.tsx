@@ -1,5 +1,6 @@
 import React from 'react';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import { savePlayerId } from '../utils/savePlayerId';
 
 interface SignalRContextType {
   onJoinGame: (id: number, currentPlayerId?: string) => void;
@@ -32,8 +33,8 @@ export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderPr
       .withAutomaticReconnect()
       .build();
 
-    newConnection.on('JoinGameSuccess', (playerId: string) => {
-      console.log('joined game', playerId);
+    newConnection.on('JoinGameSuccess', (gameId: number, playerId: string) => {
+      savePlayerId(gameId, playerId);
     });
 
     newConnection.onclose(() => {
