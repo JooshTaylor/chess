@@ -6,12 +6,12 @@ public class Game
 {
     public ulong Id { get; init; }
     public GameStatus Status { get; set; } = GameStatus.Pending;
-    public GameEnding? Ending { get; set; } = null;
-    public PieceColour? Winner { get; set; } = null;
+    public GameEnding? Ending { get; init; } = null;
+    public PieceColour? Winner { get; init; } = null;
     
-    public ulong TimeRemainingWhite { get; set; }
-    public ulong TimeRemainingBlack { get; set; }
-    public TimeControl TimeControl { get; set; }
+    public ulong TimeRemainingWhite { get; init; }
+    public ulong TimeRemainingBlack { get; init; }
+    public TimeControl TimeControl { get; init; }
 
     public Guid? PlayerOneId { get; set; } = null;
     public Guid? PlayerTwoId { get; set; } = null;

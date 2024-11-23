@@ -17,9 +17,9 @@ builder.Services.AddSignalR();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("DevCorsPolicy", builder =>
+    options.AddPolicy("DevCorsPolicy", corsPolicyBuilder =>
     {
-        builder
+        corsPolicyBuilder
             .WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
             .AllowAnyMethod()
@@ -27,11 +27,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-var folder = Environment.SpecialFolder.MyDocuments;
-var path = Environment.GetFolderPath(folder);
-var dbPath = Path.Join(path, "chess.db");
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlite($"Data Source={dbPath}"));
+builder.Services.AddDbContext<ApplicationDbContext>();
 
 builder.Services.AddScoped<IGameService, GameService>();
 

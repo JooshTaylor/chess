@@ -1,36 +1,30 @@
 ﻿using Chess.Models.Requests;
 using Chess.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chess.Controllers;
 
 [Route("api/games")]
-public class GameController : Controller
+public class GameController(IGameService gameService) : Controller
 {
-    private readonly IGameService _gameService;
-    public GameController(IGameService gameService)
-    {
-        _gameService = gameService;
-    }
-    
     [HttpGet("")]
-    public ActionResult GetGames()
+    public async Task<IActionResult> GetGames()
     {
-        return Ok(_gameService.GetGames());
+        var games = await gameService.GetGamesAsync();
+        return Ok(games);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetGame(ulong id)
     {
-        var game = await _gameService.GetGameAsync(id);
-        return Ok();
+        var game = await gameService.GetGameAsync(id);
+        return Ok(game);
     }
 
     [HttpPost("")]
     public async Task<IActionResult> CreateGame([FromBody] CreateGameRequest request)
     {
-        var game = await _gameService.CreateGameAsync(request);
+        var game = await gameService.CreateGameAsync(request);
         return Ok(game);
     }
 }

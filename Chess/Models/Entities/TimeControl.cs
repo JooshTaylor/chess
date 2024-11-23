@@ -8,7 +8,7 @@ namespace Chess.Models.Entities;
 [PrimaryKey("Time", "Increment")]
 public class TimeControl
 {
-    public TimeControlType Type { get; set; }
-    public ulong Time { get; set; }
-    public ulong Increment { get; set; }
+    public TimeControlType Type { get; init; }
+    public ulong Time { get; init; }
+    public ulong Increment { get; init; }
 }

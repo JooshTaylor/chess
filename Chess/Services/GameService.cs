@@ -3,32 +3,26 @@ using Chess.Enums;
 using Chess.Models.Entities;
 using Chess.Models.Requests;
 using Chess.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chess.Services;
 
-public class GameService : IGameService
+public class GameService(ApplicationDbContext context) : IGameService
 {
-    private readonly ApplicationDbContext _context;
-
-    public GameService(ApplicationDbContext context)
+    public async Task<IEnumerable<Game>> GetGamesAsync()
     {
-        _context = context;
+        return await context.Games.ToListAsync();
     }
 
-    public IEnumerable<Game> GetGames()
+    public async Task<Game?> GetGameAsync(ulong id)
     {
-        return _context.Games;
-    }
-
-    public async Task<Game> GetGameAsync(ulong id)
-    {
-        var game = await _context.Games.FindAsync(id);
+        var game = await context.Games.FindAsync(id);
         return game;
     }
 
     public async Task<Game> CreateGameAsync(CreateGameRequest request)
     {
-        var timeControl = await _context.TimeControls.FindAsync(request.TimeControl.Time, request.TimeControl.Increment);
+        var timeControl = await context.TimeControls.FindAsync(request.TimeControl.Time, request.TimeControl.Increment);
 
         if (timeControl == null)
         {
@@ -42,15 +36,28 @@ public class GameService : IGameService
             TimeRemainingWhite = request.TimeControl.Time
         };
 
-        var game = await _context.Games.AddAsync(newGame);
-        await _context.SaveChangesAsync();
+        var game = await context.Games.AddAsync(newGame);
+        await context.SaveChangesAsync();
         return game.Entity;
     }
 
-    public async Task AddPlayerAsync(ulong id, Guid playerId)
+    public async Task<Guid> AddPlayerAsync(ulong id)
     {
         var game = await GetGameAsync(id);
         
+        if (game == null)
+        {
+            throw new Exception($"Game {id} not found");
+        }
+
+        if (game.Status != GameStatus.Pending)
+        {
+            throw new Exception($"Game {id} has already started.");
+        }
+        
+        Guid playerId = Guid.NewGuid();
+        
+        // TODO: I don't think this actually works. Watch updating part of course.
         if (game.PlayerOneId == null)
             game.PlayerOneId = playerId;
         else if (game.PlayerTwoId == null)
@@ -58,15 +65,22 @@ public class GameService : IGameService
         else
             throw new InvalidOperationException($"Player {playerId} already added");
         
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
+
+        return playerId;
     }
 
     public async Task StartGameAsync(ulong id)
     {
         var game = await GetGameAsync(id);
 
+        if (game == null)
+        {
+            throw new Exception($"Game {id} not found");
+        }
+
         game.Status = GameStatus.Running;
         
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 }
