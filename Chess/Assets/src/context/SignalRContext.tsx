@@ -1,9 +1,9 @@
 import React from 'react';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
-import { savePlayerId } from '../utils/savePlayerId';
 
 interface SignalRContextType {
-  onJoinGame: (id: number, currentPlayerId?: string) => void;
+  invoke: (name: string, ...args: any[]) => void;
+  on: (name: string, callback: (...args: any[]) => any) => void;
   isConnected: boolean;
 }
 
@@ -24,9 +24,7 @@ interface SignalRProviderProps {
 
 export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderProps>) {
   const connection = React.useRef<HubConnection>(null);
-
   const [isConnected, setIsConnected] = React.useState<boolean>(false);
-  const [queue, setQueue] = React.useState([]);
 
   React.useEffect(() => {
     const newConnection = new HubConnectionBuilder()
@@ -34,28 +32,18 @@ export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderPr
       .withAutomaticReconnect()
       .build();
 
-    newConnection.on('JoinGameSuccess', (gameId: number, playerId: string) => {
-      savePlayerId(gameId, playerId);
-    });
-
     newConnection.onclose(() => {
       setIsConnected(false);
     });
 
     newConnection.start()
       .then(() => {
-          connection.current = newConnection;
-          setIsConnected(true);
-          console.log("Connected successfully");
-
-          for (const fn of queue) {
-            fn();
-          }
-
-          setQueue([]);
+        connection.current = newConnection;
+        setIsConnected(true);
+        console.log("Connected successfully");
       })
       .catch((err) => {
-          console.error("Connection failed:", err);
+        console.error("Connection failed:", err);
       });
 
     return () => {
@@ -65,31 +53,22 @@ export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderPr
     };
   }, [props.url]);
 
-  /**
-   * This is really silly. Basically when my client first tries to connect to our game hub socket,
-   * it fails like twice, but it also immediately tries to join whatever game it's on, which fails
-   * too because the socket isnt connected. On like the third try the socket succeeds, and so I basically
-   * just queue connection requests until the connection succeeds then fire them all. Ideally I shouldn't
-   * need this.
-   */
-  function queueOrExecuteTask(fn: () => void): void {
-    if (isConnected)
-      return fn();
-
-    queue.push(fn);
+  function invoke(name: string, ...args: any[]): void {
+    if (!isConnected)
+      return;
+    
+    connection.current.invoke(name, ...args);
   }
 
-  function onJoinGame(id: number, currentPlayerId?: string): void {
-    queueOrExecuteTask(() => {
-      connection.current.invoke("JoinGame", id, currentPlayerId)
-        .catch(err => {
-          console.log('Cannot join game', err);
-        });
-    });
+  function on<T extends (...args: any[]) => any>(name: string, callback: T): void {
+    if (!isConnected)
+      return;
+
+    connection.current.on(name, callback);
   }
 
   return (
-    <SignalRContext.Provider value={{ onJoinGame, isConnected }}>
+    <SignalRContext.Provider value={{ invoke, on, isConnected }}>
       {props.children}
     </SignalRContext.Provider>
   );

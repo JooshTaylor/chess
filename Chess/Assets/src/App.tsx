@@ -11,7 +11,13 @@ import { LoginView } from "./views/login/LoginView";
 import { SignalRProvider } from "./context/SignalRContext";
 import { GameView } from "./views/game/GameView";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: Infinity
+    }
+  }
+})
 
 const router = createBrowserRouter([
   {

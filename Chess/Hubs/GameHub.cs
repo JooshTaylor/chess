@@ -52,8 +52,7 @@ public class GameHub(IGameService gameService) : Hub
         if (game.Status == GameStatus.Pending && game.PlayerOneId != null && game.PlayerTwoId != null)
         {
             await gameService.StartGameAsync(id);
-
-            await Clients.All.SendAsync("StartGame", game);
+            await Clients.All.SendAsync("StartGame", game.Id);
         }
     }
 }
