@@ -9,6 +9,8 @@ public class Game
     public GameEnding? Ending { get; init; } = null;
     public PieceColour? Winner { get; init; } = null;
     public required TimeControl TimeControl { get; init; }
+    public IEnumerable<Move> Moves { get; set; } = new List<Move>();
+    public IEnumerable<GamePiece> Pieces { get; set; } = new List<GamePiece>();
     public Guid? PlayerOneId { get; set; } = null;
     public Guid? PlayerTwoId { get; set; } = null;
 }

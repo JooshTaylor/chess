@@ -47,12 +47,11 @@ public class GameHub(IGameService gameService) : Hub
             var player = await gameService.AddPlayerAsync(id);
             await Clients.Caller.SendAsync("JoinGameSuccess", game.Id, player.ToString());
         }
-        
 
         if (game.Status == GameStatus.Pending && game.PlayerOneId != null && game.PlayerTwoId != null)
         {
             await gameService.StartGameAsync(id);
-            await Clients.All.SendAsync("StartGame", game.Id);
+            await Clients.All.SendAsync("StartGame", game);
         }
     }
 }

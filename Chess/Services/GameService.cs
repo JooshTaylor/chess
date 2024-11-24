@@ -36,7 +36,8 @@ public class GameService(ApplicationDbContext context) : IGameService
     
         var newGame = new Game
         {
-            TimeControl = timeControl
+            TimeControl = timeControl,
+            Pieces = await GetInitialGamePieces()
         };
 
         await context.Games.AddAsync(newGame);
@@ -86,5 +87,19 @@ public class GameService(ApplicationDbContext context) : IGameService
         game.Status = GameStatus.Running;
         
         await context.SaveChangesAsync();
+    }
+
+    private async Task<List<GamePiece>> GetInitialGamePieces()
+    {
+        var pieces = await context.Pieces.ToListAsync();
+
+        var gamePieces = pieces.Select(p => new GamePiece
+        {
+            Piece = p,
+            X = p.InitialX,
+            Y = p.InitialY
+        });
+
+        return gamePieces.ToList();
     }
 }
