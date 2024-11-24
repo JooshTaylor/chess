@@ -1,4 +1,4 @@
-import { GameStatus } from "../interfaces/GameStatus";
+import { GameStatus } from "../enums/GameStatus";
 import { Piece } from "../interfaces/Piece";
 import { PieceColour } from "../interfaces/PieceColour";
 import { PieceId } from "../interfaces/PieceId";
@@ -68,7 +68,7 @@ export const isMoveAction = (actionType: GameAction['type']): boolean => {
 
 export function GameReducer(state: GameState, action: GameAction): GameState {
   function getNextTurnColour(state: GameState): PieceColour {
-    return state.turnColour === 'dark' ? 'light' : 'dark';
+    return state.turnColour === 'black' ? 'white' : 'black';
   }
 
   switch (action.type) {
@@ -214,7 +214,7 @@ export function GameReducer(state: GameState, action: GameAction): GameState {
 
       return {
         ...state,
-        status: 'complete',
+        status: GameStatus.Complete,
         result,
         winner
       };

@@ -1,7 +1,7 @@
 import { PieceProps } from "./PieceProps";
 
 export function Bishop(props: PieceProps): JSX.Element {
-  if (props.colour === 'dark') {
+  if (props.colour === 'black') {
     return (
       <svg width="45" height="45">
         <g style={{opacity: 1, fill: "none", fillRule: "evenodd", fillOpacity: 1, stroke: "#000000", strokeWidth: 1.5, strokeLinecap: "round", strokeLinejoin: "round", strokeMiterlimit: 4, strokeDasharray: "none", strokeOpacity: 1}} transform="translate(0,0.6)">

@@ -1,8 +1,9 @@
 import axios from "axios";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { Game } from "../../interfaces/Game";
+import { GameStatus } from "../../enums/GameStatus";
 import { CreateGameRequest } from "../../interfaces/requests/CreateGameRequest";
 
 export function DashboardView(): JSX.Element {
@@ -16,10 +17,15 @@ export function DashboardView(): JSX.Element {
     }
   };
 
+  const activeGames = useQuery({
+    queryKey: [`games:status:${GameStatus.Running}`],
+    queryFn: () => axios.get<Game[]>(`/api/games?status=${GameStatus.Running}`)
+  });
+
   const createGameMutation = useMutation({
     mutationFn: () => axios.post<Game>('/api/games', body),
     onSuccess: async data => {
-      navigate(`/chess/${data.data.id}`);
+      navigate(`/games/${data.data.id}`);
     }
   });
 
@@ -28,18 +34,22 @@ export function DashboardView(): JSX.Element {
   }
 
   return (
-    <div>
-      <div>
-        Dashboard
-      </div>
+    <div className=''>
+      <ul>
+        {activeGames.data?.data?.map(game => {
+          return (
+            <li>
+              <Link to={`/games/${game.id}`}>
+                Spectate: {game.id}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
 
-      <div>
-        <Link to='/chess'>
-          Chess
-        </Link>
-      </div>
-
-      <button onClick={onClickCreateGame}>Create a game</button>
+      <button onClick={onClickCreateGame}>
+        Create a game
+      </button>
     </div>
   );
 }

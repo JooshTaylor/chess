@@ -51,8 +51,8 @@ export function getPieceValidPositionsMap(state: GameState, piecePositionMap: Pi
    * This has to be checked after all of the valid positions are identified so that we know if the
    * travelled square is being targetted by another piece
    */
-  preventCastlingIfSniped(state, piecePositionMap, map, 'light');
-  preventCastlingIfSniped(state, piecePositionMap, map, 'dark');
+  preventCastlingIfSniped(state, piecePositionMap, map, 'white');
+  preventCastlingIfSniped(state, piecePositionMap, map, 'black');
 
   return map as PieceValidPositionsMap;
 }

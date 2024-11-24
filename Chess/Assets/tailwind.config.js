@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        'chess-dark': 'rgb(180,136,97)',
-        'chess-light': 'rgb(239,217,180)'
+        'chess-black': 'rgb(180,136,97)',
+        'chess-white': 'rgb(239,217,180)'
       }
     },
   },

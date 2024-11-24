@@ -9,9 +9,12 @@ namespace Chess.Services;
 
 public class GameService(ApplicationDbContext context) : IGameService
 {
-    public async Task<IEnumerable<Game>> GetGamesAsync()
+    public async Task<IEnumerable<Game>> GetGamesAsync(GameStatus? status = null)
     {
-        return await context.Games.ToListAsync();
+        if (status == null)
+            return await context.Games.ToListAsync();
+        
+        return await context.Games.Where(g => g.Status == status).ToListAsync();
     }
 
     public async Task<Game?> GetGameAsync(ulong id)
@@ -33,9 +36,7 @@ public class GameService(ApplicationDbContext context) : IGameService
     
         var newGame = new Game
         {
-            TimeControl = timeControl,
-            TimeRemainingBlack = request.TimeControl.Time,
-            TimeRemainingWhite = request.TimeControl.Time
+            TimeControl = timeControl
         };
 
         await context.Games.AddAsync(newGame);

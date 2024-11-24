@@ -3,12 +3,12 @@ import { Piece } from '../../interfaces/Piece';
 import { Position } from '../../interfaces/Position';
 
 function getColour(position: Position): string {
-  // If the first in the row is light
+  // If the first in the row is white
   if (position.y % 2 === 0)
-    return position.x % 2 === 0 ? 'bg-chess-dark' : 'bg-chess-light';
+    return position.x % 2 === 0 ? 'bg-chess-black' : 'bg-chess-white';
 
-  // If the first in the row is dark
-  return position.x % 2 === 0 ? 'bg-chess-light' : 'bg-chess-dark';
+  // If the first in the row is black
+  return position.x % 2 === 0 ? 'bg-chess-white' : 'bg-chess-black';
 }
 
 function convertNumberToChar(num: number): string {
@@ -26,7 +26,7 @@ interface SquareProps {
 
 export function Square(props: SquareProps): JSX.Element {
   function getClassName(): string {
-    let className = `relative cursor-pointer w-24 h-24 ${getColour(props.position)}`;
+    let className = `relative w-24 h-24 ${props.disabled ? '' : 'cursor-pointer'} ${getColour(props.position)}`;
 
     if (props.isSelected)
       className += ' bg-green-600';
@@ -66,7 +66,7 @@ export function Square(props: SquareProps): JSX.Element {
       )}
 
       {!!props.piece && (
-        <div className={`relative w-full h-full flex items-center justify-center ${props.piece.colour === 'dark' ? 'text-black' : 'text-white'}`}>
+        <div className={`relative w-full h-full flex items-center justify-center ${props.piece.colour === 'black' ? 'text-black' : 'text-white'}`}>
           <PieceComponent colour={props.piece.colour} />
           {props.isTarget && (
             <div className='absolute rounded-full border-2 w-2/3 h-2/3 border-gray-800'></div>

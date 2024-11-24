@@ -1,8 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 
 import { Square } from '../square/Square';
 import { GameAction, GameReducer, isMoveAction } from '../../reducers/GameReducer';
@@ -25,31 +22,17 @@ import { EndGameModal } from '../end-game-modal/EndGameModal';
 import { getInitialState } from '../../utils/getInitialState';
 import { Game } from '../../interfaces/Game';
 import { PendingGameModal } from '../pending-game-modal/PendingGameModal';
-import { useSignalR } from '../../context/SignalRContext';
+import { GameStatus } from '../../enums/GameStatus';
 import { getPlayerId } from '../../utils/getPlayerId';
 
 const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
 
-export function ChessBoard(): JSX.Element {
-  const params = useParams();
+interface ChessBoardProps {
+  game: Game;
+}
 
-  const signalR = useSignalR();
-
-  const game = useQuery({
-    queryKey: [`game:${params.id}`],
-    queryFn: () => axios.get<Game>(`/api/games/${params.id}`)
-  });
-
-  React.useEffect(() => {
-    if (!game.data?.data?.id)
-      return;
-
-    const currentPlayerId = getPlayerId(game.data.data.id);
-
-    signalR.onJoinGame(game.data.data.id, currentPlayerId);
-  }, [game.data?.data]);
-
-  const initialState = React.useMemo(() => getInitialState(game.data?.data), [game.isFetched]);
+export function ChessBoard(props: ChessBoardProps): JSX.Element {
+  const initialState = React.useMemo(() => getInitialState(props.game), []);
   const [ state, _dispatch ] = React.useState(initialState);
 
   React.useEffect(() => {
@@ -101,7 +84,7 @@ export function ChessBoard(): JSX.Element {
       dispatch({
         type: 'end-game',
         payload: {
-          winner: isCheckMate ? (state.turnColour === 'dark' ? 'light' : 'dark') : null,
+          winner: isCheckMate ? (state.turnColour === 'black' ? 'white' : 'black') : null,
           result: isCheckMate ? 'check-mate' : 'stalemate'
         }
       });
@@ -179,6 +162,21 @@ export function ChessBoard(): JSX.Element {
     onSelectPiece(position);
   }
 
+  function canMove(): boolean {
+    if (props.game.status !== GameStatus.Running)
+      return false;
+
+    const playerId = getPlayerId(props.game.id);
+
+    if (props.game.playerOneId === playerId && state.turnColour === 'white')
+      return true;
+    
+    if (props.game.playerTwoId === playerId && state.turnColour === 'black')
+      return true;
+
+    return false;
+  }
+
   return (
     <>
       <div className='flex flex-nowrap h-screen items-center justify-center'>
@@ -194,7 +192,7 @@ export function ChessBoard(): JSX.Element {
                     position={position}
                     piece={getPieceAtPosition(state, position)}
                     isTarget={validPositions?.has(getPositionId(position))}
-                    disabled={state.status !== 'running'}
+                    disabled={!canMove()}
                   />
                 );
               })}

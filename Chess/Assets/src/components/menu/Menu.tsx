@@ -3,10 +3,10 @@ import { PieceColour } from "../../interfaces/PieceColour";
 import { PiecePositionMap } from "../../utils/getPiecePositionMap";
 
 function getColourString(colour: PieceColour): string {
-  if (colour === 'dark')
-    return 'Dark';
+  if (colour === 'black')
+    return 'Black';
 
-  return 'Light';
+  return 'White';
 }
 
 type Moves = Array<[ number, string, string ]>;
@@ -29,17 +29,17 @@ export function Menu(props: MenuProps): JSX.Element {
   }
 
   return (
-    <div className='w-[300px] max-h-[768px] min-h-[768px] rounded-lg border border-chess-dark text-chess-dark bg-chess-light ms-4 font-semibold overflow-y-scroll'>
+    <div className='w-[300px] max-h-[768px] min-h-[768px] rounded-lg border border-chess-black text-chess-black bg-chess-white ms-4 font-semibold overflow-y-scroll'>
       <div className='p-2'>
         <h2>Moves</h2>
 
         <ul>
-          {moves.map(([ moveNumber, lightMove, darkMove ]) => {
+          {moves.map(([ moveNumber, whiteMove, blackMove ]) => {
             return (
               <li key={moveNumber} className='columns-3'>
                 <div>{moveNumber}.</div>
-                <div>{lightMove}</div>
-                <div>{darkMove}</div>
+                <div>{whiteMove}</div>
+                <div>{blackMove}</div>
               </li>
             );
           })}
@@ -47,7 +47,7 @@ export function Menu(props: MenuProps): JSX.Element {
 
         {props.state.status === 'complete' && (
           <div>
-            Game over! {getColourString(props.state.turnColour === 'dark' ? 'light' : 'dark')} is the winner!
+            Game over! {getColourString(props.state.turnColour === 'black' ? 'white' : 'black')} is the winner!
           </div>
         )}
       </div>

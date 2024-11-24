@@ -2,7 +2,6 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import { ChessBoard } from './components/board/ChessBoard';
 import { DashboardView } from "./views/dashboard/DashboardView";
 import { Layout } from "./layouts/Layout";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -10,6 +9,7 @@ import { ErrorView } from "./views/error/ErrorView";
 import { RegisterView } from "./views/register/RegisterView";
 import { LoginView } from "./views/login/LoginView";
 import { SignalRProvider } from "./context/SignalRContext";
+import { GameView } from "./views/game/GameView";
 
 const queryClient = new QueryClient()
 
@@ -32,8 +32,8 @@ const router = createBrowserRouter([
         element: <LoginView />
       },
       {
-        path: "chess/:id",
-        element: <ChessBoard />,
+        path: "games/:id",
+        element: <GameView />,
       },
     ],
   },

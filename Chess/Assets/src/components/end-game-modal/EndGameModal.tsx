@@ -31,7 +31,7 @@ interface EndGameModalProps {
 export function EndGameModal(props: EndGameModalProps): JSX.Element {
   const Component = EndGameComponents[props.result];
 
-  const loser = props.winner ? (props.winner === 'dark' ? 'light' : 'dark') : null;
+  const loser = props.winner ? (props.winner === 'black' ? 'white' : 'black') : null;
 
   return (
     <Modal title={`Game over`}>

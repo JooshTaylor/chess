@@ -57,7 +57,7 @@ export function getValidPawnPositions(piece: Piece, state: GameState, piecePosit
     }
   }
 
-  if (piece.colour === 'light') {
+  if (piece.colour === 'white') {
     // Forward once
     const { canContinueInDirection } = tryAddForwardPosition({ x: currentX, y: currentY + 1 }, false);
 
@@ -74,7 +74,7 @@ export function getValidPawnPositions(piece: Piece, state: GameState, piecePosit
     return validPositions;
   }
 
-  // Dark pawns
+  // Black pawns
 
   // Forward once
   const { canContinueInDirection } = tryAddForwardPosition({ x: currentX, y: currentY - 1 }, false);

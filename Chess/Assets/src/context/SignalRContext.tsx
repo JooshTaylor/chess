@@ -4,6 +4,7 @@ import { savePlayerId } from '../utils/savePlayerId';
 
 interface SignalRContextType {
   onJoinGame: (id: number, currentPlayerId?: string) => void;
+  isConnected: boolean;
 }
 
 const SignalRContext = React.createContext<SignalRContextType>(null);
@@ -88,7 +89,7 @@ export function SignalRProvider(props: React.PropsWithChildren<SignalRProviderPr
   }
 
   return (
-    <SignalRContext.Provider value={{ onJoinGame }}>
+    <SignalRContext.Provider value={{ onJoinGame, isConnected }}>
       {props.children}
     </SignalRContext.Provider>
   );

@@ -1,4 +1,5 @@
-﻿using Chess.Models.Requests;
+﻿using Chess.Enums;
+using Chess.Models.Requests;
 using Chess.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +9,9 @@ namespace Chess.Controllers;
 public class GameController(IGameService gameService) : Controller
 {
     [HttpGet("")]
-    public async Task<IActionResult> GetGames()
+    public async Task<IActionResult> GetGames([FromQuery] GameStatus? status = null)
     {
-        var games = await gameService.GetGamesAsync();
+        var games = await gameService.GetGamesAsync(status);
         return Ok(games);
     }
 

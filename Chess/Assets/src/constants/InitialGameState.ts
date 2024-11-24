@@ -1,403 +1,404 @@
+import { GameStatus } from "../enums/GameStatus";
 import { GameState } from "../reducers/GameReducer";
 
 export const INITIAL_GAME_STATE: GameState = {
-  turnColour: 'light',
+  turnColour: 'white',
   selectedPiece: '',
-  status: 'pending',
+  status: GameStatus.Pending,
   moves: [],
 
   positions: {
     // X pos then Y
     1: {
-      1: 'light-rook-1',
-      2: 'light-pawn-1',
+      1: 'white-rook-1',
+      2: 'white-pawn-1',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: 'dark-pawn-1',
-      8: 'dark-rook-1'
+      7: 'black-pawn-1',
+      8: 'black-rook-1'
     },
     2: {
-      1: 'light-knight-1',
-      2: 'light-pawn-2',
+      1: 'white-knight-1',
+      2: 'white-pawn-2',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: 'dark-pawn-2',
-      8: 'dark-knight-1'
+      7: 'black-pawn-2',
+      8: 'black-knight-1'
     },
     3: {
-      1: 'light-bishop-1',
-      2: 'light-pawn-3',
+      1: 'white-bishop-1',
+      2: 'white-pawn-3',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: 'dark-pawn-3',
-      8: 'dark-bishop-1',
+      7: 'black-pawn-3',
+      8: 'black-bishop-1',
     },
     4: {
-      1: 'light-queen',
-      2: 'light-pawn-4',
+      1: 'white-queen',
+      2: 'white-pawn-4',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: 'dark-pawn-4',
-      8: 'dark-queen',
+      7: 'black-pawn-4',
+      8: 'black-queen',
     },
     5: {
-      1: 'light-king',
-      2: 'light-pawn-5',
+      1: 'white-king',
+      2: 'white-pawn-5',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: 'dark-pawn-5',
-      8: 'dark-king',
+      7: 'black-pawn-5',
+      8: 'black-king',
     },
     6: {
-      1: 'light-bishop-2',
-      2: 'light-pawn-6',
+      1: 'white-bishop-2',
+      2: 'white-pawn-6',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: 'dark-pawn-6',
-      8: 'dark-bishop-2',
+      7: 'black-pawn-6',
+      8: 'black-bishop-2',
     },
     7: {
-      1: 'light-knight-2',
-      2: 'light-pawn-7',
+      1: 'white-knight-2',
+      2: 'white-pawn-7',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: 'dark-pawn-7',
-      8: 'dark-knight-2'
+      7: 'black-pawn-7',
+      8: 'black-knight-2'
     },
     8: {
-      1: 'light-rook-2',
-      2: 'light-pawn-8',
+      1: 'white-rook-2',
+      2: 'white-pawn-8',
       3: '',
       4: '',
       5: '',
       6: '',
-      7: 'dark-pawn-8',
-      8: 'dark-rook-2'
+      7: 'black-pawn-8',
+      8: 'black-rook-2'
     }
   },
 
   pieces: {
-    // DARK: First row
-    'dark-rook-1': {
-      id: 'dark-rook-1',
+    // BLACK: First row
+    'black-rook-1': {
+      id: 'black-rook-1',
       type: 'rook',
       originalType: 'rook',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'dark-knight-1': {
-      id: 'dark-knight-1',
+    'black-knight-1': {
+      id: 'black-knight-1',
       type: 'knight',
       originalType: 'knight',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'dark-bishop-1': {
-      id: 'dark-bishop-1',
+    'black-bishop-1': {
+      id: 'black-bishop-1',
       type: 'bishop',
       originalType: 'bishop',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'dark-king': {
-      id: 'dark-king',
+    'black-king': {
+      id: 'black-king',
       type: 'king',
       originalType: 'king',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'dark-queen': {
-      id: 'dark-queen',
+    'black-queen': {
+      id: 'black-queen',
       type: 'queen',
       originalType: 'queen',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'dark-bishop-2': {
-      id: 'dark-bishop-2',
+    'black-bishop-2': {
+      id: 'black-bishop-2',
       type: 'bishop',
       originalType: 'bishop',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'dark-knight-2': {
-      id: 'dark-knight-2',
+    'black-knight-2': {
+      id: 'black-knight-2',
       type: 'knight',
       originalType: 'knight',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'dark-rook-2': {
-      id: 'dark-rook-2',
+    'black-rook-2': {
+      id: 'black-rook-2',
       type: 'rook',
       originalType: 'rook',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    // DARK: Second row
+    // BLACK: Second row
 
-    'dark-pawn-1': {
-      id: 'dark-pawn-1',
+    'black-pawn-1': {
+      id: 'black-pawn-1',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'dark-pawn-2': {
-      id: 'dark-pawn-2',
+    'black-pawn-2': {
+      id: 'black-pawn-2',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'dark-pawn-3': {
-      id: 'dark-pawn-3',
+    'black-pawn-3': {
+      id: 'black-pawn-3',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'dark-pawn-4': {
-      id: 'dark-pawn-4',
+    'black-pawn-4': {
+      id: 'black-pawn-4',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'dark-pawn-5': {
-      id: 'dark-pawn-5',
+    'black-pawn-5': {
+      id: 'black-pawn-5',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'dark-pawn-6': {
-      id: 'dark-pawn-6',
+    'black-pawn-6': {
+      id: 'black-pawn-6',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'dark-pawn-7': {
-      id: 'dark-pawn-7',
+    'black-pawn-7': {
+      id: 'black-pawn-7',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'dark-pawn-8': {
-      id: 'dark-pawn-8',
+    'black-pawn-8': {
+      id: 'black-pawn-8',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'dark',
+      colour: 'black',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    // LIGHT: Seventh row
+    // WHITE: Seventh row
 
-    'light-pawn-1': {
-      id: 'light-pawn-1',
+    'white-pawn-1': {
+      id: 'white-pawn-1',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'light-pawn-2': {
-      id: 'light-pawn-2',
+    'white-pawn-2': {
+      id: 'white-pawn-2',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'light-pawn-3': {
-      id: 'light-pawn-3',
+    'white-pawn-3': {
+      id: 'white-pawn-3',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'light-pawn-4': {
-      id: 'light-pawn-4',
+    'white-pawn-4': {
+      id: 'white-pawn-4',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'light-pawn-5': {
-      id: 'light-pawn-5',
+    'white-pawn-5': {
+      id: 'white-pawn-5',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'light-pawn-6': {
-      id: 'light-pawn-6',
+    'white-pawn-6': {
+      id: 'white-pawn-6',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'light-pawn-7': {
-      id: 'light-pawn-7',
+    'white-pawn-7': {
+      id: 'white-pawn-7',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    'light-pawn-8': {
-      id: 'light-pawn-8',
+    'white-pawn-8': {
+      id: 'white-pawn-8',
       type: 'pawn',
       originalType: 'pawn',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
 
-    // LIGHT: Eighth row
-    'light-rook-1': {
-      id: 'light-rook-1',
+    // WHITE: Eighth row
+    'white-rook-1': {
+      id: 'white-rook-1',
       type: 'rook',
       originalType: 'rook',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'light-knight-1': {
-      id: 'light-knight-1',
+    'white-knight-1': {
+      id: 'white-knight-1',
       type: 'knight',
       originalType: 'knight',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'light-bishop-1': {
-      id: 'light-bishop-1',
+    'white-bishop-1': {
+      id: 'white-bishop-1',
       type: 'bishop',
       originalType: 'bishop',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'light-king': {
-      id: 'light-king',
+    'white-king': {
+      id: 'white-king',
       type: 'king',
       originalType: 'king',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'light-queen': {
-      id: 'light-queen',
+    'white-queen': {
+      id: 'white-queen',
       type: 'queen',
       originalType: 'queen',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'light-bishop-2': {
-      id: 'light-bishop-2',
+    'white-bishop-2': {
+      id: 'white-bishop-2',
       type: 'bishop',
       originalType: 'bishop',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'light-knight-2': {
-      id: 'light-knight-2',
+    'white-knight-2': {
+      id: 'white-knight-2',
       type: 'knight',
       originalType: 'knight',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0
     },
-    'light-rook-2': {
-      id: 'light-rook-2',
+    'white-rook-2': {
+      id: 'white-rook-2',
       type: 'rook',
       originalType: 'rook',
-      colour: 'light',
+      colour: 'white',
       status: 'alive',
       totalMoves: 0,
       turnsSinceLastMove: 0

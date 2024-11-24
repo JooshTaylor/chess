@@ -1,16 +1,14 @@
 import { GameEnding } from "./GameEnding";
-import { GameStatus } from "./GameStatus";
+import { GameStatus } from "../enums/GameStatus";
 import { PieceColour } from "./PieceColour";
 import { TimeControl } from "./TimeControl";
 
 export interface Game {
   id: number;
-
   status: GameStatus;
   ending: GameEnding;
   winner: PieceColour;
-
-  timeRemainingWhite: number;
-  timeRemainingBlack: number;
   timeControl: TimeControl;
+  playerOneId: string;
+  playerTwoId: string;
 }
