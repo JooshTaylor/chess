@@ -24,6 +24,7 @@ import { Game } from '../../interfaces/Game';
 import { PendingGameModal } from '../pending-game-modal/PendingGameModal';
 import { GameStatus } from '../../enums/GameStatus';
 import { getPlayerId } from '../../utils/getPlayerId';
+import { PieceColour } from '../../interfaces/PieceColour';
 
 const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
 
@@ -32,12 +33,22 @@ interface ChessBoardProps {
 }
 
 export function ChessBoard(props: ChessBoardProps): JSX.Element {
-  const initialState = React.useMemo(() => getInitialState(props.game), []);
+  const initialState = React.useMemo(() => getInitialState(props.game), [props.game.status]);
   const [ state, _dispatch ] = React.useState(initialState);
 
   React.useEffect(() => {
     _dispatch(initialState);
   }, [initialState]);
+
+  const playerColour: PieceColour = React.useMemo(() => {
+    const playerId = getPlayerId(props.game.id);
+
+    if (props.game.playerOneId === playerId)
+      return 'white';
+
+    if (props.game.playerTwoId === playerId)
+      return 'black';
+  }, [props.game]);
 
   const initialPiecePositionMap = React.useMemo(() => getPiecePositionMap(state.positions), []);
   const initialPieceValidPositionsMap = React.useMemo(() => getPieceValidPositionsMap(state, initialPiecePositionMap, true), []);
@@ -166,22 +177,16 @@ export function ChessBoard(props: ChessBoardProps): JSX.Element {
     if (props.game.status !== GameStatus.Running)
       return false;
 
-    const playerId = getPlayerId(props.game.id);
-
-    if (props.game.playerOneId === playerId && state.turnColour === 'white')
-      return true;
-    
-    if (props.game.playerTwoId === playerId && state.turnColour === 'black')
-      return true;
-
-    return false;
+    return state.turnColour === playerColour;
   }
+
+  const board = playerColour === 'white' ? BOARD : [...BOARD].reverse();
 
   return (
     <>
       <div className='flex flex-nowrap h-screen items-center justify-center'>
         <div>
-          {BOARD.map((row, rowIndex) => (
+          {board.map((row, rowIndex) => (
             <div key={rowIndex} className='flex'>
               {row.map(position => {
                 return (
