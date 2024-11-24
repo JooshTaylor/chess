@@ -19,6 +19,8 @@ interface SquareProps {
   position: Position;
   piece: Piece;
   onSelect: () => void;
+  onDragStart: () => void;
+  onDrop: () => void;
   isSelected: boolean;
   isTarget: boolean;
   disabled: boolean;
@@ -44,10 +46,32 @@ export function Square(props: SquareProps): JSX.Element {
     props.onSelect();
   }
 
+  function onDragStart(): void {
+    console.log('drag start');
+    if (props.disabled)
+      return;
+
+    props.onDragStart();
+  }
+
+  function onDrop(e: React.DragEvent): void {
+    e.preventDefault();
+
+    if (props.disabled)
+      return;
+
+    props.onDrop();
+  }
+
   const PieceComponent = PieceComponentMap[props.piece?.type];
   
   return (
-    <div className={getClassName()} onClick={onSelect}>
+    <div
+      className={getClassName()}
+      onClick={onSelect}
+      onDragStart={onDragStart}
+      onDrop={onDrop}
+    >
       {props.position.x === 1 && (
         <div className='absolute top-1 left-1'>
           {props.position.y}

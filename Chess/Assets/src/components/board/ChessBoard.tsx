@@ -35,6 +35,7 @@ interface ChessBoardProps {
 export function ChessBoard(props: ChessBoardProps): JSX.Element {
   const initialState = React.useMemo(() => getInitialState(props.game), [props.game.status]);
   const [ state, _dispatch ] = React.useState(initialState);
+  const [ dragPosition, setDragPosition ] = React.useState<Position>(null);
 
   React.useEffect(() => {
     _dispatch(initialState);
@@ -180,6 +181,14 @@ export function ChessBoard(props: ChessBoardProps): JSX.Element {
     return state.turnColour === playerColour;
   }
 
+  function onDragStart(position: Position): void {
+    onSelectPiece(position);
+  }
+  
+  function onDrop(position: Position): void {
+    onMovePiece(position);
+  }
+
   const board = playerColour === 'black' ? [...BOARD].reverse() : BOARD;
 
   return (
@@ -193,6 +202,8 @@ export function ChessBoard(props: ChessBoardProps): JSX.Element {
                   <Square
                     key={getPositionId(position)}
                     onSelect={() => onSelectSquare(position)}
+                    onDragStart={() => onDragStart(position)}
+                    onDrop={() => onDrop(position)}
                     isSelected={state.selectedPiece !== '' && getPositionId(position) === getPositionId(piecePositionMap.current[state.selectedPiece])}
                     position={position}
                     piece={getPieceAtPosition(state, position)}
