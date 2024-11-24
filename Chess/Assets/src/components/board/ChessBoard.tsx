@@ -180,7 +180,7 @@ export function ChessBoard(props: ChessBoardProps): JSX.Element {
     return state.turnColour === playerColour;
   }
 
-  const board = playerColour === 'white' ? BOARD : [...BOARD].reverse();
+  const board = playerColour === 'black' ? [...BOARD].reverse() : BOARD;
 
   return (
     <>
@@ -207,6 +207,8 @@ export function ChessBoard(props: ChessBoardProps): JSX.Element {
         <Menu
           state={state}
           piecePositionMap={piecePositionMap.current}
+          game={props.game}
+          playerColour={playerColour}
         />
       </div>
 

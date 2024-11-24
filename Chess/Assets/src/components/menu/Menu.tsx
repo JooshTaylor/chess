@@ -1,6 +1,8 @@
 import { GameState } from "../../reducers/GameReducer";
 import { PieceColour } from "../../interfaces/PieceColour";
 import { PiecePositionMap } from "../../utils/getPiecePositionMap";
+import { Game } from "../../interfaces/Game";
+import { GameStatus } from "../../enums/GameStatus";
 
 function getColourString(colour: PieceColour): string {
   if (colour === 'black')
@@ -13,6 +15,8 @@ type Moves = Array<[ number, string, string ]>;
 
 interface MenuProps {
   state: GameState;
+  game: Game;
+  playerColour: PieceColour;
   piecePositionMap: PiecePositionMap;
 }
 
@@ -31,6 +35,15 @@ export function Menu(props: MenuProps): JSX.Element {
   return (
     <div className='w-[300px] max-h-[768px] min-h-[768px] rounded-lg border border-chess-black text-chess-black bg-chess-white ms-4 font-semibold overflow-y-scroll'>
       <div className='p-2'>
+        {props.game.status === GameStatus.Running && (
+          <>
+            {props.playerColour === 'white' && <h2>You are playing as White</h2>}
+            {props.playerColour === 'black' && <h2>You are playing as Black</h2>}
+            {!props.playerColour && <h2>You are a spectator</h2>}
+            <hr className='my-2 border-chess-black' />
+          </>
+        )}
+
         <h2>Moves</h2>
 
         <ul>
