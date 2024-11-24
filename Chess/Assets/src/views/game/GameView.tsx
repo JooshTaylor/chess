@@ -29,8 +29,8 @@ export function GameView(): JSX.Element {
       queryClient.invalidateQueries({ queryKey: [`game:${gameId}`] });
     });
 
-    signalR.on(Messages.Server.START_GAME, gameId => {
-      queryClient.invalidateQueries({ queryKey: [`game:${gameId}`] });
+    signalR.on(Messages.Server.START_GAME, game => {
+      queryClient.setQueryData([`game:${game.id}`], game);
     });
 
     const currentPlayerId = getPlayerId(game.data.data.id);
