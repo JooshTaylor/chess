@@ -1,7 +1,7 @@
 import { GameStatus } from "../enums/GameStatus";
+import { GameEnding } from "../interfaces/GameEnding";
 import { Piece } from "../interfaces/Piece";
 import { PieceColour } from "../interfaces/PieceColour";
-import { PieceId } from "../interfaces/PieceId";
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
 import { getEnPassantTargetPosition } from "../utils/getEnPassantTargetPosition";
@@ -9,16 +9,14 @@ import { getMoveAction } from "../utils/getMoveAction";
 import { getMovePieceState } from "../utils/getMovePieceState";
 import { getPieceAtPosition } from "../utils/getPieceAtPosition";
 
-export type GameResult = 'check-mate' | 'draw' | 'stalemate' | 'resign' | 'time-out' | 'abandon';
-
 export interface GameState {
   turnColour: PieceColour;
-  selectedPiece: PieceId | '';
-  pieces: Record<PieceId, Piece>;
-  positions: Record<number, Record<number, PieceId | ''>>;
+  selectedPiece: number | '';
+  pieces: Record<number, Piece>;
+  positions: Record<number, Record<number, number | ''>>;
   moves: string[];
   status: GameStatus;
-  result?: GameResult;
+  result?: GameEnding;
   winner?: PieceColour;
 }
 
@@ -43,7 +41,7 @@ interface PromoteAction {
 
 interface EndGameActionPayload {
   winner: PieceColour;
-  result: GameResult;
+  result: GameEnding;
 }
 
 interface EndGameAction {

@@ -30,6 +30,7 @@ const modalRoot = ReactDOM.createRoot(document.getElementById('modal'));
 
 interface ChessBoardProps {
   game: Game;
+  onMove: (pieceId: number, targetPosition: Position) => Promise<void>;
 }
 
 export function ChessBoard(props: ChessBoardProps): JSX.Element {
@@ -96,7 +97,7 @@ export function ChessBoard(props: ChessBoardProps): JSX.Element {
         type: 'end-game',
         payload: {
           winner: isCheckMate ? (state.turnColour === 'black' ? 'white' : 'black') : null,
-          result: isCheckMate ? 'check-mate' : 'stalemate'
+          result: isCheckMate ? 'checkmate' : 'stalemate'
         }
       });
     }
@@ -161,7 +162,11 @@ export function ChessBoard(props: ChessBoardProps): JSX.Element {
       return;
     }
 
-    dispatch(getMoveAction(state, state.selectedPiece, currentPosition, targetPosition));
+    const moveAction = getMoveAction(state, state.selectedPiece, currentPosition, targetPosition);
+
+    dispatch(moveAction);
+
+    props.onMove(selectedPiece.id, targetPosition);
   }
 
   function onSelectSquare(position: Position): void {

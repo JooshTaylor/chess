@@ -1,5 +1,5 @@
 import { PieceColour } from "../interfaces/PieceColour";
-import { PieceId } from "../interfaces/PieceId";
+
 import { GameState } from "../reducers/GameReducer";
 import { getKing } from "./getKing";
 import { PiecePositionMap } from "./getPiecePositionMap";
@@ -29,7 +29,7 @@ function preventCastlingIfSniped(
   }
 }
 
-export type PieceValidPositionsMap = Record<PieceId, Set<string>>;
+export type PieceValidPositionsMap = Record<number, Set<string>>;
 
 export function getPieceValidPositionsMap(state: GameState, piecePositionMap: PiecePositionMap, filterUnsafeSquares: boolean): PieceValidPositionsMap {
   const map: Partial<PieceValidPositionsMap> = {};

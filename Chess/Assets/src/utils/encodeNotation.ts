@@ -1,5 +1,5 @@
 import { Piece } from "../interfaces/Piece";
-import { PieceId } from "../interfaces/PieceId";
+
 import { PieceType } from "../interfaces/PieceType";
 import { Position } from "../interfaces/Position";
 import { GameState, GameAction } from "../reducers/GameReducer";
@@ -45,10 +45,10 @@ const getDisambiguationSection = (
   const otherPieces: Piece[] = [];
 
   for (const [ pieceId, validPositions ] of Object.entries(pieceValidPositionsMap)) {
-    if (pieceId === currentPiece.id)
+    if (pieceId === currentPiece.id.toString())
       continue;
 
-    const otherPiece = state.pieces[pieceId as PieceId];
+    const otherPiece = state.pieces[+pieceId];
 
     if (otherPiece.colour !== currentPiece.colour || otherPiece.type !== currentPiece.type)
       continue;

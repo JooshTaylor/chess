@@ -22,7 +22,9 @@ public class ApplicationDbContext : DbContext
         var dbPath = Path.Join(path, "chess.db");
 
         optionsBuilder
-            .UseSqlite($"Data Source={dbPath}");
+            .UseSqlite($"Data Source={dbPath}")
+            .LogTo(Console.WriteLine, [DbLoggerCategory.Database.Command.Name], LogLevel.Information);
+        // Note: Add .EnableSensitiveDataLogging() to view SQL query parameters
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

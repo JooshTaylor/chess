@@ -1,7 +1,7 @@
 import { ChessBoard } from '../../components/board/ChessBoard';
 import { useParams } from 'react-router-dom';
 import { useSignalR } from '../../context/SignalRContext';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { Game } from '../../interfaces/Game';
 import React from 'react';
@@ -9,6 +9,8 @@ import { getPlayerId } from '../../utils/getPlayerId';
 import { GameStatus } from '../../enums/GameStatus';
 import { Messages } from '../../constants/Messages';
 import { savePlayerId } from '../../utils/savePlayerId';
+import { Position } from '../../interfaces/Position';
+import { CreateMoveRequest } from '../../interfaces/requests/CreateMoveRequest';
 
 export function GameView(): JSX.Element {
   const params = useParams();
@@ -17,7 +19,14 @@ export function GameView(): JSX.Element {
 
   const game = useQuery({
     queryKey: [`game:${params.id}`],
-    queryFn: () => axios.get<Game>(`/api/games/${params.id}`)
+    queryFn: () => axios.get<Game>(`/api/v1/games/${params.id}`)
+  });
+
+  const moveMutation = useMutation({
+    mutationFn: (body: CreateMoveRequest) => axios.post(`/api/v1/games/${params.id}/moves`, body),
+    onSuccess: data => {
+      console.log('Success', data);
+    }
   });
 
   React.useEffect(() => {
@@ -42,11 +51,18 @@ export function GameView(): JSX.Element {
     signalR.invoke(Messages.Client.JOIN_GAME, game.data.data.id, currentPlayerId);
   }, [ game.isSuccess, signalR.isConnected ]);
 
+  async function onMove(pieceId: number, targetPosition: Position): Promise<void> {
+    await moveMutation.mutateAsync({ pieceId, ...targetPosition });
+  }
+
   // TODO: Loading states
   if (!game.isSuccess)
     return <></>;
 
   return (
-    <ChessBoard game={game.data.data} />
+    <ChessBoard
+      game={game.data.data}
+      onMove={onMove}
+    />
   );
 }

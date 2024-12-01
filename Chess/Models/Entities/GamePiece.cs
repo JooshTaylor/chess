@@ -5,7 +5,7 @@ namespace Chess.Models.Entities;
 public class GamePiece
 {
     public ulong Id { get; set; }
-    public required Piece Piece { get; set; }
+    public Piece Piece { get; set; }
     public int X { get; set; }
     public int Y { get; set; }
     public PieceType? PromotionType { get; set; } = null;

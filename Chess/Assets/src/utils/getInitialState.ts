@@ -1,189 +1,218 @@
-import { INITIAL_GAME_STATE } from "../constants/InitialGameState";
 import { Game } from "../interfaces/Game";
 import { Piece } from "../interfaces/Piece";
-import { PieceType } from "../interfaces/PieceType";
-import { Position } from "../interfaces/Position";
-import { GameReducer, GameState } from "../reducers/GameReducer";
-import { ReversePieceSectionMap } from "./encodeNotation";
-import { getKing } from "./getKing";
-import { getMoveAction } from "./getMoveAction";
-import { getPiecePositionMap, PiecePositionMap } from "./getPiecePositionMap";
-import { getPieceValidPositionsMap } from "./getPieceValidPositionsMap";
 
-const DISAMBIGUATION_CHARS = new Set<string>([
-  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-  '1', '2', '3', '4', '5', '6', '7', '8'
-]);
+// import { PieceType } from "../interfaces/PieceType";
+// import { Position } from "../interfaces/Position";
+// import { GameReducer, GameState } from "../reducers/GameReducer";
+import { GameState } from "../reducers/GameReducer";
+// import { ReversePieceSectionMap } from "./encodeNotation";
+// import { getKing } from "./getKing";
+// import { getMoveAction } from "./getMoveAction";
+// import { getPiecePositionMap, PiecePositionMap } from "./getPiecePositionMap";
+// import { getPieceValidPositionsMap } from "./getPieceValidPositionsMap";
 
-const COORDINATE_MAP: Record<string, number> = {
-  a: 1,
-  b: 2,
-  c: 3,
-  d: 4,
-  e: 5,
-  f: 6,
-  g: 7,
-  h: 8
-};
+// const DISAMBIGUATION_CHARS = new Set<string>([
+//   'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+//   '1', '2', '3', '4', '5', '6', '7', '8'
+// ]);
 
-function getDisambiguationSection(charOne: string, charTwo: string): string {
-  let section = '';
+// const COORDINATE_MAP: Record<string, number> = {
+//   a: 1,
+//   b: 2,
+//   c: 3,
+//   d: 4,
+//   e: 5,
+//   f: 6,
+//   g: 7,
+//   h: 8
+// };
 
-  if (DISAMBIGUATION_CHARS.has(charOne))
-    section += charOne;
-  if (DISAMBIGUATION_CHARS.has(charTwo))
-    section += charTwo;
+// function getDisambiguationSection(charOne: string, charTwo: string): string {
+//   let section = '';
 
-  return section;
-}
+//   if (DISAMBIGUATION_CHARS.has(charOne))
+//     section += charOne;
+//   if (DISAMBIGUATION_CHARS.has(charTwo))
+//     section += charTwo;
 
-function getPromotionType(secondLastChar: string, lastChar: string): PieceType {
-  if (secondLastChar !== '=')
-    return null;
+//   return section;
+// }
 
-  return ReversePieceSectionMap[lastChar];
-}
+// function getPromotionType(secondLastChar: string, lastChar: string): PieceType {
+//   if (secondLastChar !== '=')
+//     return null;
 
-function getSelectedPiece(
-  state: GameState,
-  pieceType: PieceType,
-  disambiguationSection: string,
-  targetPosition: Position,
-  piecePositionMap: PiecePositionMap
-): Piece {
-  const pieceValidPositionsMap = getPieceValidPositionsMap(state, piecePositionMap, true);
+//   return ReversePieceSectionMap[lastChar];
+// }
 
-  const typePieces = Object.values(state.pieces).filter(piece => piece.status === 'alive' && piece.type === pieceType && piece.colour === state.turnColour);
+// function getSelectedPiece(
+//   state: GameState,
+//   pieceType: PieceType,
+//   disambiguationSection: string,
+//   targetPosition: Position,
+//   piecePositionMap: PiecePositionMap
+// ): Piece {
+//   const pieceValidPositionsMap = getPieceValidPositionsMap(state, piecePositionMap, true);
 
-  const possiblePieces: Piece[] = [];
+//   const typePieces = Object.values(state.pieces).filter(piece => piece.status === 'alive' && piece.type === pieceType && piece.colour === state.turnColour);
 
-  for (const piece of typePieces) {
-    const validMoves = pieceValidPositionsMap[piece.id];
+//   const possiblePieces: Piece[] = [];
 
-    for (const move of validMoves) {
-      const [ x, y ] = move.split(':');
-      const validPosition: Position = { x: Number(x), y: Number(y) };
+//   for (const piece of typePieces) {
+//     const validMoves = pieceValidPositionsMap[piece.id];
 
-      if (validPosition.x === targetPosition.x && validPosition.y === targetPosition.y)
-        possiblePieces.push(piece);
-    }
-  }
+//     for (const move of validMoves) {
+//       const [ x, y ] = move.split(':');
+//       const validPosition: Position = { x: Number(x), y: Number(y) };
 
-  if (possiblePieces.length === 1)
-    return possiblePieces[0];
+//       if (validPosition.x === targetPosition.x && validPosition.y === targetPosition.y)
+//         possiblePieces.push(piece);
+//     }
+//   }
 
-  if (disambiguationSection.length === 1) {
-    const isFile = Number.isNaN(Number(disambiguationSection));
+//   if (possiblePieces.length === 1)
+//     return possiblePieces[0];
 
-    if (isFile) {
-      const xCoord = COORDINATE_MAP[disambiguationSection];
+//   if (disambiguationSection.length === 1) {
+//     const isFile = Number.isNaN(Number(disambiguationSection));
 
-      return possiblePieces.find(piece => {
-        return piecePositionMap[piece.id].x === xCoord;
-      });
-    }
+//     if (isFile) {
+//       const xCoord = COORDINATE_MAP[disambiguationSection];
 
-    return possiblePieces.find(piece => {
-      return piecePositionMap[piece.id].y === Number(disambiguationSection);
-    });
-  }
+//       return possiblePieces.find(piece => {
+//         return piecePositionMap[piece.id].x === xCoord;
+//       });
+//     }
 
-  const currentPosition: Position = {
-    x: COORDINATE_MAP[disambiguationSection[0]],
-    y: Number(disambiguationSection[1])
-  };
+//     return possiblePieces.find(piece => {
+//       return piecePositionMap[piece.id].y === Number(disambiguationSection);
+//     });
+//   }
 
-  return possiblePieces.find(piece => {
-    const piecePosition = piecePositionMap[piece.id];
-    piecePosition.x === currentPosition.x && piecePosition.y === currentPosition.y;
-  });
-}
+//   const currentPosition: Position = {
+//     x: COORDINATE_MAP[disambiguationSection[0]],
+//     y: Number(disambiguationSection[1])
+//   };
+
+//   return possiblePieces.find(piece => {
+//     const piecePosition = piecePositionMap[piece.id];
+//     piecePosition.x === currentPosition.x && piecePosition.y === currentPosition.y;
+//   });
+// }
 
 export function getInitialState(game: Game, moves: string[] = []): GameState {
-  let currentState = INITIAL_GAME_STATE;
+  const state: GameState = {
+    turnColour: game.moves.length % 2 === 0 ? 'white' : 'black',
+    selectedPiece: '',
+    status: game.status,
+    moves: [],
+    result: game.ending,
+    winner: game.winner,
+    positions: game.pieces.reduce<Record<number, Record<number, number>>>((acc, gamePiece) => {
+      if (!acc[gamePiece.x])
+        acc[gamePiece.x] = {};
 
-  if (game)
-    currentState.status = game.status;
-
-  for (let move of moves) {
-    const piecePositionMap = getPiecePositionMap(currentState.positions);
-
-    if (move === '0-0' || move === '0-0-0') {
-      const king = getKing(currentState, currentState.turnColour);
-      const kingPosition = piecePositionMap[king.id];
-
-      const targetPosition: Position = move === '0-0'
-        ? { x: kingPosition.x + 2, y: kingPosition.y }
-        : { x: kingPosition.x - 2, y: kingPosition.y };
-
-      const action = getMoveAction(currentState, king.id, kingPosition, targetPosition);
-
-      currentState = {
-        ...GameReducer(currentState, action),
-        moves: currentState.moves.concat(move)
+      acc[gamePiece.x][gamePiece.y] = gamePiece.id;
+      
+      return acc;
+    }, {}),
+    pieces: game.pieces.reduce<Record<number, Piece>>((acc, gamePiece) => {
+      acc[gamePiece.id] = {
+        id: gamePiece.id,
+        colour: gamePiece.piece.colour,
+        type: gamePiece.promotionType || gamePiece.piece.type,
+        originalType: gamePiece.piece.type,
+        status: gamePiece.status,
+        totalMoves: gamePiece.totalMoves,
+        // TODO: Work this out, do we need it?
+        turnsSinceLastMove: 0
       };
 
-      continue;
-    }
+      return acc;
+    }, {})
+  };
 
-    move = move.replace('+', '');
-    move = move.replace('#', '');
-    move = move.replace(' 1/2-1/2', '');
+  moves;
 
-    const chars = move.split('');
+  return state;
 
-    const pieceType = ReversePieceSectionMap[chars[0]] || 'pawn';
+  // for (let move of moves) {
+  //   const piecePositionMap = getPiecePositionMap(currentState.positions);
 
-    if (pieceType !== 'pawn')
-      chars.shift();
+  //   if (move === '0-0' || move === '0-0-0') {
+  //     const king = getKing(currentState, currentState.turnColour);
+  //     const kingPosition = piecePositionMap[king.id];
 
-    const hasCapture = chars.includes('x');
+  //     const targetPosition: Position = move === '0-0'
+  //       ? { x: kingPosition.x + 2, y: kingPosition.y }
+  //       : { x: kingPosition.x - 2, y: kingPosition.y };
 
-    const promotionType = getPromotionType(chars[chars.length - 2], chars[chars.length - 1]);
+  //     const action = getMoveAction(currentState, king.id, kingPosition, targetPosition);
 
-    if (promotionType) {
-      chars.pop();
-      chars.pop();
-    }
+  //     currentState = {
+  //       ...GameReducer(currentState, action),
+  //       moves: currentState.moves.concat(move)
+  //     };
 
-    let disambiguationSection = '';
+  //     continue;
+  //   }
 
-    if ((hasCapture && chars.length > 3) || (!hasCapture && chars.length > 2)) {
-      disambiguationSection = getDisambiguationSection(chars[0], chars[1]);
-    }
+  //   move = move.replace('+', '');
+  //   move = move.replace('#', '');
+  //   move = move.replace(' 1/2-1/2', '');
 
-    if (disambiguationSection.length === 1) {
-      chars.shift();
-    }
+  //   const chars = move.split('');
 
-    if (disambiguationSection.length === 2) {
-      chars.shift();
-      chars.shift();
-    }
+  //   const pieceType = ReversePieceSectionMap[chars[0]] || 'pawn';
 
-    if (hasCapture)
-      chars.shift();
+  //   if (pieceType !== 'pawn')
+  //     chars.shift();
 
-    const targetPosition: Position = {
-      x: COORDINATE_MAP[chars[0]],
-      y: Number(chars[1])
-    };
+  //   const hasCapture = chars.includes('x');
 
-    const piece = getSelectedPiece(
-      currentState,
-      pieceType,
-      disambiguationSection,
-      targetPosition,
-      piecePositionMap
-    );
+  //   const promotionType = getPromotionType(chars[chars.length - 2], chars[chars.length - 1]);
 
-    const action = getMoveAction(currentState, piece.id, piecePositionMap[piece.id], targetPosition);
+  //   if (promotionType) {
+  //     chars.pop();
+  //     chars.pop();
+  //   }
 
-    currentState = {
-      ...GameReducer(currentState, action),
-      moves: currentState.moves.concat(move)
-    };
-  }
+  //   let disambiguationSection = '';
 
-  return currentState;
+  //   if ((hasCapture && chars.length > 3) || (!hasCapture && chars.length > 2)) {
+  //     disambiguationSection = getDisambiguationSection(chars[0], chars[1]);
+  //   }
+
+  //   if (disambiguationSection.length === 1) {
+  //     chars.shift();
+  //   }
+
+  //   if (disambiguationSection.length === 2) {
+  //     chars.shift();
+  //     chars.shift();
+  //   }
+
+  //   if (hasCapture)
+  //     chars.shift();
+
+  //   const targetPosition: Position = {
+  //     x: COORDINATE_MAP[chars[0]],
+  //     y: Number(chars[1])
+  //   };
+
+  //   const piece = getSelectedPiece(
+  //     currentState,
+  //     pieceType,
+  //     disambiguationSection,
+  //     targetPosition,
+  //     piecePositionMap
+  //   );
+
+  //   const action = getMoveAction(currentState, piece.id, piecePositionMap[piece.id], targetPosition);
+
+  //   currentState = {
+  //     ...GameReducer(currentState, action),
+  //     moves: currentState.moves.concat(move)
+  //   };
+  // }
 }

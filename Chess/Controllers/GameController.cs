@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chess.Controllers;
 
-[Route("api/games")]
+[Route("api/v1/games")]
 public class GameController(IGameService gameService) : Controller
 {
     [HttpGet("")]
@@ -27,5 +27,12 @@ public class GameController(IGameService gameService) : Controller
     {
         var game = await gameService.CreateGameAsync(request);
         return Ok(game);
+    }
+
+    [HttpPost("{id}/moves")]
+    public async Task<IActionResult> CreateMove(ulong id, [FromBody] CreateMoveRequest request)
+    {
+        await gameService.CreateMoveAsync(id, request);
+        return Ok();
     }
 }

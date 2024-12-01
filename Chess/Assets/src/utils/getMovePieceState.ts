@@ -1,5 +1,5 @@
 import { Piece } from "../interfaces/Piece";
-import { PieceId } from "../interfaces/PieceId";
+
 import { Position } from "../interfaces/Position";
 import { GameState } from "../reducers/GameReducer";
 
@@ -22,13 +22,13 @@ export function getMovePieceState(
     }
   };
 
-  newState.pieces = Object.entries(newState.pieces).reduce<Record<PieceId, Piece>>((acc, [ pieceId, piece ]) => {
-    acc[pieceId as PieceId] = {
+  newState.pieces = Object.entries(newState.pieces).reduce<Record<number, Piece>>((acc, [ pieceId, piece ]) => {
+    acc[+pieceId] = {
       ...piece,
       turnsSinceLastMove: piece.turnsSinceLastMove + 1
     };
     return acc;
-  }, {} as Record<PieceId, Piece>);
+  }, {} as Record<number, Piece>);
 
   const newPositions: GameState['positions'] = {
     ...currentState.positions,

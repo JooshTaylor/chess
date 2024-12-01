@@ -1,12 +1,12 @@
-import { PieceId } from "../interfaces/PieceId";
+
 import { Position } from "../interfaces/Position";
 import { GameAction, GameState } from "../reducers/GameReducer";
 import { getPieceAtPosition } from "./getPieceAtPosition";
 import { isCastling } from "./isCastling";
 import { isEnPassant } from "./isEnPassant";
 
-export function getMoveAction(state: GameState, selectedPieceId: PieceId | '', currentPosition: Position, targetPosition: Position): GameAction {
-  if (selectedPieceId === '')
+export function getMoveAction(state: GameState, selectedPieceId: number, currentPosition: Position, targetPosition: Position): GameAction {
+  if (!selectedPieceId)
     return null;
 
   const selectedPiece = state.pieces[selectedPieceId];

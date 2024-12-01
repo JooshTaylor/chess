@@ -19,7 +19,12 @@ public class GameService(ApplicationDbContext context) : IGameService
 
     public async Task<Game?> GetGameAsync(ulong id)
     {
-        var game = await context.Games.FindAsync(id);
+        var game = await context.Games
+            .Include(g => g.Pieces)
+            .ThenInclude(p => p.Piece)
+            .Include(g => g.Moves)
+            .FirstOrDefaultAsync(g => g.Id == id);
+
         return game;
     }
 
@@ -86,6 +91,39 @@ public class GameService(ApplicationDbContext context) : IGameService
 
         game.Status = GameStatus.Running;
         
+        await context.SaveChangesAsync();
+    }
+
+    public async Task CreateMoveAsync(ulong id, CreateMoveRequest request)
+    {
+        var game = await GetGameAsync(id);
+
+        if (game == null)
+        {
+            throw new Exception($"Game {id} not found");
+        }
+
+        if (game.Status != GameStatus.Running)
+        {
+            throw new Exception($"Game {id} is not running");
+        }
+
+        var piece = await context.GamePieces.FindAsync(request.PieceId);
+
+        if (piece == null)
+        {
+            throw new Exception($"Piece {request.PieceId} not found");
+        }
+        
+        var move = new Move
+        {
+            Game = game,
+            Piece = piece,
+            X = request.X,
+            Y = request.Y,
+        };
+
+        await context.Moves.AddAsync(move);
         await context.SaveChangesAsync();
     }
 

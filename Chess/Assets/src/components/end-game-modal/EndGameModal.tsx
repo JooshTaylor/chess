@@ -1,7 +1,6 @@
+import { GameEnding } from "../../interfaces/GameEnding";
 import { PieceColour } from "../../interfaces/PieceColour";
-import { GameResult } from "../../reducers/GameReducer";
 import { Modal } from "../modal/Modal";
-import { EndGameAbandon } from "./components/EndGameAbandon";
 import { EndGameCheckMate } from "./components/EndGameCheckMate";
 import { EndGameDraw } from "./components/EndGameDraw";
 import { EndGameResign } from "./components/EndGameResign";
@@ -14,17 +13,17 @@ export interface EndGameComponentProps {
 }
 
 // TODO: Implement all of these
-const EndGameComponents: Record<GameResult, (props: EndGameComponentProps) => JSX.Element> = {
-  'check-mate': EndGameCheckMate,
+const EndGameComponents: Record<GameEnding, (props: EndGameComponentProps) => JSX.Element> = {
+  'checkmate': EndGameCheckMate,
   'stalemate': EndGameStalemate,
-  'abandon': EndGameAbandon,
-  'draw': EndGameDraw,
-  'resign': EndGameResign,
-  'time-out': EndGameTimeOut,
+  'resignation': EndGameResign,
+  'timeout': EndGameTimeOut,
+  'insufficient-material': EndGameDraw,
+  'timeout-vs-insufficient-material': EndGameDraw
 };
 
 interface EndGameModalProps {
-  result: GameResult;
+  result: GameEnding;
   winner: PieceColour;
 }
 

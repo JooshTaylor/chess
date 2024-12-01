@@ -3,8 +3,8 @@
 public class Move
 {
     public ulong Id { get; init; }
-    public required Game Game { get; set; }
-    public required GamePiece Piece { get; set; }
+    public Game Game { get; set; }
+    public GamePiece Piece { get; set; }
     public int X { get; set; }
     public int Y { get; set; }
 }

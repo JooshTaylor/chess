@@ -1,11 +1,10 @@
 import { PieceColour } from "./PieceColour";
-import { PieceId } from "./PieceId";
 import { PieceStatus } from "./PieceStatus";
 import { PieceType } from "./PieceType";
 
 export interface Piece {
   // The ID for the piece
-  id: PieceId;
+  id: number;
 
   // The current type the piece is playing as
   type: PieceType;

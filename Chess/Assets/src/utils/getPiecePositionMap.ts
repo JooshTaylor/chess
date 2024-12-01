@@ -1,8 +1,8 @@
-import { PieceId } from "../interfaces/PieceId";
+
 import { Position } from "../interfaces/Position";
 import { GameState } from "../reducers/GameReducer";
 
-export type PiecePositionMap = Record<PieceId, Position>;
+export type PiecePositionMap = Record<number, Position>;
 
 export function getPiecePositionMap(positions: GameState['positions']): PiecePositionMap {
   const map: Partial<PiecePositionMap> = {};

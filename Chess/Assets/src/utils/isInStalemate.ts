@@ -1,5 +1,5 @@
 import { PieceColour } from "../interfaces/PieceColour";
-import { PieceId } from "../interfaces/PieceId";
+
 import { GameState } from "../reducers/GameReducer";
 import { PieceValidPositionsMap } from "./getPieceValidPositionsMap";
 
@@ -9,7 +9,7 @@ export function isInStalemate(state: GameState, colour: PieceColour, pieceValidP
     return false;
 
   for (const [ pieceId, validPositions ] of Object.entries(pieceValidPositionsMap)) {
-    if (state.pieces[pieceId as PieceId].colour !== colour)
+    if (state.pieces[+pieceId].colour !== colour)
       continue;
 
     if (validPositions.size)

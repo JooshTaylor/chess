@@ -19,11 +19,11 @@ export function DashboardView(): JSX.Element {
 
   const activeGames = useQuery({
     queryKey: [`games:status:${GameStatus.Running}`],
-    queryFn: () => axios.get<Game[]>(`/api/games?status=${GameStatus.Running}`)
+    queryFn: () => axios.get<Game[]>(`/api/v1/games?status=${GameStatus.Running}`)
   });
 
   const createGameMutation = useMutation({
-    mutationFn: () => axios.post<Game>('/api/games', body),
+    mutationFn: () => axios.post<Game>('/api/v1/games', body),
     onSuccess: async data => {
       navigate(`/games/${data.data.id}`);
     }
