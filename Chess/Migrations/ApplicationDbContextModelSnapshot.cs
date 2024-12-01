@@ -57,7 +57,7 @@ namespace Chess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<ulong>("GameId")
+                    b.Property<ulong?>("GameId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("PieceInitialX")
@@ -447,19 +447,15 @@ namespace Chess.Migrations
 
             modelBuilder.Entity("Chess.Models.Entities.GamePiece", b =>
                 {
-                    b.HasOne("Chess.Models.Entities.Game", "Game")
+                    b.HasOne("Chess.Models.Entities.Game", null)
                         .WithMany("Pieces")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GameId");
 
                     b.HasOne("Chess.Models.Entities.Piece", "Piece")
                         .WithMany()
                         .HasForeignKey("PieceInitialX", "PieceInitialY")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Game");
 
                     b.Navigation("Piece");
                 });

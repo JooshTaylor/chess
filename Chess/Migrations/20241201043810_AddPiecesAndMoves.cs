@@ -34,12 +34,12 @@ namespace Chess.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     PieceInitialX = table.Column<int>(type: "INTEGER", nullable: false),
                     PieceInitialY = table.Column<int>(type: "INTEGER", nullable: false),
-                    GameId = table.Column<ulong>(type: "INTEGER", nullable: false),
                     X = table.Column<int>(type: "INTEGER", nullable: false),
                     Y = table.Column<int>(type: "INTEGER", nullable: false),
                     PromotionType = table.Column<int>(type: "INTEGER", nullable: true),
                     TotalMoves = table.Column<int>(type: "INTEGER", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false)
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    GameId = table.Column<ulong>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -48,8 +48,7 @@ namespace Chess.Migrations
                         name: "FK_GamePieces_Games_GameId",
                         column: x => x.GameId,
                         principalTable: "Games",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_GamePieces_Pieces_PieceInitialX_PieceInitialY",
                         columns: x => new { x.PieceInitialX, x.PieceInitialY },

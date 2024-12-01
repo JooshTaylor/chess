@@ -1,6 +1,7 @@
 Now:
-- Support creating a game, where anyone can join via websocket. No accounts
-- Write the logic in to the backend
+- Support making moves in the backend
+- Write move validation in backend
+- Complete a full game
 
 Next:
 - Timer
